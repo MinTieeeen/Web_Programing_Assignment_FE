@@ -1,0 +1,31 @@
+/* NextPlay Footer Styles */
+.np-footer{background:rgba(15, 31, 43, 0.6);color:#cdd9e5;border-top:1px solid rgba(255,255,255,.08);position:relative;z-index:1}
+.npf-container{max-width:1200px;margin:0 auto;padding:40px 20px}
+.npf-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;align-items:flex-start}
+
+.npf-brand{display:flex;align-items:center;gap:14px}
+.npf-logo{width:64px;height:auto;display:block}
+.npf-name{color:#1990ff;font-weight:800;letter-spacing:.5px}
+.npf-tag{font-size:12px;color:#8aa3b7}
+
+.npf-title{color:#1990ff;margin:0 0 12px 0;font-weight:700}
+.npf-col ul{list-style:none;margin:0;padding:0}
+.npf-col li{margin:10px 0}
+.npf-col a{color:#cdd9e5;text-decoration:none}
+.npf-col a:hover{color:#ffffff}
+
+.npf-social{display:flex;gap:12px}
+.npf-icon{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#122636;color:#aebccd;text-decoration:none}
+.npf-icon:hover{background:#183246;color:#ffffff}
+
+.npf-bottom{margin-top:36px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);text-align:center;color:#8aa3b7;font-size:14px}
+
+@media (max-width: 992px){
+  .npf-grid{grid-template-columns:1fr 1fr;gap:24px}
+}
+@media (max-width: 600px){
+  .npf-grid{grid-template-columns:1fr}
+  .npf-brand{justify-content:center}
+  .npf-bottom{text-align:center}
+}
+
