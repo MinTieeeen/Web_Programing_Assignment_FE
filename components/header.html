@@ -20,7 +20,7 @@
       </div>
 
       <!-- User Actions (shown when logged in) -->
-      <div class="np-user-menu d-none" id="userMenu">
+      <div class="d-none np-user-menu" id="userMenu">
         <div class="np-user-info">
           <div class="np-user-avatar" id="userAvatar">
             <i class="bi bi-person-fill"></i>
@@ -47,7 +47,7 @@
                 <span>Đơn hàng</span>
               </a>
               <div class="np-dropdown-divider"></div>
-              <button class="np-dropdown-item" onclick="logout()">
+              <button class="np-dropdown-item" onclick="window.logout()">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Đăng xuất</span>
               </button>
@@ -80,83 +80,11 @@
           <a href="/user/profile.html" class="np-mobile-link">Hồ sơ</a>
           <a href="/user/settings.html" class="np-mobile-link">Cài đặt</a>
           <a href="/user/orders.html" class="np-mobile-link">Đơn hàng</a>
-          <button class="np-mobile-logout" onclick="logout()">Đăng xuất</button>
+          <button class="np-mobile-logout" onclick="window.logout()">Đăng xuất</button>
         </div>
       </div>
     </div>
   </div>
 </nav>
-
-<script>
-// Check user login status and update header
-function updateHeaderLoginStatus() {
-  const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
-  const guestActions = document.getElementById('guestActions');
-  const userMenu = document.getElementById('userMenu');
-  const mobileUserMenu = document.getElementById('mobileUserMenu');
-  
-  if (currentUser) {
-    const userData = JSON.parse(currentUser);
-    
-    // Hide guest actions, show user menu
-    if (guestActions) guestActions.classList.add('d-none');
-    if (userMenu) userMenu.classList.remove('d-none');
-    if (mobileUserMenu) mobileUserMenu.classList.remove('d-none');
-    
-    // Update user name
-    const userName = document.getElementById('userName');
-    const mobileUserName = document.getElementById('mobileUserName');
-    if (userName) userName.textContent = userData.name || userData.username;
-    if (mobileUserName) mobileUserName.textContent = userData.name || userData.username;
-    
-  } else {
-    // Show guest actions, hide user menu
-    if (guestActions) guestActions.classList.remove('d-none');
-    if (userMenu) userMenu.classList.add('d-none');
-    if (mobileUserMenu) mobileUserMenu.classList.add('d-none');
-  }
-}
-
-// Logout function
-function logout() {
-  // Clear user data
-  localStorage.removeItem('currentUser');
-  sessionStorage.removeItem('currentUser');
-  
-  // Redirect to home page
-  window.location.href = '/index.html';
-}
-
-// Toggle user dropdown
-function toggleUserDropdown() {
-  const dropdownMenu = document.getElementById('userDropdownMenu');
-  if (dropdownMenu) {
-    dropdownMenu.classList.toggle('show');
-  }
-}
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(event) {
-  const userDropdown = document.getElementById('userDropdownToggle');
-  const dropdownMenu = document.getElementById('userDropdownMenu');
-  
-  if (userDropdown && dropdownMenu && !userDropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
-    dropdownMenu.classList.remove('show');
-  }
-});
-
-// Initialize dropdown toggle
-document.addEventListener('DOMContentLoaded', function() {
-  const dropdownToggle = document.getElementById('userDropdownToggle');
-  if (dropdownToggle) {
-    dropdownToggle.addEventListener('click', toggleUserDropdown);
-  }
-  
-  // Update header on page load
-  updateHeaderLoginStatus();
-});
-
-// Listen for storage changes (when user logs in/out in another tab)
-window.addEventListener('storage', updateHeaderLoginStatus);
-</script>
+<script src="../assets/js/components/header.js"></script>
 
