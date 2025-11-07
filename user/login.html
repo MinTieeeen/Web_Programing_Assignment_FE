@@ -1,11 +1,250 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <title>Đăng nhập</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - NextPlay</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../assets/css/header.css">
+  <link rel="stylesheet" href="../assets/css/footer.css">
+  <link rel="stylesheet" href="../assets/css/login.css">
 </head>
 <body>
+  <!-- Header component -->
+  <div data-include="header"></div>
+
+  <div class="login-container">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <div class="login-card mx-auto">
+            <!-- Header -->
+            <div class="login-header">
+              <div class="d-flex align-items-center justify-content-center mb-3">
+                <img src="../assets/images/logo.png" alt="NextPlay Logo" style="height: 45px; margin-right: 12px;">
+                <h1 class="mb-0">NextPlay</h1>
+              </div>
+              <p>Chào mừng trở lại! Đăng nhập để tiếp tục gaming</p>
+            </div>
+
+            <!-- Form -->
+            <div class="login-form">
+              <!-- Error Alert -->
+              <div id="errorAlert" class="alert-custom d-none">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span id="errorMessage">Thông tin đăng nhập không chính xác</span>
+              </div>
+
+              <!-- Social Login Buttons -->
+              <div class="social-buttons">
+                <a href="#" class="btn-social" onclick="signInWithSocial('google')">
+                  <i class="bi bi-google"></i>
+                  <span>Google</span>
+                </a>
+                <a href="#" class="btn-social" onclick="signInWithSocial('facebook')">
+                  <i class="bi bi-facebook"></i>
+                  <span>Facebook</span>
+                </a>
+              </div>
+
+              <div class="divider">
+                <span>Hoặc đăng nhập bằng tài khoản</span>
+              </div>
+
+              <!-- Login Form -->
+              <form id="loginForm" class="needs-validation" novalidate>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="loginIdentifier" placeholder="Email hoặc tên đăng nhập" required>
+                  <label for="loginIdentifier">Email hoặc tên đăng nhập *</label>
+                  <div class="invalid-feedback">
+                    Vui lòng nhập email hoặc tên đăng nhập.
+                  </div>
+                </div>
+
+                <div class="form-floating password-field">
+                  <input type="password" class="form-control" id="password" placeholder="Mật khẩu" required>
+                  <label for="password">Mật khẩu *</label>
+                  <button type="button" class="password-toggle" onclick="togglePassword()">
+                    <i class="bi bi-eye" id="passwordToggleIcon"></i>
+                  </button>
+                  <div class="invalid-feedback">
+                    Vui lòng nhập mật khẩu.
+                  </div>
+                </div>
+
+                <!-- Login Options -->
+                <div class="login-options">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">
+                      Ghi nhớ đăng nhập
+                    </label>
+                  </div>
+                  <a href="#" class="forgot-password">Quên mật khẩu?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-login">
+                  <span class="spinner-border spinner-border-sm me-2 d-none" id="loadingSpinner"></span>
+                  Đăng nhập
+                </button>
+              </form>
+
+              <!-- Register Link -->
+              <div class="register-link">
+                <p>Chưa có tài khoản?</p>
+                <a href="register.html">Đăng ký ngay</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer component -->
+  <div data-include="footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/include-components.js"></script>
+  
+  <script>
+    // Demo users for testing
+    const demoUsers = [
+      { username: 'admin', email: 'admin@nextplay.com', password: 'admin123', name: 'Administrator' },
+      { username: 'gamer1', email: 'gamer1@nextplay.com', password: 'gamer123', name: 'Pro Gamer' },
+      { username: 'test', email: 'test@nextplay.com', password: 'test123', name: 'Test User' }
+    ];
+
+    // Password toggle function
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const toggleIcon = document.getElementById('passwordToggleIcon');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.className = 'bi bi-eye-slash';
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.className = 'bi bi-eye';
+      }
+    }
+
+    // Show error alert
+    function showError(message) {
+      const errorAlert = document.getElementById('errorAlert');
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.textContent = message;
+      errorAlert.classList.remove('d-none');
+      
+      // Auto hide after 5 seconds
+      setTimeout(() => {
+        errorAlert.classList.add('d-none');
+      }, 5000);
+    }
+
+    // Hide error alert
+    function hideError() {
+      document.getElementById('errorAlert').classList.add('d-none');
+    }
+
+    // Check if user is already logged in
+    function checkLoginStatus() {
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
+        // User is already logged in, redirect to home
+        window.location.href = '../index.html';
+      }
+    }
+
+    // Login function
+    function login(identifier, password, rememberMe) {
+      // Find user by username or email
+      const user = demoUsers.find(u => 
+        (u.username === identifier || u.email === identifier) && u.password === password
+      );
+
+      if (user) {
+        // Login successful
+        const userData = {
+          username: user.username,
+          email: user.email,
+          name: user.name,
+          loginTime: new Date().toISOString()
+        };
+
+        // Store user data
+        if (rememberMe) {
+          localStorage.setItem('currentUser', JSON.stringify(userData));
+        } else {
+          sessionStorage.setItem('currentUser', JSON.stringify(userData));
+        }
+
+        return { success: true, user: userData };
+      } else {
+        return { success: false, message: 'Email/tên đăng nhập hoặc mật khẩu không chính xác' };
+      }
+    }
+
+    // Form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      hideError();
+      
+      if (this.checkValidity()) {
+        const identifier = document.getElementById('loginIdentifier').value.trim();
+        const password = document.getElementById('password').value;
+        const rememberMe = document.getElementById('rememberMe').checked;
+        
+        const submitBtn = document.querySelector('.btn-login');
+        const spinner = document.getElementById('loadingSpinner');
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        spinner.classList.remove('d-none');
+        
+        // Simulate API call delay
+        setTimeout(() => {
+          const result = login(identifier, password, rememberMe);
+          
+          if (result.success) {
+            // Success - redirect to home page
+            window.location.href = '../index.html';
+          } else {
+            // Show error
+            showError(result.message);
+            
+            // Reset loading state
+            submitBtn.disabled = false;
+            spinner.classList.add('d-none');
+          }
+        }, 1500);
+      }
+      
+      this.classList.add('was-validated');
+    });
+
+    // Social login functions
+    function signInWithSocial(provider) {
+      console.log(`Signing in with ${provider}`);
+      alert(`Chức năng đăng nhập ${provider} sẽ được triển khai sau.`);
+    }
+
+    // Clear any existing validation on input
+    document.getElementById('loginIdentifier').addEventListener('input', hideError);
+    document.getElementById('password').addEventListener('input', hideError);
+
+    // Check login status on page load
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
+
+    // Demo login info
+    console.log('Demo login accounts:');
+    console.log('1. Username: admin, Password: admin123');
+    console.log('2. Username: gamer1, Password: gamer123');
+    console.log('3. Username: test, Password: test123');
+  </script>
 </body>
 </html>
 
