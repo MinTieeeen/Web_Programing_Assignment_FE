@@ -1,0 +1,60 @@
+<footer class="np-footer">
+  <div class="npf-container">
+    <div class="npf-grid">
+      <div class="npf-brand">
+        <img src="<?php echo URLROOT; ?>/assets/images/logo.png" alt="NextPlay" class="npf-logo">
+        <div class="npf-brand-text">
+          <div class="npf-name">NextPlay</div>
+          <div class="npf-tag">Cửa hàng game trực tuyến</div>
+        </div>
+      </div>
+
+      <div class="npf-col">
+        <h6 class="npf-title">Về chúng tôi</h6>
+        <ul>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Điều khoản và Điều kiện</a></li>
+          <li><a href="#">Chính sách và Quyền riêng tư</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+
+      <div class="npf-col">
+        <h6 class="npf-title">Liên hệ</h6>
+        <p><a href="mailto:support@mytems.com">support@mytems.com</a></p>
+      </div>
+
+      <div class="npf-col">
+        <h6 class="npf-title">Theo dõi chúng tôi</h6>
+        <div class="npf-social">
+          <a href="#" aria-label="Discord" class="npf-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.317 4.369A19.791 19.791 0 0 0 16.558 3c-.2.358-.43.843-.589 1.221a18.27 18.27 0 0 0-7.938 0A6.57 6.57 0 0 0 7.442 3 19.736 19.736 0 0 0 3.68 4.369C1.58 7.62 1.064 10.77 1.297 13.885c2.067 1.54 4.073 2.482 6.041 3.114a14.7 14.7 0 0 0 1.232-1.963c-.68-.26-1.327-.59-1.943-.979c.162-.118.321-.244.474-.372c3.738 1.75 7.79 1.75 11.5 0c.154.129.312.255.474.372c-.616.39-1.263.719-1.943.979c.36.69.77 1.343 1.232 1.963c1.969-.632 3.975-1.574 6.041-3.114c.3-3.95-.487-7.07-2.268-9.516zM8.727 12.86c-.9 0-1.632-.83-1.632-1.853s.72-1.853 1.632-1.853c.9 0 1.632.83 1.632 1.853s-.73 1.853-1.632 1.853zm6.546 0c-.9 0-1.632-.83-1.632-1.853s.72-1.853 1.632-1.853c.9 0 1.632.83 1.632 1.853s-.73 1.853-1.632 1.853z"/></svg>
+          </a>
+          <a href="#" aria-label="Telegram" class="npf-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M9.036 15.08l-.376 5.3c.54 0 .772-.232 1.05-.51l2.522-2.414 5.223 3.83c.958.528 1.64.252 1.902-.886l3.444-16.15l.001-.001c.305-1.423-.515-1.978-1.45-1.63L1.6 9.31C.214 9.846.226 10.64 1.355 10.99l5.194 1.62l12.08-7.622c.569-.374 1.086-.167.66.208"/></svg>
+          </a>
+          <a href="#" aria-label="Twitter" class="npf-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M22 5.924c-.68.3-1.41.5-2.18.59c.78-.46 1.38-1.2 1.66-2.07c-.73.43-1.54.75-2.4.92c-.69-.73-1.67-1.18-2.76-1.18c-2.1 0-3.8 1.7-3.8 3.8c0 .3.03.59.1.86C8.2 8.71 5.1 7.1 3 4.64c-.33.57-.52 1.23-.52 1.94c0 1.34.68 2.53 1.7 3.22c-.63-.02-1.23-.2-1.75-.49v.05c0 1.88 1.33 3.45 3.09 3.81c-.32.09-.67.14-1.02.14c-.25 0-.49-.02-.72-.07c.49 1.54 1.92 2.66 3.61 2.69c-1.32 1.03-2.98 1.64-4.78 1.64c-.31 0-.62-.02-.92-.06C4.29 20.02 6.43 20.7 8.74 20.7c6.28 0 9.72-5.2 9.72-9.72c0-.15 0-.31-.01-.46c.67-.48 1.26-1.08 1.55-1.77z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="npf-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 7a5 5 0 1 0 0 10a5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4a3.2 3.2 0 0 1 0 6.4z"/><path d="M17.8 2H6.2A4.2 4.2 0 0 0 2 6.2v11.6A4.2 4.2 0 0 0 6.2 22h11.6A4.2 4.2 0 0 0 22 17.8V6.2A4.2 4.2 0 0 0 17.8 2zm2.4 15.8a2.4 2.4 0 0 1-2.4 2.4H6.2a2.4 2.4 0 0 1-2.4-2.4V6.2a2.4 2.4 0 0 1 2.4-2.4h11.6a2.4 2.4 0 0 1 2.4 2.4v11.6z"/><circle cx="18.4" cy="5.6" r="1.2"/></svg>
+          </a>
+          <a href="#" aria-label="Facebook" class="npf-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.87v-6.98H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89c1.09 0 2.24.19 2.24.19v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.98A10 10 0 0 0 22 12"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="npf-bottom">
+      <p>© 2025 NextPlay. Tất cả các quyền được bảo lưu.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?php echo URLROOT; ?>/assets/js/main.js"></script>
+<script src="<?php echo URLROOT; ?>/assets/js/include-components.js"></script>
+<script src="<?php echo URLROOT; ?>/assets/js/validation.js"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+
+body.register-page {
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Poppins", "Segoe UI", Tahoma, sans-serif;
+  background: linear-gradient(180deg, rgba(13, 26, 64, 0.95) 0%, rgba(16, 32, 72, 0.95) 100%),
+              url('../images/starry-night-sky 1.png') center/cover no-repeat fixed;
+  color: #f3f6ff;
+}
+
+.register-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px);
+  padding: 4rem 1.5rem;
+}
+
+.register-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.45) 0.5px, transparent 0.5px);
+  background-size: 60px 60px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.register-card {
+  position: relative;
+  width: min(480px, 100%);
+  padding: 2.5rem 2.25rem;
+  border-radius: 24px;
+  background: rgba(13, 23, 51, 0.95);
+  box-shadow: 0 24px 60px rgba(8, 12, 32, 0.45);
+  border: 1px solid rgba(122, 147, 255, 0.2);
+  backdrop-filter: blur(6px);
+  z-index: 1;
+}
+
+.register-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.register-form .form-label {
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+
+.register-form .form-control,
+.register-form select,
+.register-form input[type="date"] {
+  background: rgba(12, 21, 46, 0.8);
+  border: 1px solid rgba(122, 147, 255, 0.25);
+  color: #f4f7ff;
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.register-form .form-control:focus,
+.register-form input[type="date"]:focus {
+  border-color: rgba(102, 133, 255, 0.9);
+  box-shadow: 0 0 0 0.25rem rgba(99, 132, 255, 0.15);
+  background: rgba(13, 26, 58, 0.95);
+}
+
+.register-form input::placeholder {
+  color: rgba(214, 223, 255, 0.6);
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-field {
+  flex: 1 1 0;
+}
+
+.form-field {
+  margin-bottom: 1.15rem;
+}
+
+.gender-options {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.gender-input {
+  display: none;
+}
+
+.gender-pill {
+  padding: 0.6rem 1.5rem;
+  border-radius: 30px;
+  border: 1px solid rgba(122, 147, 255, 0.35);
+  background: rgba(18, 29, 61, 0.7);
+  color: #d9e0ff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gender-input:checked + .gender-pill {
+  background: linear-gradient(135deg, #1e4bd8, #277dfd);
+  border-color: transparent;
+  color: #fdfdff;
+  box-shadow: 0 12px 24px rgba(39, 125, 253, 0.35);
+}
+
+.form-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: rgba(238, 242, 255, 0.85);
+}
+
+.form-check-input {
+  margin-top: 0.25rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(122, 147, 255, 0.5);
+  background: rgba(16, 27, 58, 0.8);
+}
+
+.form-check-input:checked {
+  background-color: #2970ff;
+  border-color: #2970ff;
+}
+
+.register-submit {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #1e4bd8, #2686ff);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.register-submit:hover {
+  background: linear-gradient(135deg, #2157f0, #3ba6ff);
+}
+
+.register-submit:focus {
+  box-shadow: 0 0 0 0.25rem rgba(46, 123, 255, 0.35);
+}
+
+@media (max-width: 576px) {
+  .register-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .gender-options {
+    gap: 0.5rem;
+  }
+
+  .gender-pill {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+}
+

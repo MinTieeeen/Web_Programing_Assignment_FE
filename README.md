@@ -1,29 +1,78 @@
-# Frontend structure for Game Store (Steam-like)
+# Game Store - PHP MVC Project
 
-This is the frontend (static) structure using HTML5, CSS3, and JavaScript (no frameworks required). It is organized to support public pages, member features, and an admin area as per assignment requirements.
+Website bán game trực tuyến (giống Steam) được xây dựng bằng PHP thuần theo mô hình MVC (Model-View-Controller), không sử dụng Framework.
 
-## Structure
-- `assets/`
-  - `css/` base styles, layout, components, utilities, admin
-  - `js/` core scripts, page scripts, UI components
-  - `images/` placeholders for site images, logos, product images
-  - `fonts/` custom webfonts if any
-  - `libs/` vendor CSS/JS (Bootstrap, Swiper, etc.)
-- Public pages: `index.html`, `about.html`, `faq.html`, `products.html`, `product-detail.html`, `cart.html`, `checkout.html`, `pricing.html`, `news.html`, `news-detail.html`, `contact.html`
-- Auth/member: `login.html`, `register.html`, `profile.html`
-- Admin: `admin/` with `index.html`, `users.html`, `products.html`, `orders.html`, `posts.html`, `comments.html`, `contacts.html`, `settings.html`
+## 🚀 Tính năng
 
-## Notes
-- Add vendor libraries into `assets/libs/` and include them where needed.
-- All pages reference `assets/css/*.css` and `assets/js/main.js`.
-- Header/Footer rendered via `assets/js/components/header.js` and `assets/js/components/footer.js`.
-- Client-side validation helpers in `assets/js/validator.js`.
+- **Khách (Guest)**:
+  - Xem danh sách game, chi tiết game.
+  - Tìm kiếm game.
+  - Đăng ký / Đăng nhập.
+- **Thành viên (Member)**:
+  - Quản lý thông tin cá nhân.
+  - Mua game (Giỏ hàng/Thanh toán).
+  - Bình luận, đánh giá game.
+- **Admin**:
+  - Dashboard quản lý chung.
+  - Quản lý sản phẩm (Game).
+  - Quản lý thành viên.
 
-## SEO & Accessibility
-- Meta tags for viewport, description, keywords, OG/Twitter prepared in templates.
-- Use semantic HTML elements and ARIA labels in components.
+## 📂 Cấu trúc dự án
 
-## Responsive
-- Mobile-first styles in CSS; utility classes available in `utilities.css`.
+Dự án được tổ chức theo mô hình MVC:
 
+```text
+/
+├── app/                    # Mã nguồn chính (Core Logic)
+│   ├── config/             # Cấu hình (Database, URL, Constants)
+│   ├── controllers/        # Controllers (Xử lý yêu cầu)
+│   ├── core/               # Lớp lõi (App, Controller, Database)
+│   ├── models/             # Models (Tương tác Database)
+│   └── views/              # Views (Giao diện HTML/PHP)
+│       ├── admin/          # Giao diện Admin
+│       ├── auth/           # Giao diện Login/Register
+│       ├── home/           # Giao diện Trang chủ
+│       ├── layouts/        # Header, Footer chung
+│       └── products/       # Giao diện Sản phẩm
+├── public/                 # Thư mục gốc truy cập Web
+│   ├── assets/             # CSS, JS, Images
+│   └── index.php           # Điểm khởi chạy ứng dụng
+└── database.sql            # File cấu trúc Database MySQL
+```
 
+## 🛠️ Cài đặt và Chạy trên XAMPP
+
+### 1. Cấu hình Thư mục
+1.  Copy thư mục dự án vào `C:\xampp\htdocs\`. Ví dụ: `C:\xampp\htdocs\GameStore`.
+2.  Mở trình duyệt và truy cập: `http://localhost/GameStore/public`.
+
+**Lưu ý quan trọng**:
+Mặc định dự án trỏ về `http://localhost:8000`. Để chạy đúng trên XAMPP (port 80), bạn cần sửa file cấu hình:
+
+Mở `app/config/config.php` và sửa dòng `URLROOT`:
+```php
+// Nếu thư mục là GameStore
+define('URLROOT', 'http://localhost/GameStore/public');
+```
+
+### 2. Cấu hình Database
+1.  Mở **phpMyAdmin** (`http://localhost/phpmyadmin`).
+2.  Tạo database mới tên là `game_store`.
+3.  Import file `database.sql` vào database vừa tạo.
+4.  Kiểm tra cấu hình trong `app/config/config.php`:
+    ```php
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'root');
+    define('DB_PASS', ''); // Mặc định XAMPP không có pass
+    define('DB_NAME', 'game_store');
+    ```
+
+### 3. Sử dụng
+- **Trang chủ**: `http://localhost/GameStore/public`
+- **Đăng nhập**: `http://localhost/GameStore/public/auth/login`
+- **Admin**: `http://localhost/GameStore/public/admin`
+
+## 📋 Yêu cầu hệ thống
+- PHP >= 7.0
+- MySQL
+- Apache (đã bật mod_rewrite)
