@@ -7,14 +7,49 @@
   color:#e6edf3;
   border-bottom:1px solid rgba(255,255,255,.08);
   position: relative;
-  z-index: 1000;
+  z-index: 2000;
 }
-.np-container{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:12px 20px;position:relative}
-.np-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-.np-logo{height:50px;width:auto;display:block}
-.np-brand-text{color:#fff;font-weight:700}
-.np-nav{display:flex;gap:80px;list-style:none;margin:0;padding:0;justify-content:center;position:absolute;left:50%;transform:translateX(-50%)}
-.np-right{display:flex;align-items:center;gap:12px;justify-self:end}
+.np-container{
+  max-width:1200px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  padding:12px 20px;
+  position:relative
+}
+.np-brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none
+}
+.np-logo{
+  height:50px;
+  width:auto;
+  display:block
+}
+.np-brand-text{
+  color:#fff;
+  font-weight:700
+}
+.np-nav{
+  display:flex;
+  gap:80px;
+  list-style:none;
+  margin:0;
+  padding:0;
+  justify-content:center;
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%)
+}
+.np-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  justify-self:end
+}
 .np-menu{display:none}
 .np-search{flex:1;display:flex;justify-content:center}
 .np-search-form{display:flex;align-items:center;gap:0;width:100%;max-width:420px}
@@ -54,6 +89,8 @@
 /* User Dropdown Styles */
 .dropdown {
   position: relative;
+  display: flex !important;
+  z-index: 1000;
 }
 
 .dropdown-toggle {
@@ -82,7 +119,7 @@
 
 .dropdown-menu {
   position: absolute;
-  z-index: 1001;
+  z-index: 3000;
   background: #1a2634;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -90,7 +127,7 @@
   padding: 8px;
   min-width: 200px;
   margin-top: 10px;
-  animation: dropdownFade 0.2s ease-out;
+  /* animation: dropdownFade 0.2s ease-out; */
 }
 
 @keyframes dropdownFade {
@@ -125,4 +162,3 @@
   .np-search{width:100%}
   .np-search-form{max-width:none}
 }
-
