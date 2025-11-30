@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ cá nhân - NextPlay</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/header.css">
+  <link rel="stylesheet" href="../assets/css/footer.css">
+  <link rel="stylesheet" href="../assets/css/profile.css">
+</head>
+<body>
+  <div data-include="header"></div>
+
+  <div class="profile-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="profile-card">
+            <div class="profile-header">
+              <h1 class="profile-title">Hồ sơ cá nhân</h1>
+              <span class="badge bg-primary rounded-pill px-3 py-2">Thành viên</span>
+            </div>
+            
+            <div class="profile-body" id="profile-content">
+              <!-- Loading state -->
+              <div class="text-center text-white py-5">Đang tải thông tin...</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/include-components.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      const userStr = localStorage.getItem('user');
+      if (!userStr) {
+        window.location.href = (window.APP_ROOT || '/') + 'auth/login.html';
+        return;
+      }
+
+      const user = JSON.parse(userStr);
+      const uid = user.uid || user.id; // Adjust based on API response
+
+      try {
+        // Fetch User Data
+        const userRes = await fetch(`http://localhost:8000/users/${uid}`);
+        const userData = await userRes.json();
+        
+        if (userData.status !== 'success') {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const userInfo = userData.data;
+
+        // Fetch Games
+        const gamesRes = await fetch(`http://localhost:8000/users/${uid}/games`);
+        const gamesData = await gamesRes.json();
+        console.log('Games Data:', gamesData);
+        let games = gamesData.data || [];
+        if (!Array.isArray(games)) {
+            console.error('Games is not an array:', games);
+            games = [];
+        }
+
+        renderProfile(userInfo, games);
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('profile-content').innerHTML = '<div class="text-center text-danger py-5">Có lỗi xảy ra khi tải thông tin.</div>';
+      }
+    });
+
+    function renderProfile(user, games) {
+      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.png';
+      const balance = user.balance ? new Intl.NumberFormat('vi-VN').format(user.balance) : '0';
+      const dob = user.DOB ? new Date(user.DOB).toLocaleDateString('vi-VN') : 'N/A';
+      const joinDate = 'N/A'; 
+
+      let gamesHtml = '';
+      if (games.length === 0) {
+        gamesHtml = '<p class="text-white">Bạn chưa mua game nào.</p>';
+      } else {
+        gamesHtml = '<div class="row">';
+        games.forEach(game => {
+          gamesHtml += `
+            <div class="col-md-3 mb-4">
+              <div class="card bg-dark text-white border-secondary h-100">
+                <div style="height: 150px; background: #2a3b4c; display: flex; align-items: center; justify-content: center; color: #8aa3b7;">
+                  Game Image
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title text-truncate">${game.name}</h5>
+                  <a href="#" class="btn btn-sm btn-primary w-100 mt-2">Chơi ngay</a>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        gamesHtml += '</div>';
+      }
+
+      const html = `
+        <div class="row align-items-center">
+          <!-- Avatar Column -->
+          <div class="col-md-4">
+            <div class="profile-avatar-section">
+              <div class="avatar-wrapper">
+                <img src="${avatarUrl}" alt="Avatar" class="profile-avatar" id="avatar-img">
+              </div>
+              
+              <form id="avatar-form">
+                <label for="avatar-input" class="btn-upload">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  Đổi ảnh đại diện
+                </label>
+                <input type="file" name="avatar" id="avatar-input" class="d-none" accept="image/*">
+              </form>
+            </div>
+          </div>
+          
+          <!-- Info Column -->
+          <div class="col-md-8">
+            <div class="profile-info-section">
+              <h2 class="user-name">${user.fname} ${user.lname}</h2>
+              <div class="user-handle">@${user.uname}</div>
+              
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Email</span>
+                  <div class="info-value">${user.email}</div>
+                </div>
+                
+                <div class="info-item">
+                  <span class="info-label">Ngày sinh</span>
+                  <div class="info-value">${dob}</div>
+                </div>
+                
+                <div class="info-item">
+                  <span class="info-label">Số dư</span>
+                  <div class="info-value" style="color: #00ff88; font-weight: 700;">${balance} đ</div>
+                  <button class="btn btn-sm btn-outline-primary mt-2" onclick="openDepositModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Nạp tiền
+                  </button>
+                </div>
+
+                <div class="info-item">
+                  <span class="info-label">Ngày tham gia</span>
+                  <div class="info-value">${joinDate}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Purchased Games Section -->
+        <div class="row mt-5">
+          <div class="col-12">
+            <h3 class="text-white mb-4 border-bottom border-secondary pb-2">Kho game của tôi</h3>
+            ${gamesHtml}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('profile-content').innerHTML = html;
+
+      // Attach avatar upload listener
+      document.getElementById('avatar-input').addEventListener('change', uploadAvatar);
+    }
+
+    async function uploadAvatar(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const userStr = localStorage.getItem('user');
+      const user = JSON.parse(userStr);
+      const uid = user.uid || user.id;
+
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      try {
+        const response = await fetch(`http://localhost:8000/users/${uid}/avatar`, {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+        if (data.status === 'success') {
+          // Update local storage
+          user.avatar = data.avatar;
+          localStorage.setItem('user', JSON.stringify(user));
+          
+          // Update UI
+          const newAvatarUrl = (window.APP_ROOT || '/') + 'assets/uploads/' + data.avatar;
+          console.log('New Avatar URL:', newAvatarUrl);
+          document.getElementById('avatar-img').src = newAvatarUrl + '?t=' + new Date().getTime();
+          // Also update header
+          if (window.updateHeaderLoginStatus) window.updateHeaderLoginStatus();
+          
+          alert('Cập nhật ảnh đại diện thành công!');
+        } else {
+          alert(data.message || 'Cập nhật thất bại');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Có lỗi xảy ra');
+      }
+    }
+
+    // Deposit Logic
+    function openDepositModal() {
+      const modal = new bootstrap.Modal(document.getElementById('depositModal'));
+      modal.show();
+    }
+
+    async function handleDeposit() {
+      const amountInput = document.getElementById('deposit-amount');
+      const amount = parseInt(amountInput.value);
+
+      if (!amount || amount <= 0) {
+        alert('Vui lòng nhập số tiền hợp lệ');
+        return;
+      }
+
+      const userStr = localStorage.getItem('user');
+      const user = JSON.parse(userStr);
+      const uid = user.uid || user.id;
+
+      try {
+        // Mock API call since BE is not ready
+        // In real implementation: await fetch(`http://localhost:8000/users/${uid}/deposit`, ...)
+        console.log(`Depositing ${amount} for user ${uid}`);
+        
+        const response = await fetch(`http://localhost:8000/users/${uid}/deposit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ amount: amount })
+        });
+
+        if (response.ok) {
+             const data = await response.json();
+             alert('Nạp tiền thành công! (Mock)');
+             // Update UI balance if BE returns new balance
+             // document.getElementById('balance-display').innerText = ...
+             // Reload page to refresh data
+             location.reload();
+        } else {
+             // Since BE is missing, we might get 404. 
+             // For demo purposes, let's simulate success if 404
+             if (response.status === 404) {
+                 alert('Gửi yêu cầu nạp tiền thành công! (Backend chưa xử lý)');
+             } else {
+                 const data = await response.json();
+                 alert(data.message || 'Nạp tiền thất bại');
+             }
+        }
+        
+        // Close modal
+        const modalEl = document.getElementById('depositModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide();
+        amountInput.value = '';
+
+      } catch (err) {
+        console.error(err);
+        alert('Có lỗi xảy ra khi kết nối server');
+      }
+    }
+  </script>
+
+  <!-- Deposit Modal -->
+  <div class="modal fade" id="depositModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-white border-secondary">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Nạp tiền vào tài khoản</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="deposit-amount" class="form-label">Số tiền muốn nạp (VNĐ)</label>
+            <input type="number" class="form-control bg-dark text-white border-secondary" id="deposit-amount" placeholder="Nhập số tiền tối thiểu 10.000đ">
+          </div>
+          <div class="alert alert-info bg-opacity-10 border-info text-info">
+            <small>Lưu ý: Đây là tính năng mô phỏng. Tiền sẽ được cộng vào tài khoản sau khi xử lý.</small>
+          </div>
+        </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="handleDeposit()">Xác nhận nạp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Store - User Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/css/admin-dashboard.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar Container -->
+    <div id="sidebarContainer">
+        <!-- Sidebar will be loaded here -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <!-- Navbar Container -->
+        <div id="navbarContainer">
+            <!-- Navbar will be loaded here -->
+        </div>
+
+        <!-- Page Content -->
+        <div class="container-fluid p-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-primary">User Management</h6>
+                            <button class="btn btn-primary btn-sm" onclick="showAddUserModal()">
+                                <i class="bi bi-plus"></i> Add User
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <!-- Search and Filter -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Search users..." onkeyup="searchUsers()">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="statusFilter" onchange="filterUsers()">
+                                        <option value="">All Status</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                        <option value="suspended">Suspended</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="roleFilter" onchange="filterUsers()">
+                                        <option value="">All Roles</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="user">User</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-outline-secondary" onclick="exportUsers()">
+                                        <i class="bi bi-download"></i> Export
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Users Table -->
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Status</th>
+                                            <th>Registration Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTableBody">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <nav aria-label="Users pagination" id="usersPagination">
+                                <!-- Dynamic pagination -->
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit User Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalTitle">Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <input type="hidden" id="userId">
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Name *</label>
+                            <input type="text" class="form-control" id="userName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label">Email *</label>
+                            <input type="email" class="form-control" id="userEmail" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userRole" class="form-label">Role *</label>
+                            <select class="form-select" id="userRole" name="role" required>
+                                <option value="">Select Role</option>
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userStatus" class="form-label">Status *</label>
+                            <select class="form-select" id="userStatus" name="status" required>
+                                <option value="">Select Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUser()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/admin-utils.js"></script>
+    <script src="../assets/js/admin-components.js"></script>
+    <script>
+        class UserManager {
+            constructor() {
+                this.currentPage = 1;
+                this.itemsPerPage = 10;
+                this.currentData = [];
+            }
+
+            async init() {
+                try {
+                    await AdminComponents.init('users');
+                    AdminUtils.initializeSampleData();
+                    this.loadUsers();
+                } catch (error) {
+                    console.error('User manager initialization error:', error);
+                }
+            }
+
+            loadUsers() {
+                const allUsers = AdminUtils.getStorageData('users_data');
+                const searchTerm = document.getElementById('searchInput')?.value || '';
+                const statusFilter = document.getElementById('statusFilter')?.value || '';
+                const roleFilter = document.getElementById('roleFilter')?.value || '';
+
+                // Apply filters
+                let filteredUsers = allUsers;
+
+                if (searchTerm) {
+                    filteredUsers = AdminUtils.searchRecords('users_data', searchTerm, ['name', 'email']);
+                }
+
+                if (statusFilter || roleFilter) {
+                    const filters = {};
+                    if (statusFilter) filters.status = statusFilter;
+                    if (roleFilter) filters.role = roleFilter;
+                    filteredUsers = AdminUtils.filterRecords(filteredUsers, filters);
+                }
+
+                this.currentData = filteredUsers;
+                this.renderUsers();
+            }
+
+            renderUsers() {
+                const paginatedData = AdminUtils.paginateData(this.currentData, this.currentPage, this.itemsPerPage);
+                const tbody = document.getElementById('usersTableBody');
+
+                if (tbody) {
+                    tbody.innerHTML = paginatedData.data.map(user => `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                            <td>
+                                <span class="badge bg-${user.role === 'admin' ? 'danger' : 'primary'}">${user.role}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-${this.getStatusBadgeColor(user.status)}">${user.status}</span>
+                            </td>
+                            <td>${AdminUtils.formatDate(user.registration_date)}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" onclick="userManager.editUser('${user.id}')" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="userManager.deleteUser('${user.id}')" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+
+                this.renderPagination(paginatedData);
+            }
+
+            getStatusBadgeColor(status) {
+                const colors = {
+                    'active': 'success',
+                    'inactive': 'secondary',
+                    'suspended': 'danger'
+                };
+                return colors[status] || 'secondary';
+            }
+
+            renderPagination(paginatedData) {
+                const pagination = document.getElementById('usersPagination');
+                if (!pagination || paginatedData.totalPages <= 1) {
+                    if (pagination) pagination.innerHTML = '';
+                    return;
+                }
+
+                let paginationHTML = '<ul class="pagination justify-content-center">';
+
+                // Previous button
+                paginationHTML += `
+                    <li class="page-item ${paginatedData.currentPage === 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="#" onclick="userManager.changePage(${paginatedData.currentPage - 1})">Previous</a>
+                    </li>
+                `;
+
+                // Page numbers
+                for (let i = 1; i <= paginatedData.totalPages; i++) {
+                    if (i === paginatedData.currentPage || 
+                        i === 1 || 
+                        i === paginatedData.totalPages || 
+                        (i >= paginatedData.currentPage - 1 && i <= paginatedData.currentPage + 1)) {
+                        paginationHTML += `
+                            <li class="page-item ${i === paginatedData.currentPage ? 'active' : ''}">
+                                <a class="page-link" href="#" onclick="userManager.changePage(${i})">${i}</a>
+                            </li>
+                        `;
+                    } else if (i === paginatedData.currentPage - 2 || i === paginatedData.currentPage + 2) {
+                        paginationHTML += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                    }
+                }
+
+                // Next button
+                paginationHTML += `
+                    <li class="page-item ${paginatedData.currentPage === paginatedData.totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="#" onclick="userManager.changePage(${paginatedData.currentPage + 1})">Next</a>
+                    </li>
+                `;
+
+                paginationHTML += '</ul>';
+                pagination.innerHTML = paginationHTML;
+            }
+
+            changePage(page) {
+                this.currentPage = page;
+                this.renderUsers();
+            }
+
+            editUser(id) {
+                const user = AdminUtils.getRecord('users_data', id);
+                if (user) {
+                    document.getElementById('userId').value = user.id;
+                    document.getElementById('userName').value = user.name;
+                    document.getElementById('userEmail').value = user.email;
+                    document.getElementById('userRole').value = user.role;
+                    document.getElementById('userStatus').value = user.status;
+                    document.getElementById('userModalTitle').textContent = 'Edit User';
+                    
+                    const modal = new bootstrap.Modal(document.getElementById('userModal'));
+                    modal.show();
+                }
+            }
+
+            deleteUser(id) {
+                AdminComponents.createConfirmModal(
+                    'Delete User',
+                    'Are you sure you want to delete this user?',
+                    () => {
+                        if (AdminUtils.deleteRecord('users_data', id)) {
+                            AdminUtils.showToast('User deleted successfully', 'success');
+                            this.loadUsers();
+                        } else {
+                            AdminUtils.showToast('Failed to delete user', 'error');
+                        }
+                    }
+                );
+            }
+        }
+
+        // Global functions
+        function showAddUserModal() {
+            document.getElementById('userForm').reset();
+            document.getElementById('userId').value = '';
+            document.getElementById('userModalTitle').textContent = 'Add User';
+            
+            const modal = new bootstrap.Modal(document.getElementById('userModal'));
+            modal.show();
+        }
+
+        function saveUser() {
+            const form = document.getElementById('userForm');
+            const formData = new FormData(form);
+            const userData = {};
+            
+            formData.forEach((value, key) => {
+                userData[key] = value;
+            });
+
+            const errors = AdminUtils.validateForm(form);
+            if (Object.keys(errors).length > 0) {
+                AdminUtils.displayFormErrors(errors, form);
+                return;
+            }
+
+            const userId = document.getElementById('userId').value;
+            
+            if (userId) {
+                // Update existing user
+                if (AdminUtils.updateRecord('users_data', userId, userData)) {
+                    AdminUtils.showToast('User updated successfully', 'success');
+                } else {
+                    AdminUtils.showToast('Failed to update user', 'error');
+                }
+            } else {
+                // Add new user
+                userData.registration_date = new Date().toISOString().split('T')[0];
+                if (AdminUtils.addRecord('users_data', userData)) {
+                    AdminUtils.showToast('User added successfully', 'success');
+                } else {
+                    AdminUtils.showToast('Failed to add user', 'error');
+                }
+            }
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('userModal'));
+            modal.hide();
+            userManager.loadUsers();
+        }
+
+        function searchUsers() {
+            userManager.currentPage = 1;
+            userManager.loadUsers();
+        }
+
+        function filterUsers() {
+            userManager.currentPage = 1;
+            userManager.loadUsers();
+        }
+
+        function exportUsers() {
+            const users = AdminUtils.getStorageData('users_data');
+            AdminUtils.exportToCSV(users, 'users_export.csv');
+        }
+
+        // Initialize when DOM is loaded
+        let userManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            userManager = new UserManager();
+            userManager.init();
+        });
+    </script>
+</body>
+</html>
