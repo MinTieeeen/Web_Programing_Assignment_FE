@@ -1,0 +1,25 @@
+<!-- Admin Top Navigation Component -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <button class="btn btn-outline-light" id="sidebarToggle">
+            <i class="bi bi-list"></i>
+        </button>
+        <span class="navbar-brand mb-0 h1 ms-3" id="pageTitle">Admin Dashboard</span>
+        <div class="ms-auto">
+            <div class="dropdown">
+                <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" id="notificationDropdown">
+                    <i class="bi bi-bell"></i> 
+                    <span class="badge bg-danger" id="notificationCount">3</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" id="notificationList">
+                    <li><h6 class="dropdown-header">Notifications</h6></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person-plus text-primary"></i> 5 new user registrations</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-check-circle text-success"></i> 3 pending game approvals</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-chat text-info"></i> 12 new reviews</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-center" href="#" onclick="AdminUtils.markAllNotificationsRead()">Mark all as read</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

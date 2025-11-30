@@ -31,6 +31,37 @@ window.updateHeaderLoginStatus = function() {
     }
     if (mobileUserName) mobileUserName.textContent = userData.name || userData.username;
     
+    // Show/hide admin panel links based on user role
+    const adminPanelLink = document.getElementById('adminPanelLink');
+    const mobileAdminPanelLink = document.getElementById('mobileAdminPanelLink');
+    if (userData.role === 'admin') {
+      if (adminPanelLink) adminPanelLink.classList.remove('d-none');
+      if (mobileAdminPanelLink) mobileAdminPanelLink.classList.remove('d-none');
+      console.log('Admin panel links shown for admin user');
+    } else {
+      if (adminPanelLink) adminPanelLink.classList.add('d-none');
+      if (mobileAdminPanelLink) mobileAdminPanelLink.classList.add('d-none');
+    }
+    
+    // Re-initialize event listeners after showing user menu
+    setTimeout(function() {
+      const userInfo = document.querySelector('.np-user-info');
+      const dropdownToggle = document.getElementById('userDropdownToggle');
+      
+      if (userInfo) {
+        userInfo.style.cursor = 'pointer';
+        userInfo.removeEventListener('click', window.toggleUserDropdown);
+        userInfo.addEventListener('click', window.toggleUserDropdown);
+        console.log('User info event listener re-attached after login');
+      }
+      
+      if (dropdownToggle) {
+        dropdownToggle.removeEventListener('click', window.toggleUserDropdown);
+        dropdownToggle.addEventListener('click', window.toggleUserDropdown);
+        console.log('Dropdown toggle event listener re-attached after login');
+      }
+    }, 100);
+    
   } else {
     console.log('No user logged in');
     // Show guest actions, hide user menu
@@ -51,44 +82,117 @@ window.logout = function() {
 };
 
 // Toggle user dropdown
-window.toggleUserDropdown = function() {
+window.toggleUserDropdown = function(event) {
+  console.log('toggleUserDropdown called');
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  
   const dropdownMenu = document.getElementById('userDropdownMenu');
+  console.log('dropdownMenu element:', dropdownMenu);
+  
   if (dropdownMenu) {
-    dropdownMenu.classList.toggle('show');
+    const isVisible = dropdownMenu.classList.contains('show');
+    console.log('Current dropdown state - has show class:', isVisible);
+    
+    // Close all other dropdowns first
+    document.querySelectorAll('.np-dropdown-menu').forEach(menu => {
+      menu.classList.remove('show');
+    });
+    
+    // Toggle current dropdown
+    if (!isVisible) {
+      dropdownMenu.classList.add('show');
+      console.log('Dropdown opened - added show class');
+    } else {
+      dropdownMenu.classList.remove('show');
+      console.log('Dropdown closed - removed show class');
+    }
+    console.log('Final dropdown classes:', dropdownMenu.className);
+  } else {
+    console.error('userDropdownMenu element not found');
   }
 };
 
 // Close dropdown when clicking outside
 document.addEventListener('click', function(event) {
-  const userDropdown = document.getElementById('userDropdownToggle');
+  const userInfo = document.querySelector('.np-user-info');
   const dropdownMenu = document.getElementById('userDropdownMenu');
   
-  if (userDropdown && dropdownMenu && !userDropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
+  if (userInfo && dropdownMenu && !userInfo.contains(event.target) && !dropdownMenu.contains(event.target)) {
     dropdownMenu.classList.remove('show');
   }
 });
 
+// Handle dropdown item clicks
+function handleDropdownItemClick(event) {
+  // Don't prevent default for links
+  if (event.target.tagName === 'A') {
+    return;
+  }
+  
+  // For buttons, prevent event bubbling
+  event.stopPropagation();
+}
+
 // Initialize dropdown toggle and check login status
 function initializeHeader() {
+  console.log('initializeHeader called');
   const dropdownToggle = document.getElementById('userDropdownToggle');
+  const userInfo = document.querySelector('.np-user-info');
+  console.log('dropdownToggle element:', dropdownToggle);
+  console.log('userInfo element:', userInfo);
+  
+  // Add click event to dropdown toggle button
   if (dropdownToggle) {
+    // Remove any existing event listeners to avoid duplicates
+    dropdownToggle.removeEventListener('click', window.toggleUserDropdown);
     dropdownToggle.addEventListener('click', window.toggleUserDropdown);
+    console.log('Dropdown toggle event listener added');
   }
+  
+  // Also make the entire user info area clickable
+  if (userInfo) {
+    userInfo.style.cursor = 'pointer';
+    userInfo.removeEventListener('click', window.toggleUserDropdown);
+    userInfo.addEventListener('click', window.toggleUserDropdown);
+    console.log('User info click event listener added');
+  }
+  
+  // Add event listeners to dropdown items
+  const dropdownItems = document.querySelectorAll('.np-dropdown-item');
+  dropdownItems.forEach(item => {
+    item.removeEventListener('click', handleDropdownItemClick);
+    item.addEventListener('click', handleDropdownItemClick);
+  });
+  console.log('Dropdown item event listeners added:', dropdownItems.length);
   
   // Update header on page load
   window.updateHeaderLoginStatus();
 }
 
-// Initialize when DOM is loaded or immediately if already loaded
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeHeader);
-} else {
-  // DOM is already loaded, run immediately
+// Make initializeHeader globally accessible
+window.initializeHeader = initializeHeader;
+
+// Initialize with multiple strategies to ensure it works
+function ensureHeaderInitialization() {
+  // Try immediately
   initializeHeader();
+  
+  // Try after DOM is loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeHeader);
+  }
+  
+  // Try with delays to ensure DOM is ready
+  setTimeout(initializeHeader, 50);
+  setTimeout(initializeHeader, 100);
+  setTimeout(initializeHeader, 250);
 }
 
-// Also run after a small delay to ensure everything is loaded
-setTimeout(initializeHeader, 100);
+// Run initialization
+ensureHeaderInitialization();
 
 // Listen for storage changes (when user logs in/out in another tab)
 window.addEventListener('storage', window.updateHeaderLoginStatus);

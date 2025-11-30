@@ -1,11 +1,291 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Admin - Orders</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders & Carts Management - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/css/admin-dashboard.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Sidebar Container -->
+    <div id="sidebarContainer">
+        <!-- Sidebar will be loaded here -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <!-- Navbar Container -->
+        <div id="navbarContainer">
+            <!-- Navbar will be loaded here -->
+        </div>
+
+        <!-- Page Content -->
+        <div class="container-fluid p-4">
+            <!-- Tabs Navigation -->
+            <ul class="nav nav-tabs mb-4" id="ordersTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="carts-tab" data-bs-toggle="tab" data-bs-target="#carts" type="button" role="tab">
+                        <i class="bi bi-cart"></i> Active Carts
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab">
+                        <i class="bi bi-bag-check"></i> Completed Orders
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="ordersTabContent">
+                <!-- Carts Tab -->
+                <div class="tab-pane fade show active" id="carts" role="tabpanel">
+                    <!-- Stats Row -->
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-cart fa-2x"></i>
+                                        <div class="ms-3">
+                                            <div class="small">Active Carts</div>
+                                            <div class="h4" id="activeCartsCount">89</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-info text-white">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-currency-dollar fa-2x"></i>
+                                        <div class="ms-3">
+                                            <div class="small">Pending Value</div>
+                                            <div class="h4" id="pendingValue">$12,458</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-check-circle fa-2x"></i>
+                                        <div class="ms-3">
+                                            <div class="small">Abandoned Carts</div>
+                                            <div class="h4" id="abandonedCarts">23</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-exclamation-triangle fa-2x"></i>
+                                        <div class="ms-3">
+                                            <div class="small">Failed Payments</div>
+                                            <div class="h4" id="failedPayments">7</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carts Table -->
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Active Shopping Carts</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="searchCarts" placeholder="Search by customer...">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="cartStatusFilter">
+                                        <option value="">All Status</option>
+                                        <option value="active">Active</option>
+                                        <option value="abandoned">Abandoned</option>
+                                        <option value="pending">Pending Payment</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="paymentMethodFilter">
+                                        <option value="">All Payment Methods</option>
+                                        <option value="credit_card">Credit Card</option>
+                                        <option value="paypal">PayPal</option>
+                                        <option value="steam_wallet">Steam Wallet</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="cartsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Cart ID</th>
+                                            <th>Customer</th>
+                                            <th>Items</th>
+                                            <th>Total Amount</th>
+                                            <th>Payment Method</th>
+                                            <th>Status</th>
+                                            <th>Last Updated</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Tab -->
+                <div class="tab-pane fade" id="orders" role="tabpanel">
+                    <!-- Orders Stats -->
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-bag-check fa-2x"></i>
+                                        <div class="ms-3">
+                                            <div class="small">Total Orders</div>
+                                            <div class="h4" id="totalOrders">1,234</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-currency-dollar fa-2x"></i>
+                                        <div class="ms-3">
+                                            <div class="small">Total Revenue</div>
+                                            <div class="h4" id="totalRevenue">$89,567</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-info text-white">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-graph-up fa-2x"></i>
+                                        <div class="ms-3">
+                                            <div class="small">Avg. Order Value</div>
+                                            <div class="h4" id="avgOrderValue">$72.58</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card bg-secondary text-white">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-calendar fa-2x"></i>
+                                        <div class="ms-3">
+                                            <div class="small">Today's Orders</div>
+                                            <div class="h4" id="todayOrders">45</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Orders Table -->
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Order History</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="searchOrders" placeholder="Search orders...">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="date" class="form-control" id="dateFrom" placeholder="From Date">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="date" class="form-control" id="dateTo" placeholder="To Date">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="orderStatusFilter">
+                                        <option value="">All Status</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="processing">Processing</option>
+                                        <option value="refunded">Refunded</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="ordersTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Games</th>
+                                            <th>Total Amount</th>
+                                            <th>Payment Method</th>
+                                            <th>Order Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="orderDetailsContent">
+                    <!-- Dynamic content -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" onclick="refundOrder()" id="refundBtn">
+                        <i class="bi bi-arrow-return-left"></i> Process Refund
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/admin-utils.js"></script>
+    <script src="../assets/js/admin-components.js"></script>
+    <script>
+        // Initialize components
+        AdminComponents.init('orders');
+    </script>
 </body>
 </html>
 

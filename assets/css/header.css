@@ -5,7 +5,9 @@
 .np-navbar{
   background:#0f1f2b;
   color:#e6edf3;
-  border-bottom:1px solid rgba(255,255,255,.08)
+  border-bottom:1px solid rgba(255,255,255,.08);
+  position: relative;
+  z-index: 10000;
 }
 .np-container{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:12px 20px;position:relative}
 .np-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
@@ -66,6 +68,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
+  user-select: none;
 }
 
 .np-user-info:hover {
@@ -137,14 +140,16 @@
   visibility: hidden;
   transform: translateY(-10px);
   transition: all 0.3s ease;
-  z-index: 1000;
+  z-index: 99999;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .np-dropdown-menu.show {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .np-dropdown-item {

@@ -1,0 +1,57 @@
+<!-- Admin Sidebar Component -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h4><i class="bi bi-controller"></i> Game Admin</h4>
+    </div>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" href="index.html" data-page="dashboard">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="users.html" data-page="users">
+                <i class="bi bi-people"></i> Users
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="products.html" data-page="products">
+                <i class="bi bi-joystick"></i> Games
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="orders.html" data-page="orders">
+                <i class="bi bi-cart3"></i> Orders & Carts
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="comments.html" data-page="comments">
+                <i class="bi bi-chat-square-text"></i> Reviews
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="contacts.html" data-page="contacts">
+                <i class="bi bi-building"></i> Publishers
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="posts.html" data-page="posts">
+                <i class="bi bi-tags"></i> Categories
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="settings.html" data-page="settings">
+                <i class="bi bi-gear"></i> Settings
+            </a>
+        </li>
+    </ul>
+    <div class="sidebar-footer">
+        <div class="user-info">
+            <i class="bi bi-person-circle"></i>
+            <span id="adminUserName">Admin User</span>
+        </div>
+        <button class="btn btn-outline-light btn-sm" onclick="AdminUtils.logout()">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+    </div>
+</div>

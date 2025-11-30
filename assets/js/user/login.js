@@ -59,6 +59,7 @@ function login(identifier, password, rememberMe) {
         username: user.username,
         email: user.email,
         name: user.name,
+        role: user.username === 'admin' ? 'admin' : 'user',
         loginTime: new Date().toISOString()
     };
 
@@ -97,8 +98,25 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         const result = login(identifier, password, rememberMe);
         
         if (result.success) {
+        // Check if user is admin and show appropriate message
+        if (result.user.role === 'admin') {
+            // Show admin access granted message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'alert alert-success';
+            successMessage.innerHTML = '<i class="bi bi-check-circle"></i> Admin access granted! Redirecting...';
+            
+            // Find the correct container and insert the message
+            const loginForm = document.getElementById('loginForm');
+            const container = document.querySelector('.login-form');
+            if (container && loginForm) {
+                container.insertBefore(successMessage, loginForm);
+            }
+        }
+        
         // Success - redirect to home page
-        window.location.href = '../index.html';
+        setTimeout(() => {
+            window.location.href = '../index.html';
+        }, result.user.role === 'admin' ? 1000 : 100);
         } else {
         // Show error
         showError(result.message);

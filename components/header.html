@@ -46,6 +46,11 @@
                 <i class="bi bi-bag"></i>
                 <span>Đơn hàng</span>
               </a>
+              <!-- Admin Panel (only for admin users) -->
+              <a href="/admin/index.html" class="np-dropdown-item d-none" id="adminPanelLink">
+                <i class="bi bi-shield-check"></i>
+                <span>Quản trị viên</span>
+              </a>
               <div class="np-dropdown-divider"></div>
               <button class="np-dropdown-item" onclick="window.logout()">
                 <i class="bi bi-box-arrow-right"></i>
@@ -80,11 +85,12 @@
           <a href="/user/profile.html" class="np-mobile-link">Hồ sơ</a>
           <a href="/user/settings.html" class="np-mobile-link">Cài đặt</a>
           <a href="/user/orders.html" class="np-mobile-link">Đơn hàng</a>
+          <a href="/admin/index.html" class="np-mobile-link d-none" id="mobileAdminPanelLink">Quản trị viên</a>
           <button class="np-mobile-logout" onclick="window.logout()">Đăng xuất</button>
         </div>
       </div>
     </div>
   </div>
 </nav>
-<script src="../assets/js/components/header.js"></script>
+<script src="/assets/js/components/header.js"></script>
 
