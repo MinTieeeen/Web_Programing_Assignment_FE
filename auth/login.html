@@ -52,34 +52,71 @@
       errorDiv.classList.add('d-none');
       errorDiv.textContent = '';
 
-      const formData = {
-        uname: document.getElementById('username').value,
-        password: document.getElementById('password').value
-      };
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        errorDiv.textContent = 'Vui lòng nhập đầy đủ thông tin';
+        errorDiv.classList.remove('d-none');
+        return;
+      }
 
       try {
-        const response = await fetch('http://localhost:8000/users/signin', {
+        const response = await fetch('/Assignment/NextPlay/users/signin', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify({
+            uname: username,
+            password: password
+          })
         });
 
         const data = await response.json();
 
         if (data.status === 'success') {
-          // Save user to localStorage
-          localStorage.setItem('user', JSON.stringify(data.user));
-          window.location.href = (window.APP_ROOT || '/') + 'index.html';
+          // Store user data in localStorage
+          const userData = {
+            uid: data.user.uid,
+            username: data.user.uname,
+            uname: data.user.uname,
+            email: data.user.email,
+            name: `${data.user.fname} ${data.user.lname}`,
+            fname: data.user.fname,
+            lname: data.user.lname,
+            avatar: data.user.avatar,
+            DOB: data.user.DOB,
+            role: data.user.role || 'user',
+            loginTime: new Date().toISOString()
+          };
+
+          localStorage.setItem('user', JSON.stringify(userData));
+          
+          // Update header login status
+          if (window.updateHeaderLoginStatus) {
+            window.updateHeaderLoginStatus();
+          }
+          
+          // Redirect to home page
+          window.location.href = (window.APP_ROOT || '../') + 'index.html';
         } else {
           errorDiv.textContent = data.message || 'Đăng nhập thất bại';
           errorDiv.classList.remove('d-none');
         }
-      } catch (err) {
-        console.error(err);
-        errorDiv.textContent = 'Có lỗi xảy ra. Vui lòng thử lại.';
+      } catch (error) {
+        console.error('Login error:', error);
+        errorDiv.textContent = 'Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.';
         errorDiv.classList.remove('d-none');
+      }
+    });
+
+    // Check if user is already logged in
+    document.addEventListener('DOMContentLoaded', function() {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        // User is already logged in, redirect to home
+        window.location.href = (window.APP_ROOT || '../') + 'index.html';
       }
     });
   </script>

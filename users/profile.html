@@ -80,10 +80,10 @@
     });
 
     function renderProfile(user, games) {
-      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.png';
+      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
       const balance = user.balance ? new Intl.NumberFormat('vi-VN').format(user.balance) : '0';
-      const dob = user.DOB ? new Date(user.DOB).toLocaleDateString('vi-VN') : 'N/A';
-      const joinDate = 'N/A'; 
+      const dob = user.DOB ? new Date(user.DOB).toLocaleDateString('vi-VN') : 'Chưa cập nhật';
+      const joinDate = user.joinDate ? new Date(user.joinDate).toLocaleDateString('vi-VN') : 'Chưa cập nhật'; 
 
       let gamesHtml = '';
       if (games.length === 0) {
@@ -91,14 +91,21 @@
       } else {
         gamesHtml = '<div class="row">';
         games.forEach(game => {
+          const gameName = game.name || 'Unknown Game';
+          const gameImage = game.thumbnail || game.image || '../assets/images/default-game.png';
+          const gamePrice = game.price === 0 || game.price === '0' ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(game.price) + ' ₫';
+          
           gamesHtml += `
             <div class="col-md-3 mb-4">
               <div class="card bg-dark text-white border-secondary h-100">
-                <div style="height: 150px; background: #2a3b4c; display: flex; align-items: center; justify-content: center; color: #8aa3b7;">
-                  Game Image
+                <div style="height: 150px; background: #2a3b4c; display: flex; align-items: center; justify-content: center; color: #8aa3b7; background-image: url('${gameImage}'); background-size: cover; background-position: center;">
+                  ${gameImage.includes('default') ? 'Game Image' : ''}
                 </div>
                 <div class="card-body">
-                  <h5 class="card-title text-truncate">${game.name}</h5>
+                  <h5 class="card-title text-truncate">${gameName}</h5>
+                  <p class="card-text small text-muted">
+                    Giá: ${gamePrice}
+                  </p>
                   <a href="#" class="btn btn-sm btn-primary w-100 mt-2">Chơi ngay</a>
                 </div>
               </div>

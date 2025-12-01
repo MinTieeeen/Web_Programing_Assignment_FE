@@ -25,7 +25,7 @@
     if (userStr) {
       const user = JSON.parse(userStr);
       // Show Avatar and Dropdown
-      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.png';
+      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
       
       authActions.innerHTML = `
         <div class="dropdown">

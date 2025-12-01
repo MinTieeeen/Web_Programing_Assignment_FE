@@ -185,17 +185,35 @@
                 this.loadRecentReviews();
             }
 
-            loadStats() {
-                const users = AdminUtils.getStorageData('users_data');
-                const games = AdminUtils.getStorageData('games_data');
-                const orders = AdminUtils.getStorageData('orders_data');
-                
-                const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.amount || 0), 0);
+            async loadStats() {
+                try {
+                    // Fetch users data
+                    const usersResponse = await fetch('/Assignment/NextPlay/users');
+                    const usersResult = await usersResponse.json();
+                    const users = usersResult.status === 'success' ? usersResult.data : [];
+                    
+                    // Fetch games data
+                    const gamesResponse = await fetch('/Assignment/NextPlay/games');
+                    const gamesResult = await gamesResponse.json();
+                    const games = gamesResult.status === 'success' ? gamesResult.data : [];
+                    
+                    // For orders, we'll use a placeholder count since there's no orders endpoint yet
+                    const orders = []; // TODO: Replace when orders endpoint is available
+                    
+                    const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.amount || 0), 0);
 
-                document.getElementById('totalUsers').textContent = users.length.toLocaleString();
-                document.getElementById('totalGames').textContent = games.length.toLocaleString();
-                document.getElementById('totalOrders').textContent = orders.length.toLocaleString();
-                document.getElementById('totalRevenue').textContent = `$${totalRevenue.toLocaleString()}`;
+                    document.getElementById('totalUsers').textContent = users.length.toLocaleString();
+                    document.getElementById('totalGames').textContent = games.length.toLocaleString();
+                    document.getElementById('totalOrders').textContent = orders.length.toLocaleString();
+                    document.getElementById('totalRevenue').textContent = `$${totalRevenue.toLocaleString()}`;
+                } catch (error) {
+                    console.error('Error loading stats:', error);
+                    // Fallback to default values
+                    document.getElementById('totalUsers').textContent = '0';
+                    document.getElementById('totalGames').textContent = '0';
+                    document.getElementById('totalOrders').textContent = '0';
+                    document.getElementById('totalRevenue').textContent = '$0';
+                }
             }
 
             initCharts() {
@@ -251,44 +269,70 @@
                 });
             }
 
-            loadRecentOrders() {
-                const orders = AdminUtils.getStorageData('orders_data');
-                const recentOrders = orders.slice(-5).reverse();
-
-                const tbody = document.getElementById('recentOrdersBody');
-                if (tbody) {
-                    tbody.innerHTML = recentOrders.map(order => `
-                        <tr>
-                            <td>#${order.id}</td>
-                            <td>${order.user_name}</td>
-                            <td>${order.game_title}</td>
-                            <td>$${order.amount}</td>
-                            <td>
-                                <span class="badge bg-${order.status === 'completed' ? 'success' : 'warning'}">
-                                    ${order.status}
-                                </span>
-                            </td>
-                        </tr>
-                    `).join('');
+            async loadRecentOrders() {
+                try {
+                    // Since there's no orders endpoint yet, show placeholder data
+                    const orders = []; // TODO: Replace when orders endpoint is available
+                    
+                    const tbody = document.getElementById('recentOrdersBody');
+                    if (tbody) {
+                        if (orders.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Chưa có đơn hàng nào</td></tr>';
+                        } else {
+                            const recentOrders = orders.slice(-5).reverse();
+                            tbody.innerHTML = recentOrders.map(order => `
+                                <tr>
+                                    <td>#${order.id}</td>
+                                    <td>${order.user_name}</td>
+                                    <td>${order.game_title}</td>
+                                    <td>$${order.amount}</td>
+                                    <td>
+                                        <span class="badge bg-${order.status === 'completed' ? 'success' : 'warning'}">
+                                            ${order.status}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `).join('');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading recent orders:', error);
+                    const tbody = document.getElementById('recentOrdersBody');
+                    if (tbody) {
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Không thể tải dữ liệu đơn hàng</td></tr>';
+                    }
                 }
             }
 
-            loadRecentReviews() {
-                const reviews = AdminUtils.getStorageData('reviews_data');
-                const recentReviews = reviews.slice(-5).reverse();
+            async loadRecentReviews() {
+                try {
+                    // Since there's no reviews endpoint yet, show placeholder data
+                    const reviews = []; // TODO: Replace when reviews endpoint is available
 
-                const tbody = document.getElementById('recentReviewsBody');
-                if (tbody) {
-                    tbody.innerHTML = recentReviews.map(review => `
-                        <tr>
-                            <td>${review.game_title}</td>
-                            <td>${review.user_name}</td>
-                            <td>
-                                ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
-                            </td>
-                            <td>${AdminUtils.formatDate(review.review_date)}</td>
-                        </tr>
-                    `).join('');
+                    const tbody = document.getElementById('recentReviewsBody');
+                    if (tbody) {
+                        if (reviews.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Chưa có đánh giá nào</td></tr>';
+                        } else {
+                            const recentReviews = reviews.slice(-5).reverse();
+                            tbody.innerHTML = recentReviews.map(review => `
+                                <tr>
+                                    <td>${review.game_title}</td>
+                                    <td>${review.user_name}</td>
+                                    <td>
+                                        ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+                                    </td>
+                                    <td>${AdminUtils.formatDate(review.review_date)}</td>
+                                </tr>
+                            `).join('');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading recent reviews:', error);
+                    const tbody = document.getElementById('recentReviewsBody');
+                    if (tbody) {
+                        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Không thể tải dữ liệu đánh giá</td></tr>';
+                    }
                 }
             }
         }

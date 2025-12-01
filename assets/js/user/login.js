@@ -1,10 +1,3 @@
-// Demo users for testing
-const demoUsers = [
-    { username: 'admin', email: 'admin@nextplay.com', password: 'admin123', name: 'Administrator' },
-    { username: 'gamer1', email: 'gamer1@nextplay.com', password: 'gamer123', name: 'Pro Gamer' },
-    { username: 'test', email: 'test@nextplay.com', password: 'test123', name: 'Test User' }
-];
-
 // Password toggle function
 function togglePassword() {
     const passwordInput = document.getElementById('password');
@@ -46,38 +39,55 @@ function checkLoginStatus() {
     }
 }
 
-// Login function
-function login(identifier, password, rememberMe) {
-    // Find user by username or email
-    const user = demoUsers.find(u => 
-    (u.username === identifier || u.email === identifier) && u.password === password
-    );
+// Login function using backend API
+async function login(identifier, password, rememberMe) {
+    try {
+        const response = await fetch('/Assignment/NextPlay/users/signin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                uname: identifier,
+                password: password
+            })
+        });
 
-    if (user) {
-    // Login successful
-    const userData = {
-        username: user.username,
-        email: user.email,
-        name: user.name,
-        role: user.username === 'admin' ? 'admin' : 'user',
-        loginTime: new Date().toISOString()
-    };
+        const data = await response.json();
 
-    // Store user data
-    if (rememberMe) {
-        localStorage.setItem('currentUser', JSON.stringify(userData));
-    } else {
-        sessionStorage.setItem('currentUser', JSON.stringify(userData));
-    }
+        if (data.status === 'success') {
+            const userData = {
+                uid: data.user.uid,
+                username: data.user.uname,
+                email: data.user.email,
+                name: `${data.user.fname} ${data.user.lname}`,
+                fname: data.user.fname,
+                lname: data.user.lname,
+                avatar: data.user.avatar,
+                DOB: data.user.DOB,
+                role: data.user.role || 'user',
+                loginTime: new Date().toISOString()
+            };
 
-    return { success: true, user: userData };
-    } else {
-    return { success: false, message: 'Email/tên đăng nhập hoặc mật khẩu không chính xác' };
+            // Store user data based on remember me preference
+            if (rememberMe) {
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+            } else {
+                sessionStorage.setItem('currentUser', JSON.stringify(userData));
+            }
+
+            return { success: true, user: userData };
+        } else {
+            return { success: false, message: data.message || 'Đăng nhập thất bại' };
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        return { success: false, message: 'Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.' };
     }
 }
 
 // Form submission
-document.getElementById('loginForm').addEventListener('submit', function(e) {
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     hideError();
     
@@ -93,9 +103,8 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     submitBtn.disabled = true;
     spinner.classList.remove('d-none');
     
-    // Simulate API call delay
-    setTimeout(() => {
-        const result = login(identifier, password, rememberMe);
+    // Call async login function
+    const result = await login(identifier, password, rememberMe);
         
         if (result.success) {
         // Check if user is admin and show appropriate message
@@ -120,12 +129,11 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         } else {
         // Show error
         showError(result.message);
+        }
         
         // Reset loading state
         submitBtn.disabled = false;
         spinner.classList.add('d-none');
-        }
-    }, 1500);
     }
     
     this.classList.add('was-validated');

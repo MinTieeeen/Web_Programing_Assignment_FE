@@ -164,53 +164,80 @@ class AdminDashboard {
         }, 30);
     }
 
-    loadRecentUsers() {
+    async loadRecentUsers() {
         const tableBody = document.querySelector('#recentUsersTable tbody');
         if (!tableBody) return;
 
-        const users = [
-            { name: 'John Doe', email: 'john@example.com', date: '2025-11-27', status: 'Active' },
-            { name: 'Jane Smith', email: 'jane@example.com', date: '2025-11-26', status: 'Active' },
-            { name: 'Mike Johnson', email: 'mike@example.com', date: '2025-11-25', status: 'Pending' },
-            { name: 'Sarah Wilson', email: 'sarah@example.com', date: '2025-11-24', status: 'Active' }
-        ];
+        try {
+            const response = await fetch('/Assignment/NextPlay/users');
+            const result = await response.json();
+            
+            if (result.status === 'success' && result.data) {
+                // Take the first 4 users for recent users display
+                const users = result.data.slice(0, 4).map(user => ({
+                    name: `${user.fname} ${user.lname}`,
+                    email: user.email,
+                    date: new Date(user.joinDate || Date.now()).toLocaleDateString('vi-VN'),
+                    status: user.isActive ? 'Active' : 'Pending'
+                }));
 
-        tableBody.innerHTML = users.map(user => `
-            <tr>
-                <td>${user.name}</td>
-                <td>${user.email}</td>
-                <td>${user.date}</td>
-                <td><span class=\"badge status-${user.status.toLowerCase()}\">${user.status}</span></td>
-            </tr>
-        `).join('');
+                tableBody.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.date}</td>
+                        <td><span class=\"badge status-${user.status.toLowerCase()}\">${user.status}</span></td>
+                    </tr>
+                `).join('');
+            } else {
+                throw new Error(result.message || 'Failed to fetch users');
+            }
+        } catch (error) {
+            console.error('Error loading recent users:', error);
+            // Fallback to empty state
+            tableBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Không thể tải dữ liệu người dùng</td></tr>';
+        }
     }
 
-    loadPendingGames() {
+    async loadPendingGames() {
         const tableBody = document.querySelector('#pendingGamesTable tbody');
         if (!tableBody) return;
 
-        const games = [
-            { name: 'Cyber Quest 2077', publisher: 'Future Games', category: 'Action' },
-            { name: 'Magic World', publisher: 'Fantasy Studio', category: 'RPG' },
-            { name: 'Racing Elite', publisher: 'Speed Games', category: 'Racing' },
-            { name: 'Strategy Master', publisher: 'Think Games', category: 'Strategy' }
-        ];
+        try {
+            const response = await fetch('/Assignment/NextPlay/games');
+            const result = await response.json();
+            
+            if (result.status === 'success' && result.data) {
+                // For demo purposes, show first 4 games as "pending"
+                const games = result.data.slice(0, 4).map(game => ({
+                    name: game.name || 'Unknown Game',
+                    publisher: game.publisher || 'Unknown Publisher',
+                    category: game.category || 'Uncategorized'
+                }));
 
-        tableBody.innerHTML = games.map(game => `
-            <tr>
-                <td>${game.name}</td>
-                <td>${game.publisher}</td>
-                <td>${game.category}</td>
-                <td>
-                    <button class=\"btn btn-success btn-sm me-2\" onclick=\"approveGame('${game.name}')\">
-                        <i class=\"bi bi-check\"></i>
-                    </button>
-                    <button class=\"btn btn-danger btn-sm\" onclick=\"rejectGame('${game.name}')\">
-                        <i class=\"bi bi-x\"></i>
-                    </button>
-                </td>
-            </tr>
-        `).join('');
+                tableBody.innerHTML = games.map(game => `
+                    <tr>
+                        <td>${game.name}</td>
+                        <td>${game.publisher}</td>
+                        <td>${game.category}</td>
+                        <td>
+                            <button class=\"btn btn-success btn-sm me-2\" onclick=\"approveGame('${game.name}')\">
+                                <i class=\"bi bi-check\"></i>
+                            </button>
+                            <button class=\"btn btn-danger btn-sm\" onclick=\"rejectGame('${game.name}')\">
+                                <i class=\"bi bi-x\"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                throw new Error(result.message || 'Failed to fetch games');
+            }
+        } catch (error) {
+            console.error('Error loading pending games:', error);
+            // Fallback to empty state
+            tableBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Không thể tải dữ liệu game</td></tr>';
+        }
     }
 
     initializeEventListeners() {
