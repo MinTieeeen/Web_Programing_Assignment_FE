@@ -99,7 +99,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/games-data.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
         const grid = document.getElementById('games-grid');
@@ -109,27 +108,44 @@
         const itemsPerPage = 9;
         let allGames = [];
 
-        // Expanded Mock Data
-        // Loaded from games-data.js
-        const mockGames = window.mockGames || [];
-
         try {
-            // Attempt to fetch from API
-            // const response = await fetch('http://localhost:8000/games');
-            // if (!response.ok) throw new Error('API Error');
-            // const data = await response.json();
-            // allGames = data.data;
+            // Fetch from backend API
+            const response = await fetch('http://localhost:80/nextplay/index.php/games');
+            if (!response.ok) throw new Error('API Error');
+            const data = await response.json();
             
-            // Simulate network delay then use Mock Data
-            await new Promise(r => setTimeout(r, 500));
-            allGames = mockGames;
+            if (data.status === 'success' && data.data) {
+                allGames = data.data.map(game => ({
+                    id: game.id || game.gid,
+                    name: game.name || game.title,
+                    price: game.price || 0,
+                    image: game.image_url || game.image || 'https://via.placeholder.com/300x400?text=Game+Image',
+                    category: game.category_name || game.category || 'Unknown',
+                    tags: game.tags ? game.tags.split(',') : [],
+                    description: game.description || 'No description available',
+                    developer: game.developer || 'Unknown Developer',
+                    publisher: game.publisher_name || game.publisher || 'Unknown Publisher',
+                    releaseDate: game.release_date || 'TBA',
+                    rating: game.rating || 0,
+                    reviews: game.review_count || 0
+                }));
+            } else {
+                throw new Error('Failed to fetch games');
+            }
+        } catch (error) {
+            console.error('Error loading games:', error);
+            // Show error message to user
+            grid.innerHTML = '<div class="col-12 text-center"><h3>Error loading games. Please try again later.</h3></div>';
+            return;
+        }
             
             renderPage(currentPage);
 
         } catch (error) {
-            console.warn('Failed to fetch games, using mock data:', error);
-            allGames = mockGames;
-            renderPage(currentPage);
+            console.error('Error loading games:', error);
+            // Show error message to user
+            grid.innerHTML = '<div class="col-12 text-center"><h3>Error loading games. Please try again later.</h3></div>';
+            return;
         }
 
         function renderPage(page) {

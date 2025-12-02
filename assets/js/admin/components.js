@@ -60,42 +60,47 @@ class AdminComponents {
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="admin/index.html" data-page="dashboard">
+                        <a class="nav-link" href="/admin/index.html" data-page="dashboard">
                             <i class="bi bi-speedometer2"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin/users.html" data-page="users">
+                        <a class="nav-link" href="/admin/users.html" data-page="users">
                             <i class="bi bi-people"></i> Users
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin/products.html" data-page="products">
+                        <a class="nav-link" href="/admin/admin-users.html" data-page="admin-users">
+                            <i class="bi bi-shield-check"></i> Admin Management
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/products.html" data-page="products">
                             <i class="bi bi-joystick"></i> Games
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin/orders.html" data-page="orders">
+                        <a class="nav-link" href="/admin/orders.html" data-page="orders">
                             <i class="bi bi-cart3"></i> Orders & Carts
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin/comments.html" data-page="comments">
+                        <a class="nav-link" href="/admin/comments.html" data-page="comments">
                             <i class="bi bi-chat-square-text"></i> Reviews
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin/contacts.html" data-page="contacts">
+                        <a class="nav-link" href="/admin/contacts.html" data-page="contacts">
                             <i class="bi bi-building"></i> Publishers
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin/posts.html" data-page="posts">
+                        <a class="nav-link" href="/admin/posts.html" data-page="posts">
                             <i class="bi bi-tags"></i> Categories
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin/settings.html" data-page="settings">
+                        <a class="nav-link" href="/admin/settings.html" data-page="settings">
                             <i class="bi bi-gear"></i> Settings
                         </a>
                     </li>
@@ -124,8 +129,8 @@ class AdminComponents {
                         <i class="bi bi-list"></i>
                     </button>
                     <span class="navbar-brand mb-0 h1 ms-3" id="pageTitle">Admin Dashboard</span>
-                    <div class="ms-auto">
-                        <div class="dropdown">
+                    <div class="ms-auto d-flex align-items-center">
+                        <div class="dropdown me-3">
                             <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" id="notificationDropdown">
                                 <i class="bi bi-bell"></i> 
                                 <span class="badge bg-danger" id="notificationCount">3</span>
@@ -139,6 +144,9 @@ class AdminComponents {
                                 <li><a class="dropdown-item text-center" href="#" onclick="AdminUtils.markAllNotificationsRead()">Mark all as read</a></li>
                             </ul>
                         </div>
+                        <button class="btn btn-outline-light" onclick="AdminUtils.logout()" title="Logout">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
                     </div>
                 </div>
             </nav>

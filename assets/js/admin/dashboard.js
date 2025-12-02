@@ -128,23 +128,48 @@ class AdminDashboard {
         });
     }
 
-    loadDashboardData() {
-        // Simulate loading dashboard data
-        this.updateStatsCards();
-        this.loadRecentUsers();
-        this.loadPendingGames();
+    async loadDashboardData() {
+        // Load real dashboard data from backend
+        await this.updateStatsCards();
+        await this.loadRecentUsers();
+        await this.loadPendingGames();
     }
 
-    updateStatsCards() {
-        // Animate numbers
-        this.animateNumber('totalUsers', 1245);
-        this.animateNumber('totalGames', 456);
-        this.animateNumber('activeOrders', 89);
-        
-        // Update revenue with currency formatting
-        const revenueElement = document.getElementById('totalRevenue');
-        if (revenueElement) {
-            this.animateNumber('totalRevenue', 45678, '$');
+    async updateStatsCards() {
+        try {
+            // Fetch dashboard statistics from backend
+            const [usersResponse, gamesResponse] = await Promise.all([
+                fetch('http://localhost:80/nextplay/index.php/users'),
+                fetch('http://localhost:80/nextplay/index.php/games')
+            ]);
+
+            const usersData = await usersResponse.json();
+            const gamesData = await gamesResponse.json();
+
+            // Update stats with real data
+            const totalUsers = usersData.status === 'success' ? usersData.data.length : 0;
+            const totalGames = gamesData.status === 'success' ? gamesData.data.length : 0;
+            
+            this.animateNumber('totalUsers', totalUsers);
+            this.animateNumber('totalGames', totalGames);
+            this.animateNumber('activeOrders', 89); // Keep mock for now until orders endpoint is ready
+            
+            // Update revenue with currency formatting
+            const revenueElement = document.getElementById('totalRevenue');
+            if (revenueElement) {
+                this.animateNumber('totalRevenue', 45678, '$'); // Keep mock for now
+            }
+        } catch (error) {
+            console.error('Error loading dashboard stats:', error);
+            // Fallback to mock data if backend fails
+            this.animateNumber('totalUsers', 1245);
+            this.animateNumber('totalGames', 456);
+            this.animateNumber('activeOrders', 89);
+            
+            const revenueElement = document.getElementById('totalRevenue');
+            if (revenueElement) {
+                this.animateNumber('totalRevenue', 45678, '$');
+            }
         }
     }
 
@@ -261,7 +286,7 @@ function logout() {
     if (confirm('Are you sure you want to logout?')) {
         localStorage.removeItem('adminAuth');
         sessionStorage.clear();
-        window.location.href = '../user/login.html';
+        window.location.href = '../auth/login.html';
     }
 }
 

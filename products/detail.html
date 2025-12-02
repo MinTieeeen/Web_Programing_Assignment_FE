@@ -28,7 +28,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/games-data.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
         const container = document.getElementById('game-detail-container');
@@ -42,13 +41,24 @@
             return;
         }
 
-        // Simulate Network Delay
-        await new Promise(r => setTimeout(r, 500));
-
-        // Find Game in Mock Data
-        const game = window.mockGames.find(g => g.id === gameId);
-
-        if (!game) {
+        try {
+            // Fetch game details from backend
+            const response = await fetch(`http://localhost:80/nextplay/index.php/games?id=${gameId}`);
+            
+            if (response.ok) {
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.data && data.data.length > 0) {
+                    const game = data.data[0];
+                    renderGameDetail(game);
+                } else {
+                    throw new Error('Game not found');
+                }
+            } else {
+                throw new Error('Failed to fetch game details');
+            }
+        } catch (error) {
+            console.error('Error loading game details:', error);
             container.innerHTML = `
                 <div class="container text-center py-5" style="margin-top: 100px;">
                     <h2 class="text-white">Không tìm thấy game</h2>
@@ -58,23 +68,29 @@
             `;
             return;
         }
-
-        // Render Game Details
-        renderGameDetail(game);
     });
 
     function renderGameDetail(game) {
         const container = document.getElementById('game-detail-container');
         
-        // Format Price
-        const priceDisplay = game.price === 0 ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(game.price) + ' đ';
+        // Format Price - backend sends price as string
+        const price = parseFloat(game.price) || 0;
+        const priceDisplay = price === 0 ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(price) + ' đ';
         
-        // Generate Stars
-        const fullStars = Math.floor(game.rating);
-        const halfStar = game.rating % 1 >= 0.5;
+        // Generate Stars - use default rating if not provided
+        const rating = parseFloat(game.rating) || 4.5;
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5;
         let starsHtml = '';
         for(let i=0; i<fullStars; i++) starsHtml += '★';
         if(halfStar) starsHtml += '½';
+        
+        // Handle tags and category
+        const category = game.category || 'Game';
+        const tags = game.tags ? (typeof game.tags === 'string' ? game.tags.split(',') : game.tags) : [];
+        
+        // Default reviews count
+        const reviews = game.reviews || Math.floor(Math.random() * 1000) + 100;
         
         container.innerHTML = `
             <!-- Hero Section -->
@@ -93,8 +109,8 @@
                         </div>
                         <div class="col-lg-9">
                             <div class="game-meta-tags">
-                                <span class="game-meta-tag">${game.category}</span>
-                                ${game.tags ? game.tags.map(tag => `<span class="game-meta-tag">${tag}</span>`).join('') : ''}
+                                <span class="game-meta-tag">${category}</span>
+                                ${tags.length > 0 ? tags.map(tag => `<span class="game-meta-tag">${tag.trim()}</span>`).join('') : ''}
                             </div>
                             
                             <h1 class="game-title-large">${game.name}</h1>
@@ -104,7 +120,7 @@
                                 <span class="game-price-large">${priceDisplay}</span>
                                 <div class="d-flex align-items-center gap-2 text-warning">
                                     <span style="font-size: 1.2rem;">${starsHtml}</span>
-                                    <span class="text-secondary">(${new Intl.NumberFormat('vi-VN').format(game.reviews)} đánh giá)</span>
+                                    <span class="text-secondary">(${new Intl.NumberFormat('vi-VN').format(reviews)} đánh giá)</span>
                                 </div>
                             </div>
                             

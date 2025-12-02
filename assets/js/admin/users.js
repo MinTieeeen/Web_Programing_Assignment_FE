@@ -1,4 +1,6 @@
 // Admin Users Management JavaScript
+const API_BASE_URL = 'http://localhost:80/nextplay/index.php';
+
 class AdminUsers {
     constructor() {
         this.currentPage = 1;
@@ -47,73 +49,41 @@ class AdminUsers {
         }
     }
 
-    loadUsers() {
-        // Simulate API call to load users
-        const mockUsers = [
-            {
-                id: 1,
-                username: 'john_doe',
-                firstName: 'John',
-                lastName: 'Doe',
-                email: 'john@example.com',
-                dateOfBirth: '1990-05-15',
-                balance: 125.50,
-                status: 'active',
-                avatar: 'https://ui-avatars.com/api/?name=John+Doe&background=007bff&color=fff',
-                createdAt: '2024-01-15'
-            },
-            {
-                id: 2,
-                username: 'jane_smith',
-                firstName: 'Jane',
-                lastName: 'Smith',
-                email: 'jane@example.com',
-                dateOfBirth: '1988-08-22',
-                balance: 89.75,
-                status: 'active',
-                avatar: 'https://ui-avatars.com/api/?name=Jane+Smith&background=28a745&color=fff',
-                createdAt: '2024-02-10'
-            },
-            {
-                id: 3,
-                username: 'mike_johnson',
-                firstName: 'Mike',
-                lastName: 'Johnson',
-                email: 'mike@example.com',
-                dateOfBirth: '1992-12-03',
-                balance: 0.00,
-                status: 'inactive',
-                avatar: 'https://ui-avatars.com/api/?name=Mike+Johnson&background=ffc107&color=000',
-                createdAt: '2024-03-05'
-            },
-            {
-                id: 4,
-                username: 'sarah_wilson',
-                firstName: 'Sarah',
-                lastName: 'Wilson',
-                email: 'sarah@example.com',
-                dateOfBirth: '1995-07-18',
-                balance: 245.30,
-                status: 'active',
-                avatar: 'https://ui-avatars.com/api/?name=Sarah+Wilson&background=17a2b8&color=fff',
-                createdAt: '2024-04-12'
-            },
-            {
-                id: 5,
-                username: 'banned_user',
-                firstName: 'Banned',
-                lastName: 'User',
-                email: 'banned@example.com',
-                dateOfBirth: '1985-03-10',
-                balance: 15.25,
-                status: 'suspended',
-                avatar: 'https://ui-avatars.com/api/?name=Banned+User&background=dc3545&color=fff',
-                createdAt: '2024-01-20'
+    async loadUsers() {
+        try {
+            // Use admin endpoint to get users with balance
+            const response = await fetch(`${API_BASE_URL}/admin/users/all`, {
+                credentials: 'include'
+            });
+            const result = await response.json();
+            
+            if (result.status === 'success' && result.data) {
+                // Map backend user data to frontend format
+                this.users = result.data.map(user => ({
+                    id: user.uid,
+                    username: user.uname,
+                    firstName: user.fname || '',
+                    lastName: user.lname || '',
+                    email: user.email,
+                    dateOfBirth: user.DOB || '',
+                    balance: parseFloat(user.balance) || 0.00,
+                    status: 'active', // Default status since backend doesn't have this field
+                    avatar: user.avatar ? user.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent((user.fname || '') + '+' + (user.lname || ''))}&background=007bff&color=fff`,
+                    createdAt: user.created_at || new Date().toISOString().split('T')[0]
+                }));
+                
+                this.totalUsers = this.users.length;
+            } else {
+                throw new Error(result.message || 'Failed to fetch users');
             }
-        ];
-
-        this.users = mockUsers;
-        this.totalUsers = mockUsers.length;
+        } catch (error) {
+            console.error('Error loading users:', error);
+            // Fallback to empty array if API fails
+            this.users = [];
+            this.totalUsers = 0;
+            showToast('Failed to load users: ' + error.message, 'error');
+        }
+        
         this.renderUsers();
         this.renderPagination();
     }
@@ -267,12 +237,29 @@ class AdminUsers {
         const user = this.users.find(u => u.id === userId);
         if (!user) return;
 
-        if (confirm(`Are you sure you want to delete user \"${user.username}\"?`)) {
-            this.users = this.users.filter(u => u.id !== userId);
-            this.totalUsers = this.users.length;
-            showToast(`User \"${user.username}\" has been deleted`, 'success');
-            this.renderUsers();
-            this.renderPagination();
+        if (confirm(`Are you sure you want to delete user "${user.username}"?`)) {
+            this.performDeleteUser(userId, user.username);
+        }
+    }
+
+    async performDeleteUser(userId, username) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+            
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                showToast(`User "${username}" has been deleted`, 'success');
+                await this.loadUsers(); // Reload from database
+            } else {
+                throw new Error(result.message || 'Failed to delete user');
+            }
+        } catch (error) {
+            console.error('Delete user error:', error);
+            showToast('Failed to delete user: ' + error.message, 'error');
         }
     }
 
@@ -364,58 +351,89 @@ class AdminUsers {
     }
 
     saveUser(userData) {
-        const newUser = {
-            id: this.users.length + 1,
-            username: userData.username,
-            firstName: userData.firstname,
-            lastName: userData.lastname,
-            email: userData.email,
-            dateOfBirth: userData.dateofbirth,
-            balance: parseFloat(userData.initialbalance) || 0.00,
-            status: 'active',
-            avatar: `https://ui-avatars.com/api/?name=${userData.firstname}+${userData.lastname}&background=007bff&color=fff`,
-            createdAt: new Date().toISOString().split('T')[0]
-        };
+        this.performCreateUser(userData);
+    }
 
-        this.users.unshift(newUser);
-        this.totalUsers = this.users.length;
-
-        showToast(`User \"${newUser.username}\" has been created successfully`, 'success');
-        
-        // Close modal and reset form
-        const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
-        modal.hide();
-        document.getElementById('addUserForm').reset();
-
-        this.renderUsers();
-        this.renderPagination();
+    async performCreateUser(userData) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/admin/users/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    uname: userData.username,
+                    email: userData.email,
+                    password: userData.password,
+                    fname: userData.firstname,
+                    lname: userData.lastname,
+                    DOB: userData.dateofbirth,
+                    balance: parseFloat(userData.initialbalance) || 0
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                showToast(`User "${userData.username}" has been created successfully`, 'success');
+                
+                // Close modal and reset form
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
+                modal.hide();
+                document.getElementById('addUserForm').reset();
+                
+                await this.loadUsers(); // Reload from database
+            } else {
+                throw new Error(result.message || 'Failed to create user');
+            }
+        } catch (error) {
+            console.error('Create user error:', error);
+            showToast('Failed to create user: ' + error.message, 'error');
+        }
     }
 
     updateUser(userData) {
+        this.performUpdateUser(userData);
+    }
+
+    async performUpdateUser(userData) {
         const userId = parseInt(userData.userid);
-        const userIndex = this.users.findIndex(u => u.id === userId);
         
-        if (userIndex === -1) return;
-
-        // Update user data
-        this.users[userIndex] = {
-            ...this.users[userIndex],
-            username: userData.username,
-            firstName: userData.firstname,
-            lastName: userData.lastname,
-            email: userData.email,
-            dateOfBirth: userData.dateofbirth,
-            balance: parseFloat(userData.balance),
-            status: userData.status
-        };
-
-        showToast(`User \"${userData.username}\" has been updated successfully`, 'success');
-        
-        // Close modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
-        modal.hide();
-
-        this.renderUsers();
+        try {
+            const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    uname: userData.username,
+                    email: userData.email,
+                    fname: userData.firstname,
+                    lname: userData.lastname,
+                    DOB: userData.dateofbirth,
+                    balance: parseFloat(userData.balance) || 0
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                showToast(`User "${userData.username}" has been updated successfully`, 'success');
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
+                modal.hide();
+                
+                await this.loadUsers(); // Reload from database
+            } else {
+                throw new Error(result.message || 'Failed to update user');
+            }
+        } catch (error) {
+            console.error('Update user error:', error);
+            showToast('Failed to update user: ' + error.message, 'error');
+        }
     }
 
     resetFilters() {

@@ -1,15 +1,18 @@
 // Admin Utilities
 class AdminUtils {
     // Authentication
-    static checkAuthentication() {
-        let currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+    static async checkAuthentication() {
+        let currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || sessionStorage.getItem('user') || localStorage.getItem('user');
         if (!currentUser) {
-            window.location.href = '../user/login.html';
+            window.location.href = '../auth/login.html';
             return false;
         }
 
         const userData = JSON.parse(currentUser);
-        if (userData.role !== 'admin') {
+        
+        // Check if user is admin by querying backend
+        const isAdmin = await this.checkIfUserIsAdmin(userData.uid);
+        if (!isAdmin) {
             alert('Access denied. Admin privileges required.');
             this.logout();
             return false;
@@ -17,6 +20,27 @@ class AdminUtils {
 
         this.updateUserDisplay(userData);
         return true;
+    }
+
+    static async checkIfUserIsAdmin(uid) {
+        try {
+            const response = await fetch(`http://localhost:80/nextplay/index.php/admin/check/${uid}`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                return data.status === 'success' && data.isAdmin;
+            }
+            return false;
+        } catch (error) {
+            console.error('Admin check error:', error);
+            return false;
+        }
     }
 
     static updateUserDisplay(userData) {
@@ -27,10 +51,14 @@ class AdminUtils {
     }
 
     static logout() {
+        // Clear all possible user storage keys
         sessionStorage.removeItem('currentUser');
+        sessionStorage.removeItem('user');
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('user');
         localStorage.removeItem('rememberedUser');
-        window.location.href = '../user/login.html';
+        localStorage.removeItem('token');
+        window.location.href = '../auth/login.html';
     }
 
     // Data Management
@@ -299,6 +327,17 @@ class AdminUtils {
         return date.toString();
     }
 
+    // Currency formatting (VND)
+    static formatCurrency(amount) {
+        const num = parseFloat(amount) || 0;
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(num);
+    }
+
     static getRelativeTime(date) {
         const now = new Date();
         const diff = now - date;
@@ -375,81 +414,6 @@ class AdminUtils {
         return container;
     }
 
-    // Initialize sample data for development
-    static initializeSampleData() {
-        // Only initialize if no data exists
-        if (!localStorage.getItem('users_data')) {
-            this.createSampleUsers();
-        }
-        if (!localStorage.getItem('games_data')) {
-            this.createSampleGames();
-        }
-        if (!localStorage.getItem('orders_data')) {
-            this.createSampleOrders();
-        }
-        if (!localStorage.getItem('reviews_data')) {
-            this.createSampleReviews();
-        }
-        if (!localStorage.getItem('publishers_data')) {
-            this.createSamplePublishers();
-        }
-        if (!localStorage.getItem('categories_data')) {
-            this.createSampleCategories();
-        }
-    }
-
-    static createSampleUsers() {
-        const sampleUsers = [
-            { id: '1', name: 'John Doe', email: 'john@example.com', status: 'active', registration_date: '2024-01-15', role: 'user' },
-            { id: '2', name: 'Jane Smith', email: 'jane@example.com', status: 'active', registration_date: '2024-01-20', role: 'user' },
-            { id: '3', name: 'Mike Johnson', email: 'mike@example.com', status: 'inactive', registration_date: '2024-01-25', role: 'user' }
-        ];
-        this.setStorageData('users_data', sampleUsers);
-    }
-
-    static createSampleGames() {
-        const sampleGames = [
-            { id: '1', title: 'Cyberpunk 2077', price: 59.99, category: 'RPG', publisher: 'CD Projekt', status: 'published', release_date: '2020-12-10' },
-            { id: '2', title: 'The Witcher 3', price: 39.99, category: 'RPG', publisher: 'CD Projekt', status: 'published', release_date: '2015-05-19' },
-            { id: '3', title: 'Call of Duty: Modern Warfare', price: 69.99, category: 'FPS', publisher: 'Activision', status: 'published', release_date: '2019-10-25' }
-        ];
-        this.setStorageData('games_data', sampleGames);
-    }
-
-    static createSampleOrders() {
-        const sampleOrders = [
-            { id: '1', user_id: '1', user_name: 'John Doe', game_title: 'Cyberpunk 2077', amount: 59.99, status: 'completed', order_date: '2024-01-16' },
-            { id: '2', user_id: '2', user_name: 'Jane Smith', game_title: 'The Witcher 3', amount: 39.99, status: 'pending', order_date: '2024-01-21' }
-        ];
-        this.setStorageData('orders_data', sampleOrders);
-    }
-
-    static createSampleReviews() {
-        const sampleReviews = [
-            { id: '1', game_id: '1', game_title: 'Cyberpunk 2077', user_name: 'John Doe', rating: 4, review: 'Great game with amazing graphics!', status: 'approved', review_date: '2024-01-17' },
-            { id: '2', game_id: '2', game_title: 'The Witcher 3', user_name: 'Jane Smith', rating: 5, review: 'Best RPG ever created!', status: 'approved', review_date: '2024-01-22' }
-        ];
-        this.setStorageData('reviews_data', sampleReviews);
-    }
-
-    static createSamplePublishers() {
-        const samplePublishers = [
-            { id: '1', name: 'CD Projekt', email: 'contact@cdprojekt.com', country: 'Poland', games_published: 15, status: 'active' },
-            { id: '2', name: 'Activision', email: 'info@activision.com', country: 'USA', games_published: 120, status: 'active' },
-            { id: '3', name: 'Ubisoft', email: 'contact@ubisoft.com', country: 'France', games_published: 200, status: 'active' }
-        ];
-        this.setStorageData('publishers_data', samplePublishers);
-    }
-
-    static createSampleCategories() {
-        const sampleCategories = [
-            { id: '1', name: 'RPG', description: 'Role Playing Games', games_count: 45, status: 'active' },
-            { id: '2', name: 'FPS', description: 'First Person Shooter', games_count: 32, status: 'active' },
-            { id: '3', name: 'Strategy', description: 'Strategy Games', games_count: 28, status: 'active' },
-            { id: '4', name: 'Adventure', description: 'Adventure Games', games_count: 37, status: 'active' }
-        ];
-        this.setStorageData('categories_data', sampleCategories);
-    }
 }
 
 // Export for use in other files

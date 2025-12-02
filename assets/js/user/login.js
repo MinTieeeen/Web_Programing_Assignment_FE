@@ -39,6 +39,61 @@ function checkLoginStatus() {
     }
 }
 
+// Check if user is admin by querying backend
+async function checkUserRole(uid) {
+    try {
+        // Check if user is in Admin table
+        const adminResponse = await fetch(`/nextplay/index.php/admin/check/${uid}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (adminResponse.ok) {
+            const adminData = await adminResponse.json();
+            if (adminData.status === 'success' && adminData.isAdmin) {
+                return 'admin';
+            }
+        }
+        
+        // Check if user is in Publisher table
+        const publisherResponse = await fetch(`/nextplay/index.php/publisher/check/${uid}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (publisherResponse.ok) {
+            const publisherData = await publisherResponse.json();
+            if (publisherData.status === 'success' && publisherData.isPublisher) {
+                return 'publisher';
+            }
+        }
+        
+        // Check if user is in Customer table
+        const customerResponse = await fetch(`/nextplay/index.php/customer/check/${uid}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (customerResponse.ok) {
+            const customerData = await customerResponse.json();
+            if (customerData.status === 'success' && customerData.isCustomer) {
+                return 'customer';
+            }
+        }
+        
+        return 'user';
+    } catch (error) {
+        console.error('Role check error:', error);
+        return 'user';
+    }
+}
+
 // Login function using backend API
 async function login(identifier, password, rememberMe) {
     try {
@@ -56,6 +111,9 @@ async function login(identifier, password, rememberMe) {
         const data = await response.json();
 
         if (data.status === 'success') {
+            // Check user role by querying backend tables
+            const userRole = await checkUserRole(data.user.uid);
+            
             const userData = {
                 uid: data.user.uid,
                 username: data.user.uname,
@@ -65,7 +123,7 @@ async function login(identifier, password, rememberMe) {
                 lname: data.user.lname,
                 avatar: data.user.avatar,
                 DOB: data.user.DOB,
-                role: data.user.role || 'user',
+                role: userRole, // Role determined by table membership check
                 loginTime: new Date().toISOString()
             };
 

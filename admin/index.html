@@ -169,9 +169,11 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../assets/js/admin-utils.js"></script>
-    <script src="../assets/js/admin-components.js"></script>
+    <script src="../assets/js/admin/utils.js"></script>
+    <script src="../assets/js/admin/components.js"></script>
     <script>
+        const API_BASE_URL = 'http://localhost:80/nextplay/index.php';
+        
         // Dashboard Manager Class
         class DashboardManager {
             async init() {
@@ -179,40 +181,57 @@
                 await AdminComponents.init('dashboard');
                 
                 // Load dashboard data
-                this.loadStats();
+                await this.loadStats();
+                await this.loadRecentOrders();
+                await this.loadRecentReviews();
                 this.initCharts();
-                this.loadRecentOrders();
-                this.loadRecentReviews();
             }
 
             async loadStats() {
                 try {
-                    // Fetch users data
-                    const usersResponse = await fetch('/Assignment/NextPlay/users');
+                    // Fetch all data in parallel
+                    const [usersResponse, gamesResponse, cartsResponse, reviewsResponse] = await Promise.all([
+                        fetch(`${API_BASE_URL}/users`, {
+                            credentials: 'include',
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        }),
+                        fetch(`${API_BASE_URL}/games`, {
+                            credentials: 'include',
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        }),
+                        fetch(`${API_BASE_URL}/carts/stats`, {
+                            credentials: 'include',
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        }),
+                        fetch(`${API_BASE_URL}/reviews/stats`, {
+                            credentials: 'include',
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        })
+                    ]);
+
                     const usersResult = await usersResponse.json();
-                    const users = usersResult.status === 'success' ? usersResult.data : [];
-                    
-                    // Fetch games data
-                    const gamesResponse = await fetch('/Assignment/NextPlay/games');
                     const gamesResult = await gamesResponse.json();
+                    const cartsResult = await cartsResponse.json();
+                    const reviewsResult = await reviewsResponse.json();
+
+                    const users = usersResult.status === 'success' ? usersResult.data : [];
                     const games = gamesResult.status === 'success' ? gamesResult.data : [];
+                    const cartStats = cartsResult.status === 'success' ? cartsResult.data.stats : {};
                     
-                    // For orders, we'll use a placeholder count since there's no orders endpoint yet
-                    const orders = []; // TODO: Replace when orders endpoint is available
-                    
-                    const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.amount || 0), 0);
+                    // Calculate total revenue from completed orders
+                    const totalRevenue = cartStats.total_revenue || 0;
+                    const totalOrders = cartStats.completed_orders || 0;
 
                     document.getElementById('totalUsers').textContent = users.length.toLocaleString();
                     document.getElementById('totalGames').textContent = games.length.toLocaleString();
-                    document.getElementById('totalOrders').textContent = orders.length.toLocaleString();
-                    document.getElementById('totalRevenue').textContent = `$${totalRevenue.toLocaleString()}`;
+                    document.getElementById('totalOrders').textContent = totalOrders.toLocaleString();
+                    document.getElementById('totalRevenue').textContent = AdminUtils.formatCurrency(totalRevenue);
                 } catch (error) {
                     console.error('Error loading stats:', error);
-                    // Fallback to default values
                     document.getElementById('totalUsers').textContent = '0';
                     document.getElementById('totalGames').textContent = '0';
                     document.getElementById('totalOrders').textContent = '0';
-                    document.getElementById('totalRevenue').textContent = '$0';
+                    document.getElementById('totalRevenue').textContent = '₫0';
                 }
             }
 
@@ -221,75 +240,131 @@
                 this.initCategoryChart();
             }
 
-            initSalesChart() {
+            async initSalesChart() {
                 const ctx = document.getElementById('salesChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                        datasets: [{
-                            label: 'Sales ($)',
-                            data: [12000, 19000, 15000, 25000, 22000, 30000],
-                            borderColor: 'rgb(75, 192, 192)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            tension: 0.1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                
+                try {
+                    // Fetch review stats to get monthly data
+                    const response = await fetch(`${API_BASE_URL}/reviews/stats`, {
+                        credentials: 'include',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    const result = await response.json();
+                    
+                    let labels = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    let data = [10, 10, 10, 10, 10, 2]; // Default from review data
+                    
+                    if (result.status === 'success' && result.data.byMonth) {
+                        const monthData = result.data.byMonth;
+                        labels = monthData.map(m => {
+                            const date = new Date(m.month + '-01');
+                            return date.toLocaleDateString('en-US', { month: 'short' });
+                        }).reverse();
+                        data = monthData.map(m => m.review_count).reverse();
+                    }
+                    
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Reviews',
+                                data: data,
+                                borderColor: 'rgb(75, 192, 192)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                tension: 0.1,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: { beginAtZero: true }
                             }
                         }
-                    }
-                });
+                    });
+                } catch (error) {
+                    console.error('Error loading sales chart:', error);
+                }
             }
 
-            initCategoryChart() {
+            async initCategoryChart() {
                 const ctx = document.getElementById('categoryChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Action', 'RPG', 'Strategy', 'Sports', 'Adventure'],
-                        datasets: [{
-                            data: [30, 25, 20, 15, 10],
-                            backgroundColor: [
-                                '#FF6384',
-                                '#36A2EB',
-                                '#FFCE56',
-                                '#4BC0C0',
-                                '#9966FF'
-                            ]
-                        }]
-                    },
-                    options: {
-                        responsive: true
+                
+                try {
+                    // Fetch games to count by category
+                    const response = await fetch(`${API_BASE_URL}/games`, {
+                        credentials: 'include',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    const result = await response.json();
+                    
+                    let labels = ['Action', 'RPG', 'Adventure', 'Indie', 'MOBA'];
+                    let data = [5, 5, 3, 4, 2];
+                    
+                    if (result.status === 'success' && result.data) {
+                        // Count games by category
+                        const categoryCount = {};
+                        result.data.forEach(game => {
+                            const cat = game.category || 'Other';
+                            categoryCount[cat] = (categoryCount[cat] || 0) + 1;
+                        });
+                        
+                        // Sort by count and take top 5
+                        const sorted = Object.entries(categoryCount)
+                            .sort((a, b) => b[1] - a[1])
+                            .slice(0, 5);
+                        
+                        labels = sorted.map(([cat]) => cat);
+                        data = sorted.map(([, count]) => count);
                     }
-                });
+                    
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: [
+                                    '#FF6384',
+                                    '#36A2EB',
+                                    '#FFCE56',
+                                    '#4BC0C0',
+                                    '#9966FF'
+                                ]
+                            }]
+                        },
+                        options: { responsive: true }
+                    });
+                } catch (error) {
+                    console.error('Error loading category chart:', error);
+                }
             }
 
             async loadRecentOrders() {
                 try {
-                    // Since there's no orders endpoint yet, show placeholder data
-                    const orders = []; // TODO: Replace when orders endpoint is available
+                    const response = await fetch(`${API_BASE_URL}/carts?status=purchased`, {
+                        credentials: 'include',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    const result = await response.json();
                     
                     const tbody = document.getElementById('recentOrdersBody');
                     if (tbody) {
+                        const orders = result.status === 'success' ? result.data : [];
+                        
                         if (orders.length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Chưa có đơn hàng nào</td></tr>';
+                            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No orders yet</td></tr>';
                         } else {
-                            const recentOrders = orders.slice(-5).reverse();
+                            const recentOrders = orders.slice(0, 5);
                             tbody.innerHTML = recentOrders.map(order => `
                                 <tr>
-                                    <td>#${order.id}</td>
-                                    <td>${order.user_name}</td>
-                                    <td>${order.game_title}</td>
-                                    <td>$${order.amount}</td>
+                                    <td>#${order.uid}</td>
+                                    <td>${order.fname || ''} ${order.lname || order.uname}</td>
+                                    <td>${order.item_count} items</td>
+                                    <td>${AdminUtils.formatCurrency(order.total_amount)}</td>
                                     <td>
-                                        <span class="badge bg-${order.status === 'completed' ? 'success' : 'warning'}">
-                                            ${order.status}
-                                        </span>
+                                        <span class="badge bg-success">Completed</span>
                                     </td>
                                 </tr>
                             `).join('');
@@ -299,30 +374,34 @@
                     console.error('Error loading recent orders:', error);
                     const tbody = document.getElementById('recentOrdersBody');
                     if (tbody) {
-                        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Không thể tải dữ liệu đơn hàng</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Failed to load orders</td></tr>';
                     }
                 }
             }
 
             async loadRecentReviews() {
                 try {
-                    // Since there's no reviews endpoint yet, show placeholder data
-                    const reviews = []; // TODO: Replace when reviews endpoint is available
+                    const response = await fetch(`${API_BASE_URL}/reviews?limit=5`, {
+                        credentials: 'include',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    const result = await response.json();
 
                     const tbody = document.getElementById('recentReviewsBody');
                     if (tbody) {
+                        const reviews = result.status === 'success' ? result.data : [];
+                        
                         if (reviews.length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Chưa có đánh giá nào</td></tr>';
+                            tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No reviews yet</td></tr>';
                         } else {
-                            const recentReviews = reviews.slice(-5).reverse();
-                            tbody.innerHTML = recentReviews.map(review => `
+                            tbody.innerHTML = reviews.map(review => `
                                 <tr>
-                                    <td>${review.game_title}</td>
-                                    <td>${review.user_name}</td>
+                                    <td>${review.game_name}</td>
+                                    <td>${review.uname}</td>
                                     <td>
                                         ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
                                     </td>
-                                    <td>${AdminUtils.formatDate(review.review_date)}</td>
+                                    <td>${AdminUtils.formatDate(review.review_time)}</td>
                                 </tr>
                             `).join('');
                         }
@@ -331,16 +410,20 @@
                     console.error('Error loading recent reviews:', error);
                     const tbody = document.getElementById('recentReviewsBody');
                     if (tbody) {
-                        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Không thể tải dữ liệu đánh giá</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Failed to load reviews</td></tr>';
                     }
                 }
             }
         }
 
         // Initialize dashboard when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            const dashboard = new DashboardManager();
-            dashboard.init();
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check authentication first
+            const authResult = await AdminUtils.checkAuthentication();
+            if (authResult) {
+                const dashboard = new DashboardManager();
+                dashboard.init();
+            }
         });
     </script>
 </body>
