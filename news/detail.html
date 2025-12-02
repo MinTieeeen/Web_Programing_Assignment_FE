@@ -14,63 +14,101 @@
 <body>
   <div data-include="header"></div>
 
-  <div class="article-container">
-    <!-- Article Content -->
-    <div id="article-content">
-        <!-- Injected via JS -->
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary" role="status"></div>
-        </div>
-    </div>
+  <div class="container mt-4 pt-5">
+    <div class="row">
+        <!-- Left Column: Article Content -->
+        <div class="col-lg-8">
+            <div class="article-container-fluid"> <!-- Renamed to avoid max-width constraint of old class -->
+                <!-- Article Content -->
+                <div id="article-content">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                    </div>
+                </div>
 
-    <!-- Comments Section -->
-    <div class="comments-section">
-      <h3 class="comments-title">Bình luận (<span id="comment-count">0</span>)</h3>
-      
-      <!-- Add Comment Form -->
-      <div class="comment-form" id="comment-form-container">
-        <textarea class="comment-input" id="comment-input" rows="3" placeholder="Viết bình luận của bạn..."></textarea>
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-primary-glow" onclick="postComment()">Gửi bình luận</button>
-        </div>
-      </div>
-      <div id="login-prompt" class="alert alert-secondary bg-opacity-10 border-secondary text-center d-none">
-        Vui lòng <a href="../auth/login.html" class="text-info">đăng nhập</a> để bình luận.
-      </div>
+                <!-- Read Next Section -->
+                <div class="read-next-section mt-5">
+                    <h3 class="news-section-title">Đọc tiếp</h3>
+                    <div class="row" id="read-next-list">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
 
-      <!-- Comment List -->
-      <div class="comment-list" id="comment-list">
-        <!-- Comments injected here -->
-      </div>
+                <!-- Comments Section -->
+                <div class="comments-section mt-5">
+                    <h3 class="comments-title">Bình luận (<span id="comment-count">0</span>)</h3>
+                    
+                    <!-- Add Comment Form -->
+                    <div class="comment-form mb-4" id="comment-form-container">
+                        <div class="d-flex gap-3">
+                            <img id="current-user-avatar" src="../assets/images/default-avatar.png" class="comment-avatar" alt="User">
+                            <div class="w-100">
+                                <textarea class="comment-input" id="comment-input" rows="3" placeholder="Chia sẻ ý kiến của bạn..."></textarea>
+                                <div class="d-flex justify-content-end mt-2">
+                                    <button class="btn btn-primary px-4 rounded-pill" onclick="postComment()">Gửi</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="login-prompt" class="alert alert-dark border-secondary text-center d-none">
+                        Vui lòng <a href="../auth/login.html" class="text-info fw-bold">đăng nhập</a> để bình luận.
+                    </div>
+
+                    <!-- Comment List -->
+                    <div class="comment-list" id="comment-list">
+                        <!-- Comments injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Sidebar -->
+        <div class="col-lg-4">
+            <!-- Sidebar Widget: Notable News -->
+            <div class="sidebar-widget">
+                <h3 class="widget-title">Đáng chú ý</h3>
+                <div class="side-news-list" id="side-news-container">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </div>
     </div>
   </div>
 
   <div data-include="footer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../env.js"></script>
   <script src="../assets/js/include-components.js"></script>
-  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/auth.js?v=2"></script>
   <script>
-    // Mock Data (Same as index.html for consistency)
+    // Mock Data (Same as index.html)
     const mockNews = [
       {
         id: 1,
         title: "Giải đấu NextPlay Championship 2025 chính thức khởi tranh",
         content: `
-            <p>Sự kiện eSports lớn nhất năm đã trở lại với tổng giải thưởng lên đến 1 tỷ đồng. Đăng ký ngay hôm nay để tranh tài cùng các cao thủ hàng đầu.</p>
-            <p>Sau thành công rực rỡ của mùa giải 2024, NextPlay Championship 2025 hứa hẹn sẽ mang đến những trận đấu kịch tính và mãn nhãn hơn bao giờ hết. Giải đấu sẽ quy tụ 16 đội tuyển mạnh nhất khu vực, tranh tài ở 3 bộ môn: League of Legends, Valorant và CS2.</p>
-            <h3>Cơ cấu giải thưởng</h3>
+            <p class="lead fw-bold mb-4">Sự kiện eSports lớn nhất năm đã trở lại với tổng giải thưởng lên đến 1 tỷ đồng. Đăng ký ngay hôm nay để tranh tài cùng các cao thủ hàng đầu.</p>
+            <p>Sau thành công rực rỡ của mùa giải 2024, <strong>NextPlay Championship 2025</strong> hứa hẹn sẽ mang đến những trận đấu kịch tính và mãn nhãn hơn bao giờ hết. Giải đấu sẽ quy tụ 16 đội tuyển mạnh nhất khu vực, tranh tài ở 3 bộ môn: <em>League of Legends, Valorant và CS2</em>.</p>
+            <figure class="figure my-4 w-100">
+                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop" class="figure-img img-fluid rounded" alt="Giải đấu">
+                <figcaption class="figure-caption text-center text-secondary">Sân khấu hoành tráng của mùa giải trước</figcaption>
+            </figure>
+            <h3>Cơ cấu giải thưởng hấp dẫn</h3>
+            <p>Ban tổ chức đã công bố mức thưởng kỷ lục cho năm nay:</p>
             <ul>
-                <li>Vô địch: 500.000.000 VNĐ</li>
-                <li>Á quân: 200.000.000 VNĐ</li>
-                <li>Hạng 3-4: 100.000.000 VNĐ</li>
+                <li><strong>Vô địch:</strong> 500.000.000 VNĐ + Cúp vàng</li>
+                <li><strong>Á quân:</strong> 200.000.000 VNĐ</li>
+                <li><strong>Hạng 3-4:</strong> 100.000.000 VNĐ</li>
             </ul>
             <p>Vòng loại sẽ bắt đầu từ ngày 15/01/2025. Các đội tuyển có thể đăng ký trực tuyến tại website chính thức của giải đấu.</p>
         `,
         image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop",
         date: "01/12/2025",
         author: "Admin",
-        views: 1200
+        source: "NextPlay Esports",
+        views: 1200,
+        category: "Esports"
       },
       {
         id: 2,
@@ -79,12 +117,76 @@
         image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071&auto=format&fit=crop",
         date: "28/11/2025",
         author: "Editor Choice",
-        views: 850
+        source: "GameK",
+        views: 850,
+        category: "Review"
       },
-      // ... Add other items if needed for ID matching
-      { id: 3, title: "Bản cập nhật mới...", content: "...", image: "...", date: "...", author: "...", views: 0 },
-      { id: 4, title: "Hướng dẫn build PC...", content: "...", image: "...", date: "...", author: "...", views: 0 },
-      { id: 5, title: "Review: 'Lost Kingdom'...", content: "...", image: "...", date: "...", author: "...", views: 0 }
+      {
+        id: 3,
+        title: "Bản cập nhật mới của 'Cyber Future' có gì hot?",
+        content: "...",
+        image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070&auto=format&fit=crop",
+        date: "25/11/2025",
+        author: "Tech Reviewer",
+        source: "GenK",
+        views: 2100,
+        category: "Tin Game"
+      },
+      {
+        id: 4,
+        title: "Hướng dẫn build PC chơi game giá rẻ năm 2025",
+        content: "...",
+        image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=2070&auto=format&fit=crop",
+        date: "20/11/2025",
+        author: "Hardware Guru",
+        source: "TinhTe",
+        views: 3500,
+        category: "Công nghệ"
+      },
+      {
+        id: 5,
+        title: "Review: 'Lost Kingdom' - Siêu phẩm hay bom xịt?",
+        content: "...",
+        image: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=2165&auto=format&fit=crop",
+        date: "15/11/2025",
+        author: "Game Critic",
+        source: "Game4V",
+        views: 1500,
+        category: "Review"
+      },
+      {
+        id: 6,
+        title: "Cộng đồng game thủ Việt nói gì về sự kiện sắp tới?",
+        content: "...",
+        image: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=2070&auto=format&fit=crop",
+        date: "10/11/2025",
+        author: "Reporter",
+        source: "ThanhNien",
+        views: 500,
+        category: "Cộng đồng"
+      },
+      {
+        id: 7,
+        title: "Sony công bố PlayStation 6: Cấu hình khủng khiếp",
+        content: "...",
+        image: "https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=2000&auto=format&fit=crop",
+        date: "05/11/2025",
+        author: "Sony Fan",
+        source: "Sony",
+        views: 5000,
+        category: "Công nghệ"
+      },
+      {
+        id: 8,
+        title: "GTA VI lộ diện trailer mới: Đồ họa siêu thực",
+        content: "...",
+        image: "https://images.unsplash.com/photo-1628260412297-a3377e45006f?q=80&w=2000&auto=format&fit=crop",
+        date: "01/11/2025",
+        author: "Gamer",
+        source: "Rockstar",
+        views: 8000,
+        category: "Tin Game"
+      }
     ];
 
     // Mock Comments
@@ -107,6 +209,8 @@
         if (article) {
             renderArticle(article);
             renderComments(newsId);
+            renderSidebar(mockNews);
+            renderReadNext(mockNews, newsId);
             checkAuthForComments();
         } else {
             document.getElementById('article-content').innerHTML = '<div class="text-center text-danger py-5">Bài viết không tồn tại.</div>';
@@ -115,20 +219,117 @@
 
     function renderArticle(article) {
         const html = `
-            <div class="article-header">
-                <div class="article-meta mb-3">
+            <div class="article-header text-start">
+                <div class="mb-3">
+                    <span class="badge bg-danger text-uppercase px-3 py-2">${article.category}</span>
+                </div>
+                <h1 class="article-title text-start mb-3" style="font-size: 2.5rem;">${article.title}</h1>
+                <div class="article-meta justify-content-start mb-4">
+                    <span class="text-white fw-bold"><i class="bi bi-person-circle text-primary"></i> ${article.author}</span>
                     <span><i class="bi bi-calendar3"></i> ${article.date}</span>
-                    <span><i class="bi bi-person"></i> ${article.author}</span>
                     <span><i class="bi bi-eye"></i> ${article.views} lượt xem</span>
                 </div>
-                <h1 class="article-title">${article.title}</h1>
             </div>
-            <img src="${article.image}" alt="${article.title}" class="article-image">
+            <img src="${article.image}" alt="${article.title}" class="article-image w-100 mb-4 shadow-lg">
             <div class="article-content">
                 ${article.content}
             </div>
+            <div class="mt-5 pt-3 border-top border-secondary">
+                <span class="text-secondary me-2">Tags:</span>
+                <a href="#" class="badge bg-dark border border-secondary text-decoration-none me-1">Esports</a>
+                <a href="#" class="badge bg-dark border border-secondary text-decoration-none me-1">Tournament</a>
+                <a href="#" class="badge bg-dark border border-secondary text-decoration-none">2025</a>
+            </div>
         `;
         document.getElementById('article-content').innerHTML = html;
+    }
+
+    function renderSidebar(newsList) {
+        // Randomize list for sidebar
+        let shuffled = [...newsList];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        const sideItems = shuffled.slice(0, 5); // Take first 5 random items
+        const container = document.getElementById('side-news-container');
+        container.innerHTML = sideItems.map(item => `
+            <div class="side-news-item">
+                <a href="detail.html?id=${item.id}">
+                    <img src="${item.image}" class="side-news-thumb" alt="${item.title}">
+                </a>
+                <div class="side-news-content">
+                    <h5 class="side-news-title">
+                        <a href="detail.html?id=${item.id}">${item.title}</a>
+                    </h5>
+                    <div class="side-news-meta">
+                        <span class="side-news-source">${item.source}</span>
+                        <span>${item.date}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderReadNext(newsList, currentId) {
+        // Filter out current article
+        let otherItems = newsList.filter(n => n.id !== currentId);
+        
+        // Randomize (Fisher-Yates shuffle)
+        for (let i = otherItems.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [otherItems[i], otherItems[j]] = [otherItems[j], otherItems[i]];
+        }
+
+        // Take up to 15 items
+        const nextItems = otherItems.slice(0, 15);
+        
+        const container = document.getElementById('read-next-list');
+        
+        // Create wrapper structure if not exists
+        if (!document.getElementById('read-next-wrapper')) {
+            const wrapper = document.createElement('div');
+            wrapper.id = 'read-next-wrapper';
+            wrapper.className = 'position-relative';
+            
+            // Move container inside wrapper
+            container.parentNode.insertBefore(wrapper, container);
+            wrapper.appendChild(container);
+            
+            // Add Arrows
+            const btnPrev = document.createElement('button');
+            btnPrev.className = 'btn btn-dark rounded-circle scroll-btn scroll-prev';
+            btnPrev.innerHTML = '<i class="bi bi-chevron-left"></i>';
+            btnPrev.onclick = () => container.scrollBy({ left: -320, behavior: 'smooth' });
+            
+            const btnNext = document.createElement('button');
+            btnNext.className = 'btn btn-dark rounded-circle scroll-btn scroll-next';
+            btnNext.innerHTML = '<i class="bi bi-chevron-right"></i>';
+            btnNext.onclick = () => container.scrollBy({ left: 320, behavior: 'smooth' });
+            
+            wrapper.appendChild(btnPrev);
+            wrapper.appendChild(btnNext);
+        }
+
+        // Use flex-nowrap and overflow-auto for horizontal scrolling
+        container.className = 'row flex-nowrap overflow-auto pb-3 gx-3 scroll-hide'; 
+        
+        container.innerHTML = nextItems.map(item => `
+            <div class="col-10 col-md-4 col-lg-4" style="flex: 0 0 auto; width: 300px;">
+                <div class="card bg-transparent border-0 h-100">
+                    <div class="position-relative rounded-3 overflow-hidden mb-3 border border-secondary group-hover-zoom">
+                        <img src="${item.image}" class="img-fluid w-100" style="height: 180px; object-fit: cover; transition: transform 0.5s ease;" alt="${item.title}">
+                    </div>
+                    <h5 class="card-title h6 fw-bold">
+                        <a href="detail.html?id=${item.id}" class="text-white text-decoration-none hover-neon text-truncate-2">${item.title}</a>
+                    </h5>
+                    <div class="small text-secondary">
+                        <i class="bi bi-calendar3"></i> ${item.date}
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
 
     function renderComments(newsId) {
@@ -137,26 +338,59 @@
         
         const list = document.getElementById('comment-list');
         if (comments.length === 0) {
-            list.innerHTML = '<p class="text-secondary text-center">Chưa có bình luận nào. Hãy là người đầu tiên!</p>';
+            list.innerHTML = '<p class="text-secondary text-center py-3">Chưa có bình luận nào. Hãy là người đầu tiên!</p>';
             return;
         }
 
-        list.innerHTML = comments.map(c => `
-            <div class="comment-item">
+        const currentUserStr = localStorage.getItem('user');
+        const currentUser = currentUserStr ? JSON.parse(currentUserStr) : null;
+        const currentUserName = currentUser ? (currentUser.uname || currentUser.fname) : null;
+
+        list.innerHTML = comments.map(c => {
+            const isOwner = currentUserName === c.user;
+            return `
+            <div class="comment-item" id="comment-${c.id}">
                 <img src="${c.avatar || '../assets/images/default-avatar.png'}" alt="${c.user}" class="comment-avatar">
                 <div class="comment-content">
-                    <span class="comment-author">${c.user} <span class="comment-date">${c.date}</span></span>
-                    <p class="comment-text">${c.content}</p>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="comment-author">${c.user}</span>
+                            <span class="comment-date">${c.date}</span>
+                        </div>
+                        ${isOwner ? `
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-link text-secondary p-0" data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                                <li><a class="dropdown-item small" href="#" onclick="enableEditComment(${c.id})"><i class="bi bi-pencil me-2"></i>Sửa</a></li>
+                                <li><a class="dropdown-item small text-danger" href="#" onclick="deleteComment(${c.id})"><i class="bi bi-trash me-2"></i>Xóa</a></li>
+                            </ul>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <p class="comment-text mt-1" id="comment-text-${c.id}">${c.content}</p>
+                    <div class="comment-edit-area d-none" id="comment-edit-${c.id}">
+                        <textarea class="form-control bg-dark text-white mb-2" rows="2">${c.content}</textarea>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button class="btn btn-sm btn-secondary" onclick="cancelEditComment(${c.id})">Hủy</button>
+                            <button class="btn btn-sm btn-primary" onclick="saveEditComment(${c.id})">Lưu</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
     }
 
     function checkAuthForComments() {
         const userStr = localStorage.getItem('user');
         if (userStr) {
+            const user = JSON.parse(userStr);
             document.getElementById('comment-form-container').classList.remove('d-none');
             document.getElementById('login-prompt').classList.add('d-none');
+            if (user.avatar) {
+                document.getElementById('current-user-avatar').src = `../assets/uploads/${user.avatar}`;
+            }
         } else {
             document.getElementById('comment-form-container').classList.add('d-none');
             document.getElementById('login-prompt').classList.remove('d-none');
@@ -177,22 +411,50 @@
         const newsId = parseInt(urlParams.get('id'));
 
         const newComment = {
-            id: mockComments.length + 1,
+            id: Date.now(), // Simple ID
             newsId: newsId,
-            user: user.uname || user.fname, // Use username or first name
+            user: user.uname || user.fname,
             avatar: user.avatar ? `../assets/uploads/${user.avatar}` : null,
             content: content,
             date: new Date().toLocaleString('vi-VN')
         };
 
-        // Add to mock array
-        mockComments.unshift(newComment); // Add to top
-        
-        // Re-render
+        mockComments.unshift(newComment);
         renderComments(newsId);
-        
-        // Clear input
         input.value = '';
+    }
+
+    function deleteComment(id) {
+        if(confirm('Bạn có chắc muốn xóa bình luận này?')) {
+            mockComments = mockComments.filter(c => c.id !== id);
+            const urlParams = new URLSearchParams(window.location.search);
+            renderComments(parseInt(urlParams.get('id')));
+        }
+    }
+
+    function enableEditComment(id) {
+        document.getElementById(`comment-text-${id}`).classList.add('d-none');
+        document.getElementById(`comment-edit-${id}`).classList.remove('d-none');
+    }
+
+    function cancelEditComment(id) {
+        document.getElementById(`comment-text-${id}`).classList.remove('d-none');
+        document.getElementById(`comment-edit-${id}`).classList.add('d-none');
+    }
+
+    function saveEditComment(id) {
+        const editArea = document.getElementById(`comment-edit-${id}`);
+        const newContent = editArea.querySelector('textarea').value.trim();
+        
+        if (newContent) {
+            const comment = mockComments.find(c => c.id === id);
+            if (comment) {
+                comment.content = newContent;
+                // Optionally update date to "Edited..."
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            renderComments(parseInt(urlParams.get('id')));
+        }
     }
   </script>
 </body>
