@@ -103,12 +103,13 @@
       };
 
       try {
-        const response = await fetch('http://localhost:80/nextplay/index.php/users/register', {
+        const response = await fetch('http://localhost/nextplay/index.php/users/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(formData),
+          credentials: 'include'
         });
 
         const data = await response.json();

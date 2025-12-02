@@ -86,6 +86,40 @@
 .np-btn-primary{background:#1273ea;color:#fff}
 .np-btn-primary:hover{background:#0e63c9}
 
+/* Cart Icon */
+.np-cart-btn {
+  position: relative;
+  color: #cdd9e5;
+  text-decoration: none;
+  font-size: 1.2rem;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.np-cart-btn:hover {
+  color: #fff;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #e53e3e;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(25%, -25%);
+  border: 2px solid #0f1f2b;
+}
+
 /* User Dropdown Styles */
 .dropdown {
   position: relative;
