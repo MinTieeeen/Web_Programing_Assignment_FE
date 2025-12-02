@@ -74,6 +74,7 @@ test_*.py
 *_test.py
 test_results/
 screenshots/
+tests/
 
 # Logs
 *.log
@@ -206,3 +207,10 @@ $RECYCLE.BIN/
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
+
+# Backend directory (it's a separate project)
+backend/
+backend
+
+# Uvicorn lock file
+uv.lock
