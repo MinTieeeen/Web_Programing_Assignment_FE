@@ -130,14 +130,10 @@
     });
 
     function renderProfile(user, games) {
-      // Update User Info
-      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.png';
-      document.getElementById('avatar-img').src = avatarUrl;
-      document.getElementById('display-name').textContent = `${user.fname} ${user.lname}`;
-      document.getElementById('username').textContent = `@${user.uname}`;
-      document.getElementById('game-count').textContent = games.length;
-      document.getElementById('join-date').textContent = new Date(user.created_at || Date.now()).getFullYear(); // Mock if missing
-      document.getElementById('balance-display').textContent = new Intl.NumberFormat('vi-VN').format(user.balance || 0) + ' đ';
+      const avatarUrl = user.avatar ? user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
+      const balance = user.balance ? new Intl.NumberFormat('vi-VN').format(user.balance) : '0';
+      const dob = user.DOB ? new Date(user.DOB).toLocaleDateString('vi-VN') : 'Chưa cập nhật';
+      const joinDate = user.joinDate ? new Date(user.joinDate).toLocaleDateString('vi-VN') : 'Chưa cập nhật'; 
 
       // Render Games
       const grid = document.getElementById('game-grid');
@@ -152,19 +148,25 @@
         // Override grid layout for empty state
         grid.style.display = 'block';
       } else {
-        grid.style.display = 'grid';
-        grid.innerHTML = games.map(game => {
-          const gameImage = game.header_image || game.thumbnail || '../assets/images/game_placeholder.jpg';
-          return `
-            <div class="game-card">
-              <div class="game-image-wrapper">
-                <img src="${gameImage}" alt="${game.name}" class="game-image">
-              </div>
-              <div class="game-info">
-                <h5 class="game-title" title="${game.name}">${game.name}</h5>
-                <a href="../products/detail.html?id=${game.Gid}" class="btn-play">
-                  <i class="bi bi-play-fill"></i> Chơi ngay
-                </a>
+        gamesHtml = '<div class="row">';
+        games.forEach(game => {
+          const gameName = game.name || 'Unknown Game';
+          const gameImage = game.thumbnail || game.image || '../assets/images/default-game.png';
+          const gamePrice = game.price === 0 || game.price === '0' ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(game.price) + ' ₫';
+          
+          gamesHtml += `
+            <div class="col-md-3 mb-4">
+              <div class="card bg-dark text-white border-secondary h-100">
+                <div style="height: 150px; background: #2a3b4c; display: flex; align-items: center; justify-content: center; color: #8aa3b7; background-image: url('${gameImage}'); background-size: cover; background-position: center;">
+                  ${gameImage.includes('default') ? 'Game Image' : ''}
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title text-truncate">${gameName}</h5>
+                  <p class="card-text small text-muted">
+                    Giá: ${gamePrice}
+                  </p>
+                  <a href="#" class="btn btn-sm btn-primary w-100 mt-2">Chơi ngay</a>
+                </div>
               </div>
             </div>
           `;
