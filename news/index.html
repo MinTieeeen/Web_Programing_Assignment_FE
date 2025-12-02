@@ -9,53 +9,80 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
-  <link rel="stylesheet" href="../assets/css/news.css?v=2">
+  <link rel="stylesheet" href="../assets/css/news.css?v=7">
 </head>
 <body>
   <div data-include="header"></div>
 
   <div class="container mt-4 pt-5">
     
-    <!-- Featured Carousel -->
-    <div id="featuredCarousel" class="carousel slide featured-carousel" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="1"></button>
-        <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="2"></button>
-      </div>
-      <div class="carousel-inner" id="carousel-content">
-        <!-- Injected via JS -->
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
+    <!-- Top News Section (Magazine Layout) -->
+    <div class="top-news-container">
+        <div class="row">
+            <!-- Left Column: Main Featured + Sub Featured -->
+            <div class="col-lg-8">
+                <!-- Main Featured Article -->
+                <div id="main-featured-container">
+                    <!-- Injected via JS -->
+                </div>
+
+                <!-- Sub Featured Grid (3 items) -->
+                <div class="row mt-4" id="sub-featured-container">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- Right Column: Side News List -->
+            <div class="col-lg-4">
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Đáng chú ý</h3>
+                    <div class="side-news-list" id="side-news-container">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Trending Section -->
-    <div class="mb-5">
-      <h2 class="news-section-title">Xu hướng <i class="bi bi-graph-up-arrow text-danger"></i></h2>
-      <div class="trending-wrapper" id="trending-content">
-        <!-- Injected via JS -->
-      </div>
-    </div>
-
-    <!-- Main Content Layout -->
+    <!-- Main Content Layout (Latest News + Sidebar) -->
     <div class="news-layout">
       
       <!-- Left Column: Latest News List -->
       <div class="main-column">
-        <h2 class="news-section-title">Mới nhất</h2>
-        <div id="latest-news-list">
-          <!-- Injected via JS -->
+        
+        <!-- Section: Latest News -->
+        <div class="mb-5">
+            <h2 class="news-section-title">Mới nhất</h2>
+            <div id="latest-news-list">
+              <!-- Injected via JS -->
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-outline-light rounded-pill px-4">Xem thêm</button>
+            </div>
         </div>
-        <div class="text-center mt-4">
-            <button class="btn btn-outline-light rounded-pill px-4">Xem thêm</button>
+
+        <!-- Section: Technology (Grid Layout) -->
+        <div class="topic-section">
+            <div class="topic-header">
+                <h2 class="topic-title">Góc Công Nghệ</h2>
+                <a href="#" class="topic-link">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="topic-grid" id="tech-news-grid">
+                <!-- Injected via JS -->
+            </div>
         </div>
+
+        <!-- Section: Game Reviews (Grid Layout) -->
+        <div class="topic-section">
+            <div class="topic-header">
+                <h2 class="topic-title">Review Game</h2>
+                <a href="#" class="topic-link">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="topic-grid" id="review-news-grid">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
       </div>
 
       <!-- Right Column: Sidebar -->
@@ -69,17 +96,7 @@
           </div>
         </div>
 
-        <!-- Categories Widget -->
-        <div class="sidebar-widget">
-          <h3 class="widget-title">Chuyên mục</h3>
-          <ul class="category-list">
-            <li class="category-item"><a href="#" class="category-link"><span>Tin Game</span> <span class="badge bg-secondary">12</span></a></li>
-            <li class="category-item"><a href="#" class="category-link"><span>Esports</span> <span class="badge bg-secondary">8</span></a></li>
-            <li class="category-item"><a href="#" class="category-link"><span>Review</span> <span class="badge bg-secondary">5</span></a></li>
-            <li class="category-item"><a href="#" class="category-link"><span>Công nghệ</span> <span class="badge bg-secondary">15</span></a></li>
-            <li class="category-item"><a href="#" class="category-link"><span>Cộng đồng</span> <span class="badge bg-secondary">4</span></a></li>
-          </ul>
-        </div>
+        <!-- Categories Widget Removed -->
 
         <!-- Newsletter Widget -->
         <div class="sidebar-widget text-center">
@@ -106,121 +123,158 @@
       {
         id: 1,
         title: "Giải đấu NextPlay Championship 2025 chính thức khởi tranh",
-        excerpt: "Sự kiện eSports lớn nhất năm đã trở lại với tổng giải thưởng lên đến 1 tỷ đồng. Đăng ký ngay hôm nay để tranh tài cùng các cao thủ hàng đầu.",
+        excerpt: "Sự kiện eSports lớn nhất năm đã trở lại với tổng giải thưởng lên đến 1 tỷ đồng.",
         image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop",
         date: "01/12/2025",
         author: "Admin",
+        source: "NextPlay Esports",
         views: 1200,
-        category: "Esports",
-        featured: true
+        category: "Esports"
       },
       {
         id: 2,
         title: "Top 10 game nhập vai đáng chơi nhất tháng 12",
-        excerpt: "Tổng hợp những tựa game RPG đình đám vừa ra mắt, hứa hẹn mang đến những trải nghiệm cốt truyện sâu sắc và lối chơi lôi cuốn.",
+        excerpt: "Tổng hợp những tựa game RPG đình đám vừa ra mắt.",
         image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071&auto=format&fit=crop",
         date: "28/11/2025",
         author: "Editor Choice",
+        source: "GameK",
         views: 850,
-        category: "Review",
-        featured: false
+        category: "Review"
       },
       {
         id: 3,
         title: "Bản cập nhật mới của 'Cyber Future' có gì hot?",
-        excerpt: "Nhà phát triển vừa tung ra bản vá lỗi lớn cùng DLC mở rộng bản đồ. Cùng điểm qua những thay đổi đáng chú ý trong phiên bản này.",
+        excerpt: "Nhà phát triển vừa tung ra bản vá lỗi lớn cùng DLC mở rộng bản đồ.",
         image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070&auto=format&fit=crop",
         date: "25/11/2025",
         author: "Tech Reviewer",
+        source: "GenK",
         views: 2100,
-        category: "Tin Game",
-        featured: true
+        category: "Tin Game"
       },
       {
         id: 4,
         title: "Hướng dẫn build PC chơi game giá rẻ năm 2025",
-        excerpt: "Tối ưu hiệu năng trên giá thành với cấu hình PC gaming tầm trung, chiến tốt các tựa game AAA ở mức thiết lập High.",
+        excerpt: "Tối ưu hiệu năng trên giá thành với cấu hình PC gaming tầm trung.",
         image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=2070&auto=format&fit=crop",
         date: "20/11/2025",
         author: "Hardware Guru",
+        source: "TinhTe",
         views: 3500,
-        category: "Công nghệ",
-        featured: false
+        category: "Công nghệ"
       },
       {
         id: 5,
         title: "Review: 'Lost Kingdom' - Siêu phẩm hay bom xịt?",
-        excerpt: "Đánh giá chi tiết tựa game được mong chờ nhất năm. Liệu nó có xứng đáng với kỳ vọng của cộng đồng game thủ?",
+        excerpt: "Đánh giá chi tiết tựa game được mong chờ nhất năm.",
         image: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=2165&auto=format&fit=crop",
         date: "15/11/2025",
         author: "Game Critic",
+        source: "Game4V",
         views: 1500,
-        category: "Review",
-        featured: true
+        category: "Review"
       },
       {
         id: 6,
         title: "Cộng đồng game thủ Việt nói gì về sự kiện sắp tới?",
-        excerpt: "Những ý kiến trái chiều xoay quanh việc thay đổi thể thức thi đấu của giải đấu mùa xuân.",
+        excerpt: "Những ý kiến trái chiều xoay quanh việc thay đổi thể thức thi đấu.",
         image: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=2070&auto=format&fit=crop",
         date: "10/11/2025",
         author: "Reporter",
+        source: "ThanhNien",
         views: 500,
-        category: "Cộng đồng",
-        featured: false
+        category: "Cộng đồng"
+      },
+      {
+        id: 7,
+        title: "Sony công bố PlayStation 6: Cấu hình khủng khiếp",
+        excerpt: "Những thông tin rò rỉ đầu tiên về thế hệ console tiếp theo.",
+        image: "https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=2000&auto=format&fit=crop",
+        date: "05/11/2025",
+        author: "Sony Fan",
+        source: "Sony",
+        views: 5000,
+        category: "Công nghệ"
+      },
+      {
+        id: 8,
+        title: "GTA VI lộ diện trailer mới: Đồ họa siêu thực",
+        excerpt: "Rockstar Games tiếp tục khiến cộng đồng đứng ngồi không yên.",
+        image: "https://images.unsplash.com/photo-1628260412297-a3377e45006f?q=80&w=2000&auto=format&fit=crop",
+        date: "01/11/2025",
+        author: "Gamer",
+        source: "Rockstar",
+        views: 8000,
+        category: "Tin Game"
       }
     ];
 
-    document.addEventListener('DOMContentLoaded', () => {
-      renderFeatured(mockNews.filter(n => n.featured));
-      renderTrending(mockNews); // Just using all for trending demo
-      renderLatest(mockNews);
+    function renderMagazineLayout(newsList) {
+        if (newsList.length === 0) return;
 
-      // Search functionality
-      const searchInput = document.getElementById('search-input');
-      searchInput.addEventListener('input', (e) => {
-        const keyword = e.target.value.toLowerCase();
-        const filteredNews = mockNews.filter(item => 
-          item.title.toLowerCase().includes(keyword) || 
-          item.excerpt.toLowerCase().includes(keyword)
-        );
-        renderLatest(filteredNews);
-      });
-    });
-
-    function renderFeatured(newsList) {
-      const container = document.getElementById('carousel-content');
-      container.innerHTML = newsList.map((item, index) => `
-        <div class="carousel-item ${index === 0 ? 'active' : ''}">
-          <img src="${item.image}" class="d-block w-100" alt="${item.title}">
-          <div class="carousel-caption">
-            <span class="featured-badge">${item.category}</span>
-            <h2 class="featured-title">${item.title}</h2>
-            <div class="featured-meta">
-                <span><i class="bi bi-calendar3"></i> ${item.date}</span>
-                <span><i class="bi bi-person"></i> ${item.author}</span>
-            </div>
-            <a href="detail.html?id=${item.id}" class="btn btn-primary mt-3">Đọc ngay</a>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderTrending(newsList) {
-      const container = document.getElementById('trending-content');
-      container.innerHTML = newsList.map(item => `
-        <div class="trending-card">
-            <a href="detail.html?id=${item.id}" class="text-decoration-none">
-                <img src="${item.image}" class="trending-img" alt="${item.title}">
-                <div class="trending-body">
-                    <h4 class="trending-title">${item.title}</h4>
-                    <div class="trending-meta">
-                        <i class="bi bi-eye"></i> ${item.views}
+        // 1. Main Featured (First Item)
+        const mainItem = newsList[0];
+        const mainContainer = document.getElementById('main-featured-container');
+        mainContainer.innerHTML = `
+            <div class="main-featured-card">
+                <div class="main-featured-img-wrapper">
+                    <a href="detail.html?id=${mainItem.id}">
+                        <img src="${mainItem.image}" class="main-featured-img" alt="${mainItem.title}">
+                    </a>
+                    <div class="main-featured-overlay">
+                        <div class="mb-2">
+                            <span class="source-badge">${mainItem.source}</span>
+                        </div>
+                        <h2 class="main-featured-title">
+                            <a href="detail.html?id=${mainItem.id}">${mainItem.title}</a>
+                        </h2>
+                        <div class="main-featured-meta">
+                            <span><i class="bi bi-calendar3"></i> ${mainItem.date}</span>
+                            <span><i class="bi bi-eye"></i> ${mainItem.views} lượt xem</span>
+                        </div>
                     </div>
                 </div>
-            </a>
-        </div>
-      `).join('');
+            </div>
+        `;
+
+        // 2. Sub Featured (Next 3 Items)
+        const subItems = newsList.slice(1, 4);
+        const subContainer = document.getElementById('sub-featured-container');
+        subContainer.innerHTML = subItems.map(item => `
+            <div class="col-md-4">
+                <div class="sub-featured-card">
+                    <div class="sub-featured-img-wrapper">
+                        <a href="detail.html?id=${item.id}">
+                            <img src="${item.image}" class="sub-featured-img" alt="${item.title}">
+                        </a>
+                    </div>
+                    <h4 class="sub-featured-title">
+                        <a href="detail.html?id=${item.id}">${item.title}</a>
+                    </h4>
+                </div>
+            </div>
+        `).join('');
+
+        // 3. Side News List (Next 4 Items)
+        const sideItems = newsList.slice(4, 8);
+        const sideContainer = document.getElementById('side-news-container');
+        sideContainer.innerHTML = sideItems.map(item => `
+            <div class="side-news-item">
+                <a href="detail.html?id=${item.id}">
+                    <img src="${item.image}" class="side-news-thumb" alt="${item.title}">
+                </a>
+                <div class="side-news-content">
+                    <h5 class="side-news-title">
+                        <a href="detail.html?id=${item.id}">${item.title}</a>
+                    </h5>
+                    <div class="side-news-meta">
+                        <span class="side-news-source">${item.source}</span>
+                        <span>${item.date}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
 
     function renderLatest(newsList) {
@@ -229,9 +283,13 @@
         container.innerHTML = '<div class="text-center text-secondary py-5">Không tìm thấy bài viết nào.</div>';
         return;
       }
-      container.innerHTML = newsList.map(item => `
+      // Take only first 4 for latest list to save space for topics
+      const displayList = newsList.slice(0, 4); 
+      container.innerHTML = displayList.map(item => `
         <div class="news-list-item">
-            <img src="${item.image}" class="news-list-img" alt="${item.title}">
+            <a href="detail.html?id=${item.id}">
+                <img src="${item.image}" class="news-list-img" alt="${item.title}">
+            </a>
             <div class="news-list-content">
                 <div class="mb-2">
                     <span class="badge bg-dark border border-secondary text-secondary">${item.category}</span>
@@ -249,6 +307,51 @@
         </div>
       `).join('');
     }
+
+    function renderTopicGrid(newsList, containerId, category) {
+        const container = document.getElementById(containerId);
+        // Filter by category if provided, otherwise just take some items
+        let filtered = category ? newsList.filter(n => n.category === category) : newsList;
+        // Fallback if no specific category match (for demo)
+        if (filtered.length === 0) filtered = newsList.slice(0, 2);
+        
+        container.innerHTML = filtered.slice(0, 2).map(item => `
+            <div class="topic-card">
+                <a href="detail.html?id=${item.id}">
+                    <img src="${item.image}" class="topic-img" alt="${item.title}">
+                </a>
+                <div class="topic-content">
+                    <div class="mb-2">
+                        <span class="source-badge" style="font-size: 0.7rem">${item.category}</span>
+                    </div>
+                    <h3 class="topic-card-title">
+                        <a href="detail.html?id=${item.id}" class="text-decoration-none text-white">${item.title}</a>
+                    </h3>
+                    <div class="topic-card-meta">
+                        <span><i class="bi bi-calendar3"></i> ${item.date}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderMagazineLayout(mockNews);
+      renderLatest(mockNews);
+      renderTopicGrid(mockNews, 'tech-news-grid', 'Công nghệ');
+      renderTopicGrid(mockNews, 'review-news-grid', 'Review');
+
+      // Search functionality
+      const searchInput = document.getElementById('search-input');
+      searchInput.addEventListener('input', (e) => {
+        const keyword = e.target.value.toLowerCase();
+        const filteredNews = mockNews.filter(item => 
+          item.title.toLowerCase().includes(keyword) || 
+          item.excerpt.toLowerCase().includes(keyword)
+        );
+        renderLatest(filteredNews);
+      });
+    });
   </script>
 </body>
 </html>
