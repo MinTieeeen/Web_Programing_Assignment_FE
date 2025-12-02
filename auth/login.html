@@ -43,13 +43,21 @@
   <div data-include="footer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../env.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script>
+    // Ensure ENV is loaded
+    if (!window.ENV || !window.ENV.API_URL) {
+        document.body.innerHTML = '<div class="alert alert-danger m-5"><h4>Configuration Error</h4><p>ENV not loaded! Make sure env.js is included and API_URL is configured.</p></div>';
+        throw new Error('[auth/login.html] ENV not loaded!');
+    }
+    const API_URL = window.ENV.API_URL;
+
 // Check if user is admin by querying backend Admin table
 async function checkIfUserIsAdmin(uid) {
   try {
-    const response = await fetch(`http://localhost/nextplay/index.php/admin/check/${uid}`, {
+    const response = await fetch(`${API_URL}/admin/check/${uid}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -84,7 +92,7 @@ async function checkIfUserIsAdmin(uid) {
       }
 
       try {
-        const response = await fetch('http://localhost/nextplay/index.php/users/signin', {
+        const response = await fetch(`${API_URL}/users/signin`, {
           method: 'POST',
           credentials: 'include',
           headers: {

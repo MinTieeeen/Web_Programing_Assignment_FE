@@ -1,6 +1,11 @@
 // Auth Logic
 (function() {
-  const API_URL = 'http://localhost/BTL_LTW/BTL_LTW_BE'; // Adjust if needed
+  // Ensure ENV is loaded
+  if (!window.ENV || !window.ENV.API_URL) {
+    console.error('[auth.js] ENV not loaded! Include env.js before this script.');
+    return;
+  }
+  const API_URL = window.ENV.API_URL;
 
   // Calculate APP_ROOT if not set
   if (!window.APP_ROOT) {

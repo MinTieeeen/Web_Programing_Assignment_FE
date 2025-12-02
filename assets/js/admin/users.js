@@ -1,5 +1,9 @@
 // Admin Users Management JavaScript
-const API_BASE_URL = 'http://localhost:80/nextplay/index.php';
+// Ensure ENV is loaded before using API
+if (!window.ENV || !window.ENV.API_URL) {
+    throw new Error('[users.js] ENV not loaded! Include env.js before this script.');
+}
+const API_BASE_URL = window.ENV.API_URL;
 
 class AdminUsers {
     constructor() {
@@ -68,7 +72,7 @@ class AdminUsers {
                     dateOfBirth: user.DOB || '',
                     balance: parseFloat(user.balance) || 0.00,
                     status: 'active', // Default status since backend doesn't have this field
-                    avatar: user.avatar ? user.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent((user.fname || '') + '+' + (user.lname || ''))}&background=007bff&color=fff`,
+                    avatar: user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent((user.fname || '') + '+' + (user.lname || ''))}&background=007bff&color=fff`,
                     createdAt: user.created_at || new Date().toISOString().split('T')[0]
                 }));
                 

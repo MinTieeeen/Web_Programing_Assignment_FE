@@ -85,9 +85,19 @@
   <div data-include="footer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../env.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script>
+    // Helper function to get API URL with strict checking
+    function getApiUrl() {
+      if (!window.ENV || !window.ENV.API_URL) {
+        document.body.innerHTML = '<div style="color:red;padding:40px;font-size:24px;">Configuration Error: ENV.API_URL not loaded. Please check that env.js is included.</div>';
+        throw new Error('ENV.API_URL is not defined. Make sure env.js is loaded before this script.');
+      }
+      return window.ENV.API_URL;
+    }
+
     document.addEventListener('DOMContentLoaded', async function() {
       const userStr = localStorage.getItem('user');
       if (!userStr) {
@@ -99,8 +109,8 @@
       const uid = user.uid || user.id;
 
       try {
-        // Ensure API_URL is available
-        const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+        // Get API URL with strict checking
+        const apiUrl = getApiUrl();
         console.log('Using API URL:', apiUrl);
 
         // Fetch User Data
@@ -189,7 +199,7 @@
       formData.append('avatar', file);
 
       try {
-        const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+        const apiUrl = getApiUrl();
         const response = await fetch(`${apiUrl}/users/${uid}/avatar`, {
           method: 'POST',
           body: formData,
@@ -243,7 +253,7 @@
         // In real implementation: await fetch(`http://localhost:8000/users/${uid}/deposit`, ...)
         console.log(`Depositing ${amount} for user ${uid}`);
         
-        const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+        const apiUrl = getApiUrl();
         const response = await fetch(`${apiUrl}/users/${uid}/deposit`, {
             method: 'POST',
             headers: {
@@ -315,7 +325,7 @@
         const uid = user.uid || user.id;
 
         try {
-            const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+            const apiUrl = getApiUrl();
             const response = await fetch(`${apiUrl}/users/me`, {
                 method: 'PUT',
                 headers: {
@@ -367,7 +377,7 @@
         }
 
         try {
-            const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+            const apiUrl = getApiUrl();
             const response = await fetch(`${apiUrl}/users/password`, {
                 method: 'PUT',
                 headers: {

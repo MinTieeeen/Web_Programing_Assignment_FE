@@ -137,10 +137,14 @@ class AdminDashboard {
 
     async updateStatsCards() {
         try {
-            // Fetch dashboard statistics from backend
+            // Ensure ENV is loaded
+            if (!window.ENV || !window.ENV.API_URL) {
+                throw new Error('[dashboard.js] ENV not loaded! Include env.js before this script.');
+            }
+            const apiUrl = window.ENV.API_URL;
             const [usersResponse, gamesResponse] = await Promise.all([
-                fetch('http://localhost:80/nextplay/index.php/users'),
-                fetch('http://localhost:80/nextplay/index.php/games')
+                fetch(`${apiUrl}/users`),
+                fetch(`${apiUrl}/games`)
             ]);
 
             const usersData = await usersResponse.json();
