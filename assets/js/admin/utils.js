@@ -24,7 +24,11 @@ class AdminUtils {
 
     static async checkIfUserIsAdmin(uid) {
         try {
-            const response = await fetch(`http://localhost:80/nextplay/index.php/admin/check/${uid}`, {
+            if (!window.ENV || !window.ENV.API_URL) {
+                throw new Error('[utils.js] ENV not loaded! Include env.js before this script.');
+            }
+            const apiUrl = window.ENV.API_URL;
+            const response = await fetch(`${apiUrl}/admin/check/${uid}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {

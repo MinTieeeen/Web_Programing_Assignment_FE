@@ -1,5 +1,10 @@
 // Publishers Management JavaScript
 
+// Ensure ENV is loaded before using API
+if (!window.ENV || !window.ENV.API_URL) {
+    throw new Error('[publishers.js] ENV not loaded! Include env.js before this script.');
+}
+
 // State management
 let publishers = [];
 let filteredPublishers = [];
@@ -7,7 +12,7 @@ let currentPage = 1;
 const itemsPerPage = 10;
 
 // API Endpoints
-const API_BASE = 'http://localhost:80/nextplay/index.php';
+const API_BASE = window.ENV.API_URL;
 
 /**
  * Initialize the publishers page
