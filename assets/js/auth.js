@@ -1,6 +1,6 @@
 // Auth Logic
 (function() {
-  const API_URL = 'http://localhost:8000'; // Adjust if needed
+  const API_URL = 'http://localhost/BTL_LTW/BTL_LTW_BE'; // Adjust if needed
 
   // Calculate APP_ROOT if not set
   if (!window.APP_ROOT) {
@@ -75,6 +75,7 @@
 
   // Expose function globally
   window.updateHeaderLoginStatus = updateHeaderLoginStatus;
+  window.API_URL = API_URL;
 
   // Run on load if header is already present
   document.addEventListener('DOMContentLoaded', function() {

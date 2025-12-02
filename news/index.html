@@ -3,19 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tin tức - NextPlay</title>
+  <title>Tin tức & Sự kiện - NextPlay</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
   <link rel="stylesheet" href="../assets/css/style.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
+  <link rel="stylesheet" href="../assets/css/news.css">
 </head>
 <body>
   <div data-include="header"></div>
 
-  <div class="container mt-5 mb-5">
-    <h1>Tin tức</h1>
-    <p>Chuyên mục đang được cập nhật...</p>
+  <!-- Hero Section -->
+  <div class="news-hero" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop');">
+    <div class="news-hero-content">
+      <span class="news-hero-badge">Tin Nổi Bật</span>
+      <h1 class="news-hero-title">Giải đấu NextPlay Championship 2025 chính thức khởi tranh</h1>
+      <div class="news-hero-meta">
+        <span><i class="bi bi-calendar3"></i> 01/12/2025</span>
+        <span><i class="bi bi-person"></i> Admin</span>
+        <span><i class="bi bi-eye"></i> 1.2k lượt xem</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mb-5">
+    <!-- Search -->
+    <div class="news-search-container">
+      <input type="text" class="news-search-input" id="search-input" placeholder="Tìm kiếm bài viết...">
+      <i class="bi bi-search news-search-icon"></i>
+    </div>
+
+    <!-- News Grid -->
+    <div class="news-grid" id="news-grid">
+      <!-- News items will be injected here -->
+    </div>
   </div>
 
   <div data-include="footer"></div>
@@ -23,6 +45,98 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/cart.js"></script>
+  <script>
+    // Mock Data
+    const mockNews = [
+      {
+        id: 1,
+        title: "Giải đấu NextPlay Championship 2025 chính thức khởi tranh",
+        excerpt: "Sự kiện eSports lớn nhất năm đã trở lại với tổng giải thưởng lên đến 1 tỷ đồng. Đăng ký ngay hôm nay để tranh tài cùng các cao thủ hàng đầu.",
+        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop",
+        date: "01/12/2025",
+        author: "Admin",
+        views: 1200
+      },
+      {
+        id: 2,
+        title: "Top 10 game nhập vai đáng chơi nhất tháng 12",
+        excerpt: "Tổng hợp những tựa game RPG đình đám vừa ra mắt, hứa hẹn mang đến những trải nghiệm cốt truyện sâu sắc và lối chơi lôi cuốn.",
+        image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071&auto=format&fit=crop",
+        date: "28/11/2025",
+        author: "Editor Choice",
+        views: 850
+      },
+      {
+        id: 3,
+        title: "Bản cập nhật mới của 'Cyber Future' có gì hot?",
+        excerpt: "Nhà phát triển vừa tung ra bản vá lỗi lớn cùng DLC mở rộng bản đồ. Cùng điểm qua những thay đổi đáng chú ý trong phiên bản này.",
+        image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070&auto=format&fit=crop",
+        date: "25/11/2025",
+        author: "Tech Reviewer",
+        views: 2100
+      },
+      {
+        id: 4,
+        title: "Hướng dẫn build PC chơi game giá rẻ năm 2025",
+        excerpt: "Tối ưu hiệu năng trên giá thành với cấu hình PC gaming tầm trung, chiến tốt các tựa game AAA ở mức thiết lập High.",
+        image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=2070&auto=format&fit=crop",
+        date: "20/11/2025",
+        author: "Hardware Guru",
+        views: 3500
+      },
+      {
+        id: 5,
+        title: "Review: 'Lost Kingdom' - Siêu phẩm hay bom xịt?",
+        excerpt: "Đánh giá chi tiết tựa game được mong chờ nhất năm. Liệu nó có xứng đáng với kỳ vọng của cộng đồng game thủ?",
+        image: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=2165&auto=format&fit=crop",
+        date: "15/11/2025",
+        author: "Game Critic",
+        views: 1500
+      }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNews(mockNews);
+
+      // Search functionality
+      const searchInput = document.getElementById('search-input');
+      searchInput.addEventListener('input', (e) => {
+        const keyword = e.target.value.toLowerCase();
+        const filteredNews = mockNews.filter(item => 
+          item.title.toLowerCase().includes(keyword) || 
+          item.excerpt.toLowerCase().includes(keyword)
+        );
+        renderNews(filteredNews);
+      });
+    });
+
+    function renderNews(newsList) {
+      const grid = document.getElementById('news-grid');
+      
+      if (newsList.length === 0) {
+        grid.innerHTML = '<div class="col-12 text-center text-secondary py-5">Không tìm thấy bài viết nào.</div>';
+        return;
+      }
+
+      grid.innerHTML = newsList.map(item => `
+        <div class="news-card">
+          <div class="news-card-img-wrapper">
+            <img src="${item.image}" alt="${item.title}" class="news-card-img">
+          </div>
+          <div class="news-card-body">
+            <div class="news-card-date"><i class="bi bi-calendar3"></i> ${item.date}</div>
+            <h3 class="news-card-title">${item.title}</h3>
+            <p class="news-card-excerpt">${item.excerpt}</p>
+            <div class="news-card-footer">
+              <span class="text-secondary" style="font-size: 0.8rem"><i class="bi bi-eye"></i> ${item.views}</span>
+              <a href="detail.html?id=${item.id}" class="btn-read-more">
+                Đọc tiếp <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
 </body>
 </html>

@@ -132,7 +132,7 @@
 
         try {
             // Attempt to fetch from API
-            const response = await fetch('http://localhost:8000/games');
+            const response = await fetch(`${window.API_URL}/games`);
             if (!response.ok) throw new Error('API Error');
             const data = await response.json();
             

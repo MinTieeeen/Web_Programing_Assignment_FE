@@ -58,7 +58,8 @@
       };
 
       try {
-        const response = await fetch('http://localhost:8000/users/signin', {
+        
+        const response = await fetch(`${window.API_URL}/users/signin`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

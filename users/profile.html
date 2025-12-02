@@ -99,8 +99,12 @@
       const uid = user.uid || user.id;
 
       try {
+        // Ensure API_URL is available
+        const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+        console.log('Using API URL:', apiUrl);
+
         // Fetch User Data
-        const userRes = await fetch(`http://localhost:8000/users/${uid}`);
+        const userRes = await fetch(`${apiUrl}/users/${uid}`);
         const userData = await userRes.json();
         
         if (userData.status !== 'success') {
@@ -110,7 +114,7 @@
         const userInfo = userData.data;
 
         // Fetch Games - Correct endpoint is /library
-        const gamesRes = await fetch(`http://localhost:8000/library`, {
+        const gamesRes = await fetch(`${apiUrl}/library`, {
             credentials: 'include'
         });
         const gamesData = await gamesRes.json();
@@ -183,7 +187,8 @@
       formData.append('avatar', file);
 
       try {
-        const response = await fetch(`http://localhost:8000/users/${uid}/avatar`, {
+        const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+        const response = await fetch(`${apiUrl}/users/${uid}/avatar`, {
           method: 'POST',
           body: formData,
           credentials: 'include'
@@ -236,7 +241,8 @@
         // In real implementation: await fetch(`http://localhost:8000/users/${uid}/deposit`, ...)
         console.log(`Depositing ${amount} for user ${uid}`);
         
-        const response = await fetch(`http://localhost:8000/users/${uid}/deposit`, {
+        const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+        const response = await fetch(`${apiUrl}/users/${uid}/deposit`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -307,7 +313,8 @@
         const uid = user.uid || user.id;
 
         try {
-            const response = await fetch(`http://localhost:8000/users/me`, {
+            const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+            const response = await fetch(`${apiUrl}/users/me`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -358,7 +365,8 @@
         }
 
         try {
-            const response = await fetch(`http://localhost:8000/users/password`, {
+            const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+            const response = await fetch(`${apiUrl}/users/password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -472,6 +480,9 @@
             <!-- Password Tab -->
             <div class="tab-pane fade" id="password-pane" role="tabpanel">
               <form id="change-password-form">
+                <!-- Hidden username for accessibility -->
+                <input type="text" autocomplete="username" style="display:none;">
+                
                 <div class="mb-4">
                     <label class="form-label">Mật khẩu hiện tại</label>
                     <input type="password" class="form-control" id="current-pass" placeholder="Nhập mật khẩu hiện tại" autocomplete="current-password">
