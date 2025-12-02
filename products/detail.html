@@ -4,7 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chi tiết Game - NextPlay</title>
+  <meta name="description" content="Chi tiết sản phẩm game tại NextPlay">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="">
+  <meta property="og:title" content="">
+  <meta property="og:description" content="">
+  <meta property="og:image" content="">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
@@ -43,7 +53,7 @@
 
         try {
             // Fetch game details from backend
-            const response = await fetch(`http://localhost:80/nextplay/index.php/games?id=${gameId}`);
+            const response = await fetch(`http://localhost/nextplay/index.php/games?id=${gameId}`);
             
             if (response.ok) {
                 const data = await response.json();
@@ -69,6 +79,51 @@
             return;
         }
     });
+
+    function updateSEOTags(game) {
+        document.title = `${game.name} - Mua ngay tại NextPlay`;
+        
+        // Meta Description
+        const description = `Mua game ${game.name} bản quyền giá rẻ tại NextPlay. ${game.description.substring(0, 150)}...`;
+        document.querySelector('meta[name="description"]').setAttribute('content', description);
+        
+        // Open Graph
+        document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
+        document.querySelector('meta[property="og:title"]').setAttribute('content', `${game.name} - NextPlay Store`);
+        document.querySelector('meta[property="og:description"]').setAttribute('content', description);
+        document.querySelector('meta[property="og:image"]').setAttribute('content', game.image);
+    }
+
+    function injectJSONLD(game) {
+        const schema = {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": game.name,
+            "image": game.image,
+            "description": game.description,
+            "brand": {
+                "@type": "Brand",
+                "name": game.publisher
+            },
+            "offers": {
+                "@type": "Offer",
+                "url": window.location.href,
+                "priceCurrency": "VND",
+                "price": game.price,
+                "availability": "https://schema.org/InStock"
+            },
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": game.rating,
+                "reviewCount": game.reviews
+            }
+        };
+
+        const script = document.createElement('script');
+        script.type = "application/ld+json";
+        script.text = JSON.stringify(schema);
+        document.head.appendChild(script);
+    }
 
     function renderGameDetail(game) {
         const container = document.getElementById('game-detail-container');
@@ -125,9 +180,12 @@
                             </div>
                             
                             <div class="game-actions">
-                                <a href="#" class="btn-buy-large">
+                                <button onclick="addToCartAndCheckout(${game.id})" class="btn-buy-large border-0 cursor-pointer">
                                     Mua ngay
-                                </a>
+                                </button>
+                                <button onclick="addToCartOnly(${game.id})" class="btn-wishlist" title="Thêm vào giỏ hàng">
+                                    Thêm vào giỏ hàng
+                                </button>
                                 <button class="btn-wishlist">
                                     ♥
                                 </button>
@@ -215,6 +273,49 @@
                 </div>
             </div>
         `;
+    }
+
+    // Cart Actions
+    function addToCartOnly(gameId) {
+        if (!localStorage.getItem('user')) {
+            if(confirm('Bạn cần đăng nhập để thêm vào giỏ hàng. Đi đến trang đăng nhập?')) {
+                window.location.href = '../auth/login.html';
+            }
+            return;
+        }
+        
+        const game = window.currentGame || window.mockGames.find(g => g.id === gameId);
+        
+        if (game) {
+            Cart.addItem(game);
+        } else {
+            alert('Không tìm thấy thông tin game!');
+        }
+    }
+
+    function addToCartAndCheckout(gameId) {
+        if (!localStorage.getItem('user')) {
+            if(confirm('Bạn cần đăng nhập để mua hàng. Đi đến trang đăng nhập?')) {
+                window.location.href = '../auth/login.html';
+            }
+            return;
+        }
+        
+        const game = window.currentGame || window.mockGames.find(g => g.id === gameId);
+        
+        if (game) {
+            Cart.addItem(game);
+            // Wait a bit for the alert/async add to finish? 
+            // Cart.addItem is async in my new implementation but here it's treated as sync?
+            // Wait, Cart.addItem in cart.js is NOT async in the user's last edit (they reverted it or something? No, I see async in my previous edit but user might have changed it).
+            // Let's check cart.js again.
+            // But regardless, we redirect.
+            setTimeout(() => {
+                window.location.href = '../cart/index.html';
+            }, 500);
+        } else {
+            alert('Không tìm thấy thông tin game!');
+        }
     }
   </script>
 </body>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hồ sơ cá nhân - NextPlay</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
@@ -14,20 +15,67 @@
   <div data-include="header"></div>
 
   <div class="profile-section">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-10">
-          <div class="profile-card">
-            <div class="profile-header">
-              <h1 class="profile-title">Hồ sơ cá nhân</h1>
-              <span class="badge bg-primary rounded-pill px-3 py-2">Thành viên</span>
-            </div>
-            
-            <div class="profile-body" id="profile-content">
-              <!-- Loading state -->
-              <div class="text-center text-white py-5">Đang tải thông tin...</div>
-            </div>
+    <!-- Banner -->
+    <div class="profile-banner"></div>
 
+    <div class="profile-container">
+      <!-- Left Sidebar -->
+      <div class="profile-sidebar">
+        <div class="avatar-container">
+          <img src="" alt="Avatar" class="profile-avatar" id="avatar-img">
+          <label for="avatar-input" class="btn-edit-avatar" title="Đổi ảnh đại diện">
+            <i class="bi bi-camera-fill"></i>
+          </label>
+          <input type="file" id="avatar-input" hidden accept="image/*">
+        </div>
+
+        <div class="user-info-card">
+          <h2 class="user-display-name" id="display-name">Loading...</h2>
+          <span class="user-username" id="username">@loading</span>
+
+          <div class="user-stats">
+            <div class="stat-item">
+              <span class="stat-value" id="game-count">0</span>
+              <span class="stat-label">Games</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="join-date">N/A</span>
+              <span class="stat-label">Joined</span>
+            </div>
+          </div>
+
+          <div class="balance-card">
+            <span class="balance-label">Số dư ví</span>
+            <div class="balance-amount" id="balance-display">0 đ</div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn-profile btn-primary-glow" onclick="openDepositModal()">
+              <i class="bi bi-wallet2"></i> Nạp tiền
+            </button>
+            <button class="btn-profile btn-secondary-glass" onclick="openEditProfileModal()">
+              <i class="bi bi-pencil"></i> Chỉnh sửa hồ sơ
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Content -->
+      <div class="profile-content">
+        <div class="section-header">
+          <h3 class="section-title">Kho game của tôi</h3>
+          
+          <!-- Optional Filter/Search could go here -->
+          <div class="library-filters">
+            <!-- <input type="text" class="form-control bg-dark border-secondary text-white" placeholder="Tìm game..."> -->
+          </div>
+        </div>
+
+        <div class="game-grid" id="game-grid">
+          <!-- Games will be injected here -->
+          <div class="text-center w-100 py-5 text-secondary">
+            <div class="spinner-border text-primary mb-3" role="status"></div>
+            <p>Đang tải thư viện game...</p>
           </div>
         </div>
       </div>
@@ -48,11 +96,15 @@
       }
 
       const user = JSON.parse(userStr);
-      const uid = user.uid || user.id; // Adjust based on API response
+      const uid = user.uid || user.id;
 
       try {
+        // Ensure API_URL is available
+        const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+        console.log('Using API URL:', apiUrl);
+
         // Fetch User Data
-        const userRes = await fetch(`http://localhost:8000/users/${uid}`);
+        const userRes = await fetch(`${apiUrl}/users/${uid}`);
         const userData = await userRes.json();
         
         if (userData.status !== 'success') {
@@ -61,33 +113,40 @@
 
         const userInfo = userData.data;
 
-        // Fetch Games
-        const gamesRes = await fetch(`http://localhost:8000/users/${uid}/games`);
+        // Fetch Games - Correct endpoint is /library
+        const gamesRes = await fetch(`${apiUrl}/library`, {
+            credentials: 'include'
+        });
         const gamesData = await gamesRes.json();
-        console.log('Games Data:', gamesData);
         let games = gamesData.data || [];
-        if (!Array.isArray(games)) {
-            console.error('Games is not an array:', games);
-            games = [];
-        }
+        if (!Array.isArray(games)) games = [];
 
         renderProfile(userInfo, games);
 
       } catch (err) {
         console.error(err);
-        document.getElementById('profile-content').innerHTML = '<div class="text-center text-danger py-5">Có lỗi xảy ra khi tải thông tin.</div>';
+        document.getElementById('game-grid').innerHTML = '<div class="text-center text-danger py-5">Có lỗi xảy ra khi tải thông tin.</div>';
       }
     });
 
     function renderProfile(user, games) {
-      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
+      const avatarUrl = user.avatar ? user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
       const balance = user.balance ? new Intl.NumberFormat('vi-VN').format(user.balance) : '0';
       const dob = user.DOB ? new Date(user.DOB).toLocaleDateString('vi-VN') : 'Chưa cập nhật';
       const joinDate = user.joinDate ? new Date(user.joinDate).toLocaleDateString('vi-VN') : 'Chưa cập nhật'; 
 
-      let gamesHtml = '';
+      // Render Games
+      const grid = document.getElementById('game-grid');
       if (games.length === 0) {
-        gamesHtml = '<p class="text-white">Bạn chưa mua game nào.</p>';
+        grid.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-controller display-1 text-secondary mb-3"></i>
+                <p class="text-secondary">Bạn chưa sở hữu game nào.</p>
+                <a href="../products/index.html" class="btn btn-primary-glow mt-3">Khám phá cửa hàng</a>
+            </div>
+        `;
+        // Override grid layout for empty state
+        grid.style.display = 'block';
       } else {
         gamesHtml = '<div class="row">';
         games.forEach(game => {
@@ -111,74 +170,8 @@
               </div>
             </div>
           `;
-        });
-        gamesHtml += '</div>';
+        }).join('');
       }
-
-      const html = `
-        <div class="row align-items-center">
-          <!-- Avatar Column -->
-          <div class="col-md-4">
-            <div class="profile-avatar-section">
-              <div class="avatar-wrapper">
-                <img src="${avatarUrl}" alt="Avatar" class="profile-avatar" id="avatar-img">
-              </div>
-              
-              <form id="avatar-form">
-                <label for="avatar-input" class="btn-upload">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                  Đổi ảnh đại diện
-                </label>
-                <input type="file" name="avatar" id="avatar-input" class="d-none" accept="image/*">
-              </form>
-            </div>
-          </div>
-          
-          <!-- Info Column -->
-          <div class="col-md-8">
-            <div class="profile-info-section">
-              <h2 class="user-name">${user.fname} ${user.lname}</h2>
-              <div class="user-handle">@${user.uname}</div>
-              
-              <div class="info-grid">
-                <div class="info-item">
-                  <span class="info-label">Email</span>
-                  <div class="info-value">${user.email}</div>
-                </div>
-                
-                <div class="info-item">
-                  <span class="info-label">Ngày sinh</span>
-                  <div class="info-value">${dob}</div>
-                </div>
-                
-                <div class="info-item">
-                  <span class="info-label">Số dư</span>
-                  <div class="info-value" style="color: #00ff88; font-weight: 700;">${balance} đ</div>
-                  <button class="btn btn-sm btn-outline-primary mt-2" onclick="openDepositModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    Nạp tiền
-                  </button>
-                </div>
-
-                <div class="info-item">
-                  <span class="info-label">Ngày tham gia</span>
-                  <div class="info-value">${joinDate}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Purchased Games Section -->
-        <div class="row mt-5">
-          <div class="col-12">
-            <h3 class="text-white mb-4 border-bottom border-secondary pb-2">Kho game của tôi</h3>
-            ${gamesHtml}
-          </div>
-        </div>
-      `;
-
-      document.getElementById('profile-content').innerHTML = html;
 
       // Attach avatar upload listener
       document.getElementById('avatar-input').addEventListener('change', uploadAvatar);
@@ -196,9 +189,11 @@
       formData.append('avatar', file);
 
       try {
-        const response = await fetch(`http://localhost:8000/users/${uid}/avatar`, {
+        const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+        const response = await fetch(`${apiUrl}/users/${uid}/avatar`, {
           method: 'POST',
-          body: formData
+          body: formData,
+          credentials: 'include'
         });
 
         const data = await response.json();
@@ -248,7 +243,8 @@
         // In real implementation: await fetch(`http://localhost:8000/users/${uid}/deposit`, ...)
         console.log(`Depositing ${amount} for user ${uid}`);
         
-        const response = await fetch(`http://localhost:8000/users/${uid}/deposit`, {
+        const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+        const response = await fetch(`${apiUrl}/users/${uid}/deposit`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -285,6 +281,118 @@
         alert('Có lỗi xảy ra khi kết nối server');
       }
     }
+
+    // Edit Profile Logic
+    function openEditProfileModal() {
+        const userStr = localStorage.getItem('user');
+        if (!userStr) return;
+        const user = JSON.parse(userStr);
+
+        // Populate form
+        document.getElementById('edit-fname').value = user.fname || '';
+        document.getElementById('edit-lname').value = user.lname || '';
+        document.getElementById('edit-email').value = user.email || '';
+        document.getElementById('edit-dob').value = user.DOB || '';
+        document.getElementById('edit-uname').value = user.uname || ''; // Readonly
+
+        const modal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+        modal.show();
+    }
+
+    async function handleUpdateProfile() {
+        const fname = document.getElementById('edit-fname').value;
+        const lname = document.getElementById('edit-lname').value;
+        const email = document.getElementById('edit-email').value;
+        const dob = document.getElementById('edit-dob').value;
+
+        if (!fname || !lname || !email || !dob) {
+            alert('Vui lòng điền đầy đủ thông tin');
+            return;
+        }
+
+        const userStr = localStorage.getItem('user');
+        const user = JSON.parse(userStr);
+        const uid = user.uid || user.id;
+
+        try {
+            const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+            const response = await fetch(`${apiUrl}/users/me`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fname: fname,
+                    lname: lname,
+                    email: email,
+                    DOB: dob
+                }),
+                credentials: 'include'
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert('Cập nhật thông tin thành công!');
+                // Update local storage
+                const updatedUser = { ...user, ...result.user };
+                localStorage.setItem('user', JSON.stringify(updatedUser));
+                location.reload();
+            } else {
+                alert(result.message || 'Cập nhật thất bại');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Lỗi kết nối');
+        }
+    }
+
+    async function handleChangePassword() {
+        const currentPass = document.getElementById('current-pass').value;
+        const newPass = document.getElementById('new-pass').value;
+        const confirmPass = document.getElementById('confirm-pass').value;
+
+        if (!currentPass || !newPass || !confirmPass) {
+            alert('Vui lòng điền đầy đủ thông tin');
+            return;
+        }
+
+        if (newPass !== confirmPass) {
+            alert('Mật khẩu mới không khớp');
+            return;
+        }
+
+        if (newPass.length < 8) {
+            alert('Mật khẩu mới phải có ít nhất 8 ký tự');
+            return;
+        }
+
+        try {
+            const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+            const response = await fetch(`${apiUrl}/users/password`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    currentPassword: currentPass,
+                    newPassword: newPass
+                }),
+                credentials: 'include'
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert('Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
+                localStorage.removeItem('user');
+                window.location.href = '../auth/login.html';
+            } else {
+                alert(result.message || 'Đổi mật khẩu thất bại');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Lỗi kết nối');
+        }
+    }
   </script>
 
   <!-- Deposit Modal -->
@@ -307,6 +415,95 @@
         <div class="modal-footer border-secondary">
           <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Hủy</button>
           <button type="button" class="btn btn-primary" onclick="handleDeposit()">Xác nhận nạp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Chỉnh sửa hồ sơ</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs mb-4" id="editProfileTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-pane" type="button" role="tab">Thông tin chung</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-pane" type="button" role="tab">Đổi mật khẩu</button>
+            </li>
+          </ul>
+          
+          <div class="tab-content" id="editProfileTabContent">
+            <!-- Info Tab -->
+            <div class="tab-pane fade show active" id="info-pane" role="tabpanel">
+              <form id="edit-info-form">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Họ</label>
+                        <input type="text" class="form-control" id="edit-lname" placeholder="Nhập họ của bạn">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Tên</label>
+                        <input type="text" class="form-control" id="edit-fname" placeholder="Nhập tên của bạn">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Email <i class="bi bi-lock-fill ms-1 text-secondary" title="Không thể thay đổi email"></i></label>
+                    <div class="input-group">
+                        <span class="input-group-text border-end-0 bg-transparent text-secondary"><i class="bi bi-envelope"></i></span>
+                        <input type="email" class="form-control border-start-0 ps-0" id="edit-email" readonly disabled style="background: rgba(255, 255, 255, 0.05);">
+                    </div>
+                    <div class="form-text text-secondary mt-2"><small>Để thay đổi email, vui lòng liên hệ bộ phận hỗ trợ.</small></div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="date" class="form-control" id="edit-dob">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="edit-uname" readonly disabled>
+                    </div>
+                </div>
+              </form>
+              <div class="d-flex justify-content-end gap-3 mt-5">
+                  <button type="button" class="btn btn-secondary-glass px-4" data-bs-dismiss="modal">Hủy</button>
+                  <button type="button" class="btn btn-primary-glow px-4" onclick="handleUpdateProfile()">Lưu thay đổi</button>
+              </div>
+            </div>
+            
+            <!-- Password Tab -->
+            <div class="tab-pane fade" id="password-pane" role="tabpanel">
+              <form id="change-password-form">
+                <!-- Hidden username for accessibility -->
+                <input type="text" autocomplete="username" style="display:none;">
+                
+                <div class="mb-4">
+                    <label class="form-label">Mật khẩu hiện tại</label>
+                    <input type="password" class="form-control" id="current-pass" placeholder="Nhập mật khẩu hiện tại" autocomplete="current-password">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Mật khẩu mới</label>
+                    <input type="password" class="form-control" id="new-pass" placeholder="Nhập mật khẩu mới (tối thiểu 8 ký tự)" autocomplete="new-password">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Nhập lại mật khẩu mới</label>
+                    <input type="password" class="form-control" id="confirm-pass" placeholder="Xác nhận mật khẩu mới" autocomplete="new-password">
+                </div>
+              </form>
+              <div class="d-flex justify-content-end gap-3 mt-5">
+                  <button type="button" class="btn btn-secondary-glass px-4" data-bs-dismiss="modal">Hủy</button>
+                  <button type="button" class="btn btn-primary-glow px-4" onclick="handleChangePassword()">Đổi mật khẩu</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

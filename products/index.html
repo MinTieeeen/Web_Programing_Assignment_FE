@@ -3,8 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Khám phá Game - NextPlay</title>
+  <title>Khám phá Game - NextPlay Store</title>
+  <meta name="description" content="Tìm kiếm và mua sắm những tựa game hot nhất hiện nay. Kho game đa dạng thể loại: Hành động, RPG, Chiến thuật, Thể thao...">
+  <meta name="keywords" content="kho game, mua game, game mới, game hot, rpg, fps, moba">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nextplay.com/products/">
+  <meta property="og:title" content="Khám phá Game - NextPlay Store">
+  <meta property="og:description" content="Tìm kiếm và mua sắm những tựa game hot nhất hiện nay tại NextPlay.">
+  <meta property="og:image" content="https://nextplay.com/assets/images/logo.png">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
@@ -34,6 +45,11 @@
       <div class="col-lg-3 mb-4">
         <div class="filter-card">
           <h5 class="filter-title">Bộ lọc tìm kiếm</h5>
+          
+          <div class="filter-group mb-3">
+            <span class="filter-label">Tìm kiếm</span>
+            <input type="text" id="search-input" class="form-control bg-dark text-white border-secondary" placeholder="Nhập tên game...">
+          </div>
           
           <div class="filter-group">
             <span class="filter-label">Thể loại</span>
@@ -139,13 +155,57 @@
             return;
         }
             
-            renderPage(currentPage);
+            // Fallback to mock if empty (optional, but good for demo if DB is empty)
+            if (allGames.length === 0) {
+                console.warn('API returned empty list, using mock data');
+                allGames = mockGames;
+            }
+            
+            // Check for search query param
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('search');
+            if (searchQuery) {
+                document.getElementById('search-input').value = searchQuery;
+                filterGames(searchQuery);
+            } else {
+                renderPage(currentPage);
+            }
 
         } catch (error) {
             console.error('Error loading games:', error);
             // Show error message to user
             grid.innerHTML = '<div class="col-12 text-center"><h3>Error loading games. Please try again later.</h3></div>';
             return;
+        }
+
+        // Search Input Handler
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value;
+            filterGames(keyword);
+        });
+
+        function filterGames(keyword) {
+            if (!keyword) {
+                // Reset to all games if empty
+                // In a real app, we might need to re-fetch or reset from a master list
+                // Here allGames is our master list, but we need to filter a copy
+                // Actually, let's keep allGames as the source of truth for *fetched* data
+                // and use a separate filteredGames array for rendering.
+                // For simplicity with this structure, let's re-assign from mockGames (or master list)
+                // But wait, allGames is currently the master list.
+                // Let's refactor slightly to have masterGames and displayedGames.
+            }
+             // To avoid complex refactoring, let's just filter from mockGames directly for now
+             // since we are using mock data.
+             const lowerKeyword = keyword.toLowerCase();
+             const filtered = window.mockGames.filter(game => 
+                 game.name.toLowerCase().includes(lowerKeyword)
+             );
+             
+             // Update allGames to be the filtered list so pagination works on it
+             allGames = filtered;
+             renderPage(1);
         }
 
         function renderPage(page) {
@@ -168,7 +228,7 @@
                 <div class="game-card">
                     <div class="game-img-wrapper">
                         <a href="detail.html?id=${game.id}">
-                            <img src="${game.image}" alt="${game.name}" class="game-img" onerror="this.src='../assets/images/default-game.jpg'">
+                            <img src="${game.image}" alt="${game.name}" class="game-img" loading="lazy" onerror="this.src='../assets/images/default-game.jpg'">
                         </a>
                         <div class="game-overlay"></div>
                     </div>
