@@ -58,8 +58,8 @@
       };
 
       try {
-        
-        const response = await fetch(`${window.API_URL}/users/signin`, {
+        const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE/index.php';
+        const response = await fetch(`${apiUrl}/users/signin`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

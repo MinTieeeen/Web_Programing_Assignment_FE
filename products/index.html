@@ -114,8 +114,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/include-components.js"></script>
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/js/auth.js?v=2"></script>
+  <script src="../assets/js/cart.js?v=2"></script>
   <script src="../assets/js/games-data.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
@@ -132,7 +132,8 @@
 
         try {
             // Attempt to fetch from API
-            const response = await fetch(`${window.API_URL}/games`);
+            const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE/index.php';
+            const response = await fetch(`${apiUrl}/games`);
             if (!response.ok) throw new Error('API Error');
             const data = await response.json();
             

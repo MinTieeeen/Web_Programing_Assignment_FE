@@ -9,44 +9,99 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
-  <link rel="stylesheet" href="../assets/css/news.css">
+  <link rel="stylesheet" href="../assets/css/news.css?v=2">
 </head>
 <body>
   <div data-include="header"></div>
 
-  <!-- Hero Section -->
-  <div class="news-hero" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop');">
-    <div class="news-hero-content">
-      <span class="news-hero-badge">Tin Nổi Bật</span>
-      <h1 class="news-hero-title">Giải đấu NextPlay Championship 2025 chính thức khởi tranh</h1>
-      <div class="news-hero-meta">
-        <span><i class="bi bi-calendar3"></i> 01/12/2025</span>
-        <span><i class="bi bi-person"></i> Admin</span>
-        <span><i class="bi bi-eye"></i> 1.2k lượt xem</span>
+  <div class="container mt-4 pt-5">
+    
+    <!-- Featured Carousel -->
+    <div id="featuredCarousel" class="carousel slide featured-carousel" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="2"></button>
+      </div>
+      <div class="carousel-inner" id="carousel-content">
+        <!-- Injected via JS -->
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+    <!-- Trending Section -->
+    <div class="mb-5">
+      <h2 class="news-section-title">Xu hướng <i class="bi bi-graph-up-arrow text-danger"></i></h2>
+      <div class="trending-wrapper" id="trending-content">
+        <!-- Injected via JS -->
       </div>
     </div>
-  </div>
 
-  <div class="container mb-5">
-    <!-- Search -->
-    <div class="news-search-container">
-      <input type="text" class="news-search-input" id="search-input" placeholder="Tìm kiếm bài viết...">
-      <i class="bi bi-search news-search-icon"></i>
+    <!-- Main Content Layout -->
+    <div class="news-layout">
+      
+      <!-- Left Column: Latest News List -->
+      <div class="main-column">
+        <h2 class="news-section-title">Mới nhất</h2>
+        <div id="latest-news-list">
+          <!-- Injected via JS -->
+        </div>
+        <div class="text-center mt-4">
+            <button class="btn btn-outline-light rounded-pill px-4">Xem thêm</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Sidebar -->
+      <div class="sidebar-column">
+        
+        <!-- Search Widget -->
+        <div class="sidebar-widget">
+          <div class="news-search-container mb-0">
+            <input type="text" class="news-search-input" id="search-input" placeholder="Tìm kiếm bài viết...">
+            <i class="bi bi-search news-search-icon"></i>
+          </div>
+        </div>
+
+        <!-- Categories Widget -->
+        <div class="sidebar-widget">
+          <h3 class="widget-title">Chuyên mục</h3>
+          <ul class="category-list">
+            <li class="category-item"><a href="#" class="category-link"><span>Tin Game</span> <span class="badge bg-secondary">12</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Esports</span> <span class="badge bg-secondary">8</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Review</span> <span class="badge bg-secondary">5</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Công nghệ</span> <span class="badge bg-secondary">15</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Cộng đồng</span> <span class="badge bg-secondary">4</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter Widget -->
+        <div class="sidebar-widget text-center">
+            <h3 class="widget-title text-center">Đăng ký nhận tin</h3>
+            <p class="text-secondary small mb-3">Nhận thông báo về các bài viết mới nhất qua email.</p>
+            <input type="email" class="form-control bg-dark text-white border-secondary mb-2" placeholder="Email của bạn">
+            <button class="btn btn-primary w-100">Đăng ký</button>
+        </div>
+
+      </div>
     </div>
 
-    <!-- News Grid -->
-    <div class="news-grid" id="news-grid">
-      <!-- News items will be injected here -->
-    </div>
   </div>
 
   <div data-include="footer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/include-components.js"></script>
-  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/auth.js?v=2"></script>
+  <script src="../assets/js/cart.js?v=2"></script>
   <script>
-    // Mock Data
+    // Extended Mock Data
     const mockNews = [
       {
         id: 1,
@@ -55,7 +110,9 @@
         image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop",
         date: "01/12/2025",
         author: "Admin",
-        views: 1200
+        views: 1200,
+        category: "Esports",
+        featured: true
       },
       {
         id: 2,
@@ -64,7 +121,9 @@
         image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071&auto=format&fit=crop",
         date: "28/11/2025",
         author: "Editor Choice",
-        views: 850
+        views: 850,
+        category: "Review",
+        featured: false
       },
       {
         id: 3,
@@ -73,7 +132,9 @@
         image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070&auto=format&fit=crop",
         date: "25/11/2025",
         author: "Tech Reviewer",
-        views: 2100
+        views: 2100,
+        category: "Tin Game",
+        featured: true
       },
       {
         id: 4,
@@ -82,7 +143,9 @@
         image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=2070&auto=format&fit=crop",
         date: "20/11/2025",
         author: "Hardware Guru",
-        views: 3500
+        views: 3500,
+        category: "Công nghệ",
+        featured: false
       },
       {
         id: 5,
@@ -91,12 +154,27 @@
         image: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=2165&auto=format&fit=crop",
         date: "15/11/2025",
         author: "Game Critic",
-        views: 1500
+        views: 1500,
+        category: "Review",
+        featured: true
+      },
+      {
+        id: 6,
+        title: "Cộng đồng game thủ Việt nói gì về sự kiện sắp tới?",
+        excerpt: "Những ý kiến trái chiều xoay quanh việc thay đổi thể thức thi đấu của giải đấu mùa xuân.",
+        image: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=2070&auto=format&fit=crop",
+        date: "10/11/2025",
+        author: "Reporter",
+        views: 500,
+        category: "Cộng đồng",
+        featured: false
       }
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
-      renderNews(mockNews);
+      renderFeatured(mockNews.filter(n => n.featured));
+      renderTrending(mockNews); // Just using all for trending demo
+      renderLatest(mockNews);
 
       // Search functionality
       const searchInput = document.getElementById('search-input');
@@ -106,34 +184,68 @@
           item.title.toLowerCase().includes(keyword) || 
           item.excerpt.toLowerCase().includes(keyword)
         );
-        renderNews(filteredNews);
+        renderLatest(filteredNews);
       });
     });
 
-    function renderNews(newsList) {
-      const grid = document.getElementById('news-grid');
-      
+    function renderFeatured(newsList) {
+      const container = document.getElementById('carousel-content');
+      container.innerHTML = newsList.map((item, index) => `
+        <div class="carousel-item ${index === 0 ? 'active' : ''}">
+          <img src="${item.image}" class="d-block w-100" alt="${item.title}">
+          <div class="carousel-caption">
+            <span class="featured-badge">${item.category}</span>
+            <h2 class="featured-title">${item.title}</h2>
+            <div class="featured-meta">
+                <span><i class="bi bi-calendar3"></i> ${item.date}</span>
+                <span><i class="bi bi-person"></i> ${item.author}</span>
+            </div>
+            <a href="detail.html?id=${item.id}" class="btn btn-primary mt-3">Đọc ngay</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderTrending(newsList) {
+      const container = document.getElementById('trending-content');
+      container.innerHTML = newsList.map(item => `
+        <div class="trending-card">
+            <a href="detail.html?id=${item.id}" class="text-decoration-none">
+                <img src="${item.image}" class="trending-img" alt="${item.title}">
+                <div class="trending-body">
+                    <h4 class="trending-title">${item.title}</h4>
+                    <div class="trending-meta">
+                        <i class="bi bi-eye"></i> ${item.views}
+                    </div>
+                </div>
+            </a>
+        </div>
+      `).join('');
+    }
+
+    function renderLatest(newsList) {
+      const container = document.getElementById('latest-news-list');
       if (newsList.length === 0) {
-        grid.innerHTML = '<div class="col-12 text-center text-secondary py-5">Không tìm thấy bài viết nào.</div>';
+        container.innerHTML = '<div class="text-center text-secondary py-5">Không tìm thấy bài viết nào.</div>';
         return;
       }
-
-      grid.innerHTML = newsList.map(item => `
-        <div class="news-card">
-          <div class="news-card-img-wrapper">
-            <img src="${item.image}" alt="${item.title}" class="news-card-img">
-          </div>
-          <div class="news-card-body">
-            <div class="news-card-date"><i class="bi bi-calendar3"></i> ${item.date}</div>
-            <h3 class="news-card-title">${item.title}</h3>
-            <p class="news-card-excerpt">${item.excerpt}</p>
-            <div class="news-card-footer">
-              <span class="text-secondary" style="font-size: 0.8rem"><i class="bi bi-eye"></i> ${item.views}</span>
-              <a href="detail.html?id=${item.id}" class="btn-read-more">
-                Đọc tiếp <i class="bi bi-arrow-right"></i>
-              </a>
+      container.innerHTML = newsList.map(item => `
+        <div class="news-list-item">
+            <img src="${item.image}" class="news-list-img" alt="${item.title}">
+            <div class="news-list-content">
+                <div class="mb-2">
+                    <span class="badge bg-dark border border-secondary text-secondary">${item.category}</span>
+                    <span class="text-secondary small ms-2"><i class="bi bi-calendar3"></i> ${item.date}</span>
+                </div>
+                <a href="detail.html?id=${item.id}" class="text-decoration-none">
+                    <h3 class="news-list-title">${item.title}</h3>
+                </a>
+                <p class="news-list-excerpt">${item.excerpt}</p>
+                <div class="d-flex align-items-center text-secondary small">
+                    <span class="me-3"><i class="bi bi-person"></i> ${item.author}</span>
+                    <span><i class="bi bi-eye"></i> ${item.views} lượt xem</span>
+                </div>
             </div>
-          </div>
         </div>
       `).join('');
     }

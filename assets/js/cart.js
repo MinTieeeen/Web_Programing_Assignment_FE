@@ -12,7 +12,10 @@ window.Cart = {
         const userStr = localStorage.getItem('user');
         if (userStr) {
             try {
-                const response = await fetch('http://localhost:8000/wishlists/Cart/games', {
+                let apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+                if (apiUrl.includes(':8000')) apiUrl = 'http://localhost/BTL_LTW/BTL_LTW_BE';
+
+                const response = await fetch(`${apiUrl}/wishlists/Cart/games`, {
                     credentials: 'include'
                 });
                 const result = await response.json();
@@ -55,7 +58,10 @@ window.Cart = {
         if (userStr) {
             // User is logged in, use API
             try {
-                const response = await fetch('http://localhost:8000/wishlists/Cart/games', {
+                let apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+                // if (apiUrl.includes(':8000')) apiUrl = 'http://localhost/BTL_LTW/BTL_LTW_BE';
+
+                const response = await fetch(`${apiUrl}/wishlists/Cart/games`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -100,7 +106,10 @@ window.Cart = {
         const userStr = localStorage.getItem('user');
         if (userStr) {
             try {
-                const response = await fetch(`http://localhost:8000/wishlists/Cart/games/${productId}`, {
+                let apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+                if (apiUrl.includes(':8000')) apiUrl = 'http://localhost/BTL_LTW/BTL_LTW_BE';
+
+                const response = await fetch(`${apiUrl}/wishlists/Cart/games/${productId}`, {
                     method: 'DELETE',
                     credentials: 'include'
                 });
@@ -137,7 +146,10 @@ window.Cart = {
 
         if (userStr) {
             try {
-                const response = await fetch('http://localhost:8000/wishlists/Cart/games', {
+                let apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+                // if (apiUrl.includes(':8000')) apiUrl = 'http://localhost/BTL_LTW/BTL_LTW_BE';
+
+                const response = await fetch(`${apiUrl}/wishlists/Cart/games`, {
                     credentials: 'include'
                 });
                 const result = await response.json();
@@ -163,7 +175,10 @@ window.Cart = {
         
         const user = JSON.parse(userStr);
         try {
-            const response = await fetch(`http://localhost:8000/users/${user.uid}`, {
+            let apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+            // if (apiUrl.includes(':8000')) apiUrl = 'http://localhost/BTL_LTW/BTL_LTW_BE';
+
+            const response = await fetch(`${apiUrl}/users/${user.uid}`, {
                 credentials: 'include'
             });
             const result = await response.json();
@@ -195,7 +210,10 @@ window.Cart = {
 
         try {
             // 1. Get cart items to get Game IDs
-            const cartResponse = await fetch('http://localhost:8000/wishlists/Cart/games', {
+            let apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
+            // if (apiUrl.includes(':8000')) apiUrl = 'http://localhost/BTL_LTW/BTL_LTW_BE';
+
+            const cartResponse = await fetch(`${apiUrl}/wishlists/Cart/games`, {
                 credentials: 'include'
             });
             const cartResult = await cartResponse.json();
@@ -208,7 +226,7 @@ window.Cart = {
             const gameIds = cartResult.data.games.map(item => item.Gid);
 
             // 2. Call Payment API
-            const response = await fetch('http://localhost:8000/payments', {
+            const response = await fetch(`${apiUrl}/payments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
