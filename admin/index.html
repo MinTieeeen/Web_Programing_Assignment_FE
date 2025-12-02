@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Store - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/css/admin-dashboard.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar Container -->
+    <div id="sidebarContainer">
+        <!-- Sidebar will be loaded here -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <!-- Navbar Container -->
+        <div id="navbarContainer">
+            <!-- Navbar will be loaded here -->
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="container-fluid p-4">
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stats-card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">Total Users</h5>
+                                    <h3 id="totalUsers">1,234</h3>
+                                </div>
+                                <div class="stats-icon">
+                                    <i class="bi bi-people fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stats-card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">Total Games</h5>
+                                    <h3 id="totalGames">567</h3>
+                                </div>
+                                <div class="stats-icon">
+                                    <i class="bi bi-joystick fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stats-card bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">Total Orders</h5>
+                                    <h3 id="totalOrders">2,890</h3>
+                                </div>
+                                <div class="stats-icon">
+                                    <i class="bi bi-cart3 fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stats-card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">Revenue</h5>
+                                    <h3 id="totalRevenue">$45,230</h3>
+                                </div>
+                                <div class="stats-icon">
+                                    <i class="bi bi-currency-dollar fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row mb-4">
+                <div class="col-xl-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Sales Analytics</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="salesChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Popular Categories</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="categoryChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tables Row -->
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recent Orders</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Game</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentOrdersBody">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recent Reviews</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Game</th>
+                                            <th>Customer</th>
+                                            <th>Rating</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentReviewsBody">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../env.js"></script>
+    <script src="../assets/js/admin/utils.js"></script>
+    <script src="../assets/js/admin/components.js"></script>
+    <script>
+        // Ensure ENV is loaded
+        if (!window.ENV || !window.ENV.API_URL) {
+            document.body.innerHTML = '<div class="alert alert-danger m-5"><h4>Configuration Error</h4><p>ENV not loaded! Make sure env.js is included and API_URL is configured.</p></div>';
+            throw new Error('[admin/index.html] ENV not loaded!');
+        }
+        const API_BASE_URL = window.ENV.API_URL;
+        
+        // Dashboard Manager Class
+        class DashboardManager {
+            async init() {
+                // Initialize components first
+                await AdminComponents.init('dashboard');
+                
+                // Load dashboard data
+                await this.loadStats();
+                await this.loadRecentOrders();
+                await this.loadRecentReviews();
+                this.initCharts();
+            }
+
+            async loadStats() {
+                try {
+                    // Fetch all data in parallel
+                    const [usersResponse, gamesResponse, cartsResponse, reviewsResponse] = await Promise.all([
+                        fetch(`${API_BASE_URL}/users`, {
+                            credentials: 'include',
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        }),
+                        fetch(`${API_BASE_URL}/games`, {
+                            credentials: 'include',
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        }),
+                        fetch(`${API_BASE_URL}/carts/stats`, {
+                            credentials: 'include',
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        }),
+                        fetch(`${API_BASE_URL}/reviews/stats`, {
+                            credentials: 'include',
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        })
+                    ]);
+
+                    const usersResult = await usersResponse.json();
+                    const gamesResult = await gamesResponse.json();
+                    const cartsResult = await cartsResponse.json();
+                    const reviewsResult = await reviewsResponse.json();
+
+                    const users = usersResult.status === 'success' ? usersResult.data : [];
+                    const games = gamesResult.status === 'success' ? gamesResult.data : [];
+                    const cartStats = cartsResult.status === 'success' ? cartsResult.data.stats : {};
+                    
+                    // Calculate total revenue from completed orders
+                    const totalRevenue = cartStats.total_revenue || 0;
+                    const totalOrders = cartStats.completed_orders || 0;
+
+                    document.getElementById('totalUsers').textContent = users.length.toLocaleString();
+                    document.getElementById('totalGames').textContent = games.length.toLocaleString();
+                    document.getElementById('totalOrders').textContent = totalOrders.toLocaleString();
+                    document.getElementById('totalRevenue').textContent = AdminUtils.formatCurrency(totalRevenue);
+                } catch (error) {
+                    console.error('Error loading stats:', error);
+                    document.getElementById('totalUsers').textContent = '0';
+                    document.getElementById('totalGames').textContent = '0';
+                    document.getElementById('totalOrders').textContent = '0';
+                    document.getElementById('totalRevenue').textContent = '₫0';
+                }
+            }
+
+            initCharts() {
+                this.initSalesChart();
+                this.initCategoryChart();
+            }
+
+            async initSalesChart() {
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                
+                try {
+                    // Fetch review stats to get monthly data
+                    const response = await fetch(`${API_BASE_URL}/reviews/stats`, {
+                        credentials: 'include',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    const result = await response.json();
+                    
+                    let labels = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    let data = [10, 10, 10, 10, 10, 2]; // Default from review data
+                    
+                    if (result.status === 'success' && result.data.byMonth) {
+                        const monthData = result.data.byMonth;
+                        labels = monthData.map(m => {
+                            const date = new Date(m.month + '-01');
+                            return date.toLocaleDateString('en-US', { month: 'short' });
+                        }).reverse();
+                        data = monthData.map(m => m.review_count).reverse();
+                    }
+                    
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Reviews',
+                                data: data,
+                                borderColor: 'rgb(75, 192, 192)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                tension: 0.1,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: { beginAtZero: true }
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error loading sales chart:', error);
+                }
+            }
+
+            async initCategoryChart() {
+                const ctx = document.getElementById('categoryChart').getContext('2d');
+                
+                try {
+                    // Fetch games to count by category
+                    const response = await fetch(`${API_BASE_URL}/games`, {
+                        credentials: 'include',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    const result = await response.json();
+                    
+                    let labels = ['Action', 'RPG', 'Adventure', 'Indie', 'MOBA'];
+                    let data = [5, 5, 3, 4, 2];
+                    
+                    if (result.status === 'success' && result.data) {
+                        // Count games by category
+                        const categoryCount = {};
+                        result.data.forEach(game => {
+                            const cat = game.category || 'Other';
+                            categoryCount[cat] = (categoryCount[cat] || 0) + 1;
+                        });
+                        
+                        // Sort by count and take top 5
+                        const sorted = Object.entries(categoryCount)
+                            .sort((a, b) => b[1] - a[1])
+                            .slice(0, 5);
+                        
+                        labels = sorted.map(([cat]) => cat);
+                        data = sorted.map(([, count]) => count);
+                    }
+                    
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: [
+                                    '#FF6384',
+                                    '#36A2EB',
+                                    '#FFCE56',
+                                    '#4BC0C0',
+                                    '#9966FF'
+                                ]
+                            }]
+                        },
+                        options: { responsive: true }
+                    });
+                } catch (error) {
+                    console.error('Error loading category chart:', error);
+                }
+            }
+
+            async loadRecentOrders() {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/carts?status=purchased`, {
+                        credentials: 'include',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    const result = await response.json();
+                    
+                    const tbody = document.getElementById('recentOrdersBody');
+                    if (tbody) {
+                        const orders = result.status === 'success' ? result.data : [];
+                        
+                        if (orders.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No orders yet</td></tr>';
+                        } else {
+                            const recentOrders = orders.slice(0, 5);
+                            tbody.innerHTML = recentOrders.map(order => `
+                                <tr>
+                                    <td>#${order.uid}</td>
+                                    <td>${order.fname || ''} ${order.lname || order.uname}</td>
+                                    <td>${order.item_count} items</td>
+                                    <td>${AdminUtils.formatCurrency(order.total_amount)}</td>
+                                    <td>
+                                        <span class="badge bg-success">Completed</span>
+                                    </td>
+                                </tr>
+                            `).join('');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading recent orders:', error);
+                    const tbody = document.getElementById('recentOrdersBody');
+                    if (tbody) {
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Failed to load orders</td></tr>';
+                    }
+                }
+            }
+
+            async loadRecentReviews() {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/reviews?limit=5`, {
+                        credentials: 'include',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    const result = await response.json();
+
+                    const tbody = document.getElementById('recentReviewsBody');
+                    if (tbody) {
+                        const reviews = result.status === 'success' ? result.data : [];
+                        
+                        if (reviews.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No reviews yet</td></tr>';
+                        } else {
+                            tbody.innerHTML = reviews.map(review => `
+                                <tr>
+                                    <td>${review.game_name}</td>
+                                    <td>${review.uname}</td>
+                                    <td>
+                                        ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+                                    </td>
+                                    <td>${AdminUtils.formatDate(review.review_time)}</td>
+                                </tr>
+                            `).join('');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading recent reviews:', error);
+                    const tbody = document.getElementById('recentReviewsBody');
+                    if (tbody) {
+                        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Failed to load reviews</td></tr>';
+                    }
+                }
+            }
+        }
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check authentication first
+            const authResult = await AdminUtils.checkAuthentication();
+            if (authResult) {
+                const dashboard = new DashboardManager();
+                dashboard.init();
+            }
+        });
+    </script>
+</body>
+</html>
+
