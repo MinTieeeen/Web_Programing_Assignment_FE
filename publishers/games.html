@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Games - NextPlay Publisher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/publisher.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="publisher-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-gamepad"></i> NextPlay
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="games.html" class="nav-link active">
+                        <i class="fas fa-box-open"></i> Manage Games
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reviews.html" class="nav-link">
+                        <i class="fas fa-star"></i> Reviews
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="revenue.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i> Revenue
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Manage Games</h1>
+                <button class="btn btn-primary" onclick="openGameModal()">
+                    <i class="fas fa-plus"></i> Upload New Game
+                </button>
+            </div>
+
+            <!-- Games List -->
+            <div class="table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Thumbnail</th>
+                            <th>Game Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Sales</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="games-table-body">
+                        <!-- Games will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Game Modal -->
+    <div class="modal-overlay" id="gameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Upload New Game</h3>
+                <button class="close-modal" onclick="closeGameModal()">&times;</button>
+            </div>
+            <form id="gameForm" onsubmit="event.preventDefault(); closeGameModal(); alert('Game Saved (Mock)');">
+                <div class="form-group">
+                    <label class="form-label">Game Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="Enter game name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="3"
+                        placeholder="Game description"></textarea>
+                </div>
+                <div class="form-group">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label class="form-label">Price ($)</label>
+                            <input type="number" name="price" class="form-control" placeholder="0.00" step="0.01"
+                                required>
+                        </div>
+                        <div>
+                            <label class="form-label">Version</label>
+                            <input type="text" name="version" class="form-control" placeholder="1.0">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-control">
+                        <option>Action</option>
+                        <option>Adventure</option>
+                        <option>RPG</option>
+                        <option>Strategy</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Thumbnail</label>
+                    <input type="file" class="form-control">
+                </div>
+                <div style="text-align: right;">
+                    <button type="button" class="btn btn-danger" onclick="closeGameModal()"
+                        style="margin-right: 10px; background: transparent; border: 1px solid var(--danger); color: var(--danger);">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Game</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../assets/js/publisher.js"></script>
+</body>
+
+</html>

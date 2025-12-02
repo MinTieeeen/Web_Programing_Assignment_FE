@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue Reports - NextPlay Publisher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/publisher.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="publisher-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-gamepad"></i> NextPlay
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="games.html" class="nav-link">
+                        <i class="fas fa-box-open"></i> Manage Games
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reviews.html" class="nav-link">
+                        <i class="fas fa-star"></i> Reviews
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="revenue.html" class="nav-link active">
+                        <i class="fas fa-chart-line"></i> Revenue
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Revenue Reports</h1>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <select class="form-control" style="width: 150px;">
+                        <option>Last 7 Days</option>
+                        <option>Last 30 Days</option>
+                        <option>This Year</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">Total Revenue</div>
+                    <div class="stat-value">$45,290</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> 12.5% vs last period
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Daily Average</div>
+                    <div class="stat-value">$1,509</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> 5.2% vs last period
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Top Game</div>
+                    <div class="stat-value" style="font-size: 24px;">Cyber Adventure</div>
+                    <div style="color: var(--text-muted); font-size: 14px; margin-top: 5px;">
+                        $25,000 revenue
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-section" style="grid-template-columns: 1fr 1fr;">
+                <div class="chart-container">
+                    <h3 style="margin-top: 0; margin-bottom: 20px;">Revenue Trend</h3>
+                    <canvas id="revenueTrendChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 style="margin-top: 0; margin-bottom: 20px;">Revenue by Game</h3>
+                    <canvas id="revenueByGameChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/publisher.js"></script>
+</body>
+
+</html>
