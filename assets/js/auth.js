@@ -11,8 +11,8 @@
   if (!window.APP_ROOT) {
     var scripts = document.getElementsByTagName('script');
     var scriptPath = '';
-    for(var i=0; i<scripts.length; i++) {
-      if(scripts[i].src && scripts[i].src.indexOf('auth.js') !== -1) {
+    for (var i = 0; i < scripts.length; i++) {
+      if (scripts[i].src && scripts[i].src.indexOf('auth.js') !== -1) {
         scriptPath = scripts[i].src;
         break;
       }
@@ -39,7 +39,7 @@
       const user = JSON.parse(userStr);
       // Show Avatar and Dropdown
       // const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
-      const avatarUrl = window.ENV.getAvatarUrl(user.avatar);
+      const avatarUrl = (window.ENV && window.ENV.getAvatarUrl) ? window.ENV.getAvatarUrl(user.avatar) : ((window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar);
       authActions.innerHTML = `
         <div class="d-flex align-items-center">
           ${cartHtml}
@@ -55,7 +55,7 @@
           </div>
         </div>
       `;
-    } 
+    }
     else {
       // Show Login/Register
       authActions.innerHTML = `
@@ -65,10 +65,10 @@
         </div>
       `;
     }
-    
+
     // Update cart count if Cart object is available
     if (window.Cart && window.Cart.updateCartCount) {
-        window.Cart.updateCartCount();
+      window.Cart.updateCartCount();
     }
   }
 
@@ -83,12 +83,12 @@
   window.API_URL = API_URL;
 
   // Run on load if header is already present
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     updateHeaderLoginStatus();
   });
 
   // Event Delegation for Logout
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     const logoutBtn = e.target.closest('#logout-btn');
     if (logoutBtn) {
       console.log('Logout button clicked');
