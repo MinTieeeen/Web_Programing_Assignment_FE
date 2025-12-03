@@ -111,6 +111,7 @@
         let currentPage = 1;
         const itemsPerPage = 9;
         let allGames = [];
+        let masterGames = []; // Store full list for filtering
 
         try {
             // Ensure ENV is loaded
@@ -127,7 +128,7 @@
                     id: game.id || game.gid,
                     name: game.name || game.title,
                     price: game.price || 0,
-                    image: game.image_url || game.image || 'https://via.placeholder.com/300x400?text=Game+Image',
+                    image: game.image_url || game.image || '../assets/images/default-game.jpg',
                     category: game.category_name || game.category || 'Unknown',
                     tags: typeof game.tags === 'string' ? game.tags.split(',') : (Array.isArray(game.tags) ? game.tags : []),
                     description: game.description || 'No description available',
@@ -137,6 +138,7 @@
                     rating: game.rating || 0,
                     reviews: game.review_count || 0
                 }));
+                masterGames = [...allGames]; // Backup full list
             } else {
                 throw new Error('Failed to fetch games');
             }
@@ -149,8 +151,7 @@
             
             // Fallback to mock if empty (optional, but good for demo if DB is empty)
             if (allGames.length === 0) {
-                console.warn('API returned empty list, using mock data');
-                allGames = mockGames;
+                console.warn('API returned empty list');
             }
             
             // Check for search query param
@@ -175,18 +176,13 @@
         function filterGames(keyword) {
             if (!keyword) {
                 // Reset to all games if empty
-                // In a real app, we might need to re-fetch or reset from a master list
-                // Here allGames is our master list, but we need to filter a copy
-                // Actually, let's keep allGames as the source of truth for *fetched* data
-                // and use a separate filteredGames array for rendering.
-                // For simplicity with this structure, let's re-assign from mockGames (or master list)
-                // But wait, allGames is currently the master list.
-                // Let's refactor slightly to have masterGames and displayedGames.
+                allGames = [...masterGames];
+                renderPage(1);
+                return;
             }
-             // To avoid complex refactoring, let's just filter from mockGames directly for now
-             // since we are using mock data.
+             
              const lowerKeyword = keyword.toLowerCase();
-             const filtered = window.mockGames.filter(game => 
+             const filtered = masterGames.filter(game => 
                  game.name.toLowerCase().includes(lowerKeyword)
              );
              

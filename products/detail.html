@@ -138,28 +138,53 @@
         document.head.appendChild(script);
     }
 
-    function renderGameDetail(game) {
+    async function renderGameDetail(game) {
         const container = document.getElementById('game-detail-container');
         
-        // Format Price - backend sends price as string
-        const price = parseFloat(game.price) || 0;
-        const priceDisplay = price === 0 ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(price) + ' đ';
+        // Fetch Reviews
+        let reviews = [];
+        try {
+            const reviewRes = await fetch(`${window.ENV.API_URL}/feedback/game/${game.id}`);
+            const reviewData = await reviewRes.json();
+            if (reviewData.status === 'success') {
+                reviews = reviewData.data;
+            }
+        } catch (e) {
+            console.error('Error loading reviews:', e);
+        }
+
+        // Calculate average rating from real reviews if available
+        let displayRating = game.rating;
+        let displayReviewCount = game.reviews;
         
-        // Generate Stars - use default rating if not provided
-        const rating = parseFloat(game.rating) || 4.5;
-        const fullStars = Math.floor(rating);
-        const halfStar = rating % 1 >= 0.5;
+        if (reviews.length > 0) {
+            const totalRating = reviews.reduce((acc, r) => acc + parseFloat(r.rating), 0);
+            displayRating = (totalRating / reviews.length).toFixed(1);
+            displayReviewCount = reviews.length;
+        }
+
+        // Generate Stars
+        const fullStars = Math.floor(displayRating);
+        const halfStar = displayRating % 1 >= 0.5;
         let starsHtml = '';
         for(let i=0; i<fullStars; i++) starsHtml += '★';
         if(halfStar) starsHtml += '½';
-        
-        // Handle tags and category
-        const category = game.category || 'Game';
-        const tags = game.tags ? (typeof game.tags === 'string' ? game.tags.split(',') : game.tags) : [];
-        
-        // Default reviews count
-        const reviews = game.reviews || Math.floor(Math.random() * 1000) + 100;
-        
+
+        // Render Reviews HTML
+        const reviewsHtml = reviews.length > 0 ? reviews.map(r => `
+            <div class="review-item">
+                <div class="review-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="${window.ENV.getAvatarUrl(r.reviewer_avatar)}" alt="${r.reviewer_name}" class="rounded-circle" width="30" height="30" style="object-fit: cover;">
+                        <span class="reviewer-name">${r.reviewer_name}</span>
+                    </div>
+                    <span class="review-date">${r.feedback_time}</span>
+                </div>
+                <div class="text-warning mb-2">${'★'.repeat(Math.floor(r.rating))}</div>
+                <p class="review-text">${r.content}</p>
+            </div>
+        `).join('') : '<p class="text-secondary">Chưa có đánh giá nào.</p>';
+
         container.innerHTML = `
             <!-- Hero Section -->
             <div class="game-hero">
@@ -188,7 +213,7 @@
                                 <span class="game-price-large">${priceDisplay}</span>
                                 <div class="d-flex align-items-center gap-2 text-warning">
                                     <span style="font-size: 1.2rem;">${starsHtml}</span>
-                                    <span class="text-secondary">(${new Intl.NumberFormat('vi-VN').format(reviews)} đánh giá)</span>
+                                    <span class="text-secondary">(${new Intl.NumberFormat('vi-VN').format(displayReviewCount)} đánh giá)</span>
                                 </div>
                             </div>
                             
@@ -227,9 +252,9 @@
                                 <h3 class="section-title">Đánh giá từ người chơi</h3>
                                 <div class="review-stats">
                                     <div class="text-center">
-                                        <div class="rating-big">${game.rating}</div>
+                                        <div class="rating-big">${displayRating}</div>
                                         <div class="rating-stars">${starsHtml}</div>
-                                        <div class="rating-count">${new Intl.NumberFormat('vi-VN').format(game.reviews)} bài đánh giá</div>
+                                        <div class="rating-count">${new Intl.NumberFormat('vi-VN').format(displayReviewCount)} bài đánh giá</div>
                                     </div>
                                     <div class="flex-grow-1 border-start border-secondary ps-4">
                                         <p class="text-white mb-1">Rất tích cực</p>
@@ -238,22 +263,7 @@
                                 </div>
 
                                 <div class="reviews-list">
-                                    <div class="review-item">
-                                        <div class="review-header">
-                                            <span class="reviewer-name">Gamer123</span>
-                                            <span class="review-date">2 ngày trước</span>
-                                        </div>
-                                        <div class="text-warning mb-2">★★★★★</div>
-                                        <p class="review-text">Game quá hay, đồ họa đẹp, cốt truyện cuốn hút. Rất đáng tiền!</p>
-                                    </div>
-                                    <div class="review-item">
-                                        <div class="review-header">
-                                            <span class="reviewer-name">ProPlayerVN</span>
-                                            <span class="review-date">1 tuần trước</span>
-                                        </div>
-                                        <div class="text-warning mb-2">★★★★☆</div>
-                                        <p class="review-text">Gameplay ổn, nhưng server đôi khi hơi lag. Hy vọng sẽ fix sớm.</p>
-                                    </div>
+                                    ${reviewsHtml}
                                 </div>
                             </div>
                         </div>
