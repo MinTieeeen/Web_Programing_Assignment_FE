@@ -89,23 +89,12 @@
         <div id="games-grid" class="games-grid">
           <!-- Loading Skeletons -->
           <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
         </div>
         
         <!-- Pagination -->
-        <nav aria-label="Page navigation" class="mt-5">
-          <ul class="pagination justify-content-center pagination-dark">
-            <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Sau</a></li>
-          </ul>
-        </nav>
+        <div id="pagination-controls" class="pagination-container"></div>
+      </div>
+
       </div>
     </div>
   </div>
@@ -115,11 +104,11 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../env.js"></script>
   <script src="../assets/js/include-components.js"></script>
-  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/auth.js?v=2"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
         const grid = document.getElementById('games-grid');
-        const paginationContainer = document.querySelector('.pagination');
+        // const paginationContainer = document.querySelector('.pagination'); // Removed as it's no longer used here
         
         let currentPage = 1;
         const itemsPerPage = 9;
@@ -142,7 +131,7 @@
                     price: game.price || 0,
                     image: game.image_url || game.image || 'https://via.placeholder.com/300x400?text=Game+Image',
                     category: game.category_name || game.category || 'Unknown',
-                    tags: game.tags ? game.tags.split(',') : [],
+                    tags: typeof game.tags === 'string' ? game.tags.split(',') : (Array.isArray(game.tags) ? game.tags : []),
                     description: game.description || 'No description available',
                     developer: game.developer || 'Unknown Developer',
                     publisher: game.publisher_name || game.publisher || 'Unknown Publisher',
@@ -176,12 +165,7 @@
                 renderPage(currentPage);
             }
 
-        } catch (error) {
-            console.error('Error loading games:', error);
-            // Show error message to user
-            grid.innerHTML = '<div class="col-12 text-center"><h3>Error loading games. Please try again later.</h3></div>';
-            return;
-        }
+
 
         // Search Input Handler
         const searchInput = document.getElementById('search-input');
@@ -258,25 +242,21 @@
         }
 
         function renderPagination() {
-            const totalPages = Math.ceil(allGames.length / itemsPerPage);
-            let html = '';
-
-            // Previous Button
-            html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                        <a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">Trước</a>
-                     </li>`;
-
-            // Page Numbers
-            for (let i = 1; i <= totalPages; i++) {
-                html += `<li class="page-item ${currentPage === i ? 'active' : ''}">
-                            <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>
-                         </li>`;
-            }
-
-            // Next Button
-            html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                        <a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">Sau</a>
-                     </li>`;
+            const totalPages = Math.ceil(allGames.length / itemsPerPage) || 1; // Default to 1 if 0
+            const paginationContainer = document.getElementById('pagination-controls');
+            
+            // Always render, even if 1 page
+            let html = `
+                <button class="btn-page" id="btn-prev" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                
+                <span class="page-info">${currentPage} / ${totalPages}</span>
+                
+                <button class="btn-page" id="btn-next" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            `;
 
             paginationContainer.innerHTML = html;
         }
