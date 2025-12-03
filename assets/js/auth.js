@@ -11,8 +11,8 @@
   if (!window.APP_ROOT) {
     var scripts = document.getElementsByTagName('script');
     var scriptPath = '';
-    for(var i=0; i<scripts.length; i++) {
-      if(scripts[i].src && scripts[i].src.indexOf('auth.js') !== -1) {
+    for (var i = 0; i < scripts.length; i++) {
+      if (scripts[i].src && scripts[i].src.indexOf('auth.js') !== -1) {
         scriptPath = scripts[i].src;
         break;
       }
@@ -29,7 +29,9 @@
     // Cart Icon HTML
     const cartHtml = `
       <a href="${(window.APP_ROOT || '/') + 'cart/index.html'}" class="np-cart-btn me-3">
-        <i class="bi bi-bag-fill"></i>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bag-fill" viewBox="0 0 16 16">
+          <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
+        </svg>
         <span class="cart-badge" id="cart-count" style="display: none;">0</span>
       </a>
     `;
@@ -39,7 +41,7 @@
       const user = JSON.parse(userStr);
       // Show Avatar and Dropdown
       // const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
-      const avatarUrl = user.avatar ? user.avatar: (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
+      const avatarUrl = (window.ENV && window.ENV.getAvatarUrl) ? window.ENV.getAvatarUrl(user.avatar) : ((window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar);
       authActions.innerHTML = `
         <div class="d-flex align-items-center">
           ${cartHtml}
@@ -55,7 +57,7 @@
           </div>
         </div>
       `;
-    } 
+    }
     else {
       // Show Login/Register
       authActions.innerHTML = `
@@ -65,10 +67,10 @@
         </div>
       `;
     }
-    
+
     // Update cart count if Cart object is available
     if (window.Cart && window.Cart.updateCartCount) {
-        window.Cart.updateCartCount();
+      window.Cart.updateCartCount();
     }
   }
 
@@ -83,12 +85,12 @@
   window.API_URL = API_URL;
 
   // Run on load if header is already present
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     updateHeaderLoginStatus();
   });
 
   // Event Delegation for Logout
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     const logoutBtn = e.target.closest('#logout-btn');
     if (logoutBtn) {
       console.log('Logout button clicked');

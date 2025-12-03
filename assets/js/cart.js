@@ -11,7 +11,7 @@ function getApiUrl() {
 
 window.Cart = {
     // Get all items (Sync - LocalStorage only)
-    getItems: function() {
+    getItems: function () {
         const cartJson = localStorage.getItem(CART_STORAGE_KEY);
         return cartJson ? JSON.parse(cartJson) : [];
     },
@@ -49,13 +49,13 @@ window.Cart = {
     },
 
     // Save items
-    saveItems: function(items) {
+    saveItems: function (items) {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
         this.updateCartCount();
     },
 
     // Get total price
-    getTotal: function() {
+    getTotal: function () {
         const items = this.getItems();
         return items.reduce((total, item) => total + item.price, 0);
     },
@@ -91,7 +91,7 @@ window.Cart = {
             // Guest user
             let items = this.getItems();
             const existingItem = items.find(item => item.id === game.id);
-    
+
             if (existingItem) {
                 alert('Game này đã có trong giỏ hàng của bạn!');
             } else {
@@ -157,6 +157,16 @@ window.Cart = {
                 const response = await fetch(`${apiUrl}/wishlists/Cart/games`, {
                     credentials: 'include'
                 });
+
+                if (response.status === 401) {
+                    console.warn('Session expired. Clearing local user data.');
+                    localStorage.removeItem('user');
+                    if (window.updateHeaderLoginStatus) {
+                        window.updateHeaderLoginStatus();
+                    }
+                    return;
+                }
+
                 const result = await response.json();
                 if (result.status === 'success' && result.data && result.data.games) {
                     count = result.data.games.length;
@@ -177,7 +187,7 @@ window.Cart = {
     async fetchUserBalance() {
         const userStr = localStorage.getItem('user');
         if (!userStr) return;
-        
+
         const user = JSON.parse(userStr);
         try {
             const apiUrl = getApiUrl();
@@ -185,6 +195,16 @@ window.Cart = {
             const response = await fetch(`${apiUrl}/users/${user.uid}`, {
                 credentials: 'include'
             });
+
+            if (response.status === 401) {
+                console.warn('Session expired (balance check). Clearing local user data.');
+                localStorage.removeItem('user');
+                if (window.updateHeaderLoginStatus) {
+                    window.updateHeaderLoginStatus();
+                }
+                return;
+            }
+
             const result = await response.json();
             if (result.status === 'success') {
                 const balanceElement = document.getElementById('user-balance');
@@ -249,10 +269,10 @@ window.Cart = {
                     location.reload();
                 }
             } else if (response.status === 402) {
-                 // Insufficient balance
-                 const needed = new Intl.NumberFormat('vi-VN').format(result.data.needed_amount) + ' đ';
-                 const current = new Intl.NumberFormat('vi-VN').format(result.data.current_balance) + ' đ';
-                 alert(`Số dư không đủ!\nSố dư hiện tại: ${current}\nCần thêm: ${needed}`);
+                // Insufficient balance
+                const needed = new Intl.NumberFormat('vi-VN').format(result.data.needed_amount) + ' đ';
+                const current = new Intl.NumberFormat('vi-VN').format(result.data.current_balance) + ' đ';
+                alert(`Số dư không đủ!\nSố dư hiện tại: ${current}\nCần thêm: ${needed}`);
             } else {
                 alert('Thanh toán thất bại: ' + (result.message || 'Lỗi không xác định'));
             }

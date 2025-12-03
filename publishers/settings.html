@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - NextPlay Publisher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/publisher.css">
+</head>
+
+<body>
+    <div class="publisher-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-gamepad"></i> NextPlay
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="games.html" class="nav-link">
+                        <i class="fas fa-box-open"></i> Manage Games
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reviews.html" class="nav-link">
+                        <i class="fas fa-star"></i> Reviews
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="revenue.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i> Revenue
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link active">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Settings</h1>
+            </div>
+
+            <div class="chart-container" style="max-width: 800px;">
+                <form onsubmit="event.preventDefault(); alert('Settings Saved (Mock)');">
+                    <h3 style="margin-top: 0; margin-bottom: 20px;">Company Information</h3>
+
+                    <div class="form-group">
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div
+                                style="width: 80px; height: 80px; background: #a29bfe; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; color: white;">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary">Change Logo</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" class="form-control" value="NextPlay Studios" required>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <label class="form-label">Tax Code</label>
+                                <input type="text" class="form-control" value="TX-123456789" required>
+                            </div>
+                            <div>
+                                <label class="form-label">Website</label>
+                                <input type="url" class="form-control" value="https://nextplay.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <textarea class="form-control" rows="2">123 Gaming Street, Tech City, NY 10001</textarea>
+                    </div>
+
+                    <h3 style="margin-top: 30px; margin-bottom: 20px;">Payment Information</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-control">
+                            <option>Bank Transfer</option>
+                            <option>Stripe</option>
+                            <option>Momo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Bank Account Number</label>
+                        <input type="text" class="form-control" value="**** **** **** 1234">
+                    </div>
+
+                    <div style="margin-top: 30px; text-align: right;">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/publisher.js"></script>
+</body>
+
+</html>
