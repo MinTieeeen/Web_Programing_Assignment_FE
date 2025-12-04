@@ -1,7 +1,8 @@
 // Auth Logic
 (function () {
   if (!window.ENV || !window.ENV.API_URL) {
-    console.error('ENV or ENV.API_URL is not defined');
+    console.error('ENV or ENV.API_URL is not defined in auth.js');
+    console.log('window.ENV:', window.ENV);
     return;
   }
   const API_URL = window.ENV.API_URL;
