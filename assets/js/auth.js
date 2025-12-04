@@ -39,7 +39,9 @@
     if (userStr) {
       const user = JSON.parse(userStr);
       // Show Avatar and Dropdown
-      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.png';
+      const avatarUrl = user.avatar 
+        ? (user.avatar.startsWith('http') ? user.avatar : (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar)
+        : (window.APP_ROOT || '/') + 'assets/images/default-avatar.png';
 
       authActions.innerHTML = `
         <div class="d-flex align-items-center">

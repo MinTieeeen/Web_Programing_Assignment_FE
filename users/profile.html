@@ -137,7 +137,9 @@
     });
 
     function renderUserInfo(user) {
-      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
+      const avatarUrl = user.avatar 
+        ? (user.avatar.startsWith('http') ? user.avatar : (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar)
+        : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
       const balance = user.balance ? new Intl.NumberFormat('vi-VN').format(user.balance) : '0';
       const joinDate = user.created_at ? new Date(user.created_at).toLocaleDateString('vi-VN') : 'Mới tham gia';
 
