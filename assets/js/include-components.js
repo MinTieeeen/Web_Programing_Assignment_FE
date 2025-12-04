@@ -43,6 +43,19 @@
                           .replace(/src="\//g, 'src="' + rootPath);
 
       el.innerHTML = fixedHtml;
+      
+      // Execute scripts in the included HTML
+      var scripts = el.getElementsByTagName('script');
+      for (var i = 0; i < scripts.length; i++) {
+          var script = document.createElement('script');
+          if (scripts[i].src) {
+              script.src = scripts[i].src;
+          } else {
+              script.textContent = scripts[i].textContent;
+          }
+          document.body.appendChild(script);
+      }
+
       wireToggle(el);
       
       // If this is header, trigger status update
