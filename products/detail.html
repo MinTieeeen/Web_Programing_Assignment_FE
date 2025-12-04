@@ -441,12 +441,12 @@
         const content = input.value.trim();
         
         if (!content) {
-            alert('Vui lòng nhập nội dung đánh giá');
+            Toast.warning('Vui lòng nhập nội dung đánh giá');
             return;
         }
 
         if (!localStorage.getItem('user')) {
-            alert('Vui lòng đăng nhập để đánh giá');
+            Toast.warning('Vui lòng đăng nhập để đánh giá');
             return;
         }
 
@@ -477,11 +477,11 @@
                 // Reload page to refresh reviews
                 window.location.reload();
             } else {
-                alert(result.message || 'Không thể gửi đánh giá');
+                Toast.error(result.message || 'Không thể gửi đánh giá');
             }
         } catch (e) {
             console.error('Error posting review:', e);
-            alert('Có lỗi xảy ra khi gửi đánh giá');
+            Toast.error('Có lỗi xảy ra khi gửi đánh giá');
         }
     }
 
@@ -502,20 +502,18 @@
             if (response.ok && result.status === 'success') {
                 window.location.reload();
             } else {
-                alert(result.message || 'Không thể xóa đánh giá');
+                Toast.error(result.message || 'Không thể xóa đánh giá');
             }
         } catch (e) {
             console.error('Error deleting review:', e);
-            alert('Có lỗi xảy ra khi xóa đánh giá');
+            Toast.error('Có lỗi xảy ra khi xóa đánh giá');
         }
     }
 
     // Cart Actions
     function addToCartOnly(gameId) {
         if (!localStorage.getItem('user')) {
-            if(confirm('Bạn cần đăng nhập để thêm vào giỏ hàng. Đi đến trang đăng nhập?')) {
-                window.location.href = '../auth/login.html';
-            }
+            Toast.warning('Bạn cần đăng nhập để thêm vào giỏ hàng');
             return;
         }
         
@@ -524,15 +522,13 @@
         if (game) {
             Cart.addItem(game);
         } else {
-            alert('Không tìm thấy thông tin game!');
+            Toast.error('Không tìm thấy thông tin game!');
         }
     }
 
     function addToCartAndCheckout(gameId) {
         if (!localStorage.getItem('user')) {
-            if(confirm('Bạn cần đăng nhập để mua hàng. Đi đến trang đăng nhập?')) {
-                window.location.href = '../auth/login.html';
-            }
+            Toast.warning('Bạn cần đăng nhập để mua hàng');
             return;
         }
         
@@ -544,7 +540,7 @@
                 window.location.href = '../cart/index.html';
             }, 500);
         } else {
-            alert('Không tìm thấy thông tin game!');
+            Toast.error('Không tìm thấy thông tin game!');
         }
     }
   </script>

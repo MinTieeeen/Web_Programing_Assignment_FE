@@ -127,6 +127,22 @@
                      errorMessage = 'Tên đăng nhập hoặc mật khẩu không chính xác';
                  } else if (errorData.message === 'Username and password are required') {
                      errorMessage = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu';
+                 } else if (errorData.message.includes('Remaining attempts')) {
+                     const match = errorData.message.match(/Remaining attempts: (\d+)/);
+                     if (match) {
+                         errorMessage = `Tên đăng nhập hoặc mật khẩu không chính xác. Bạn còn ${match[1]} lần thử.`;
+                     } else {
+                         errorMessage = 'Tên đăng nhập hoặc mật khẩu không chính xác';
+                     }
+                 } else if (errorData.message.includes('Account is now locked')) {
+                     errorMessage = 'Tài khoản đã bị khóa do đăng nhập sai quá nhiều lần. Vui lòng thử lại sau 15 phút.';
+                 } else if (errorData.message.includes('Account is locked')) {
+                     const match = errorData.message.match(/in (\d+) minutes/);
+                     if (match) {
+                        errorMessage = `Tài khoản đang bị khóa. Vui lòng thử lại sau ${match[1]} phút.`;
+                     } else {
+                        errorMessage = 'Tài khoản đang bị khóa. Vui lòng thử lại sau.';
+                     }
                  } else {
                      errorMessage = errorData.message;
                  }
