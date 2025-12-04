@@ -319,17 +319,8 @@
       };
 
       try {
-<<<<<<< HEAD
         const apiUrl = 'http://localhost/BE/NextPlay/index.php';
         const response = await fetch(`${apiUrl}/users/register`, {
-=======
-        // Ensure ENV is loaded
-        if (!window.ENV || !window.ENV.API_URL) {
-            throw new Error('ENV not loaded! Make sure env.js is included.');
-        }
-        const API_URL = window.ENV.API_URL;
-        const response = await fetch(`${API_URL}/users/register`, {
->>>>>>> c45c01909a526a887f9fedb6a309ccaf78602a96
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

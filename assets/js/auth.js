@@ -1,16 +1,6 @@
 // Auth Logic
-<<<<<<< HEAD
 (function () {
   const API_URL = 'http://localhost/BE/NextPlay/index.php'; // Adjust if needed
-=======
-(function() {
-  // Ensure ENV is loaded
-  if (!window.ENV || !window.ENV.API_URL) {
-    console.error('[auth.js] ENV not loaded! Include env.js before this script.');
-    return;
-  }
-  const API_URL = window.ENV.API_URL;
->>>>>>> c45c01909a526a887f9fedb6a309ccaf78602a96
 
   // Calculate APP_ROOT if not set
   if (!window.APP_ROOT) {
@@ -43,13 +33,8 @@
     if (userStr) {
       const user = JSON.parse(userStr);
       // Show Avatar and Dropdown
-<<<<<<< HEAD
       const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.png';
 
-=======
-      // const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
-      const avatarUrl = user.avatar ? user.avatar: (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
->>>>>>> c45c01909a526a887f9fedb6a309ccaf78602a96
       authActions.innerHTML = `
         <div class="d-flex align-items-center">
           ${cartHtml}

@@ -86,40 +86,7 @@
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script>
-<<<<<<< HEAD
     document.getElementById('login-form').addEventListener('submit', async function (e) {
-=======
-    // Ensure ENV is loaded
-    if (!window.ENV || !window.ENV.API_URL) {
-        document.body.innerHTML = '<div class="alert alert-danger m-5"><h4>Configuration Error</h4><p>ENV not loaded! Make sure env.js is included and API_URL is configured.</p></div>';
-        throw new Error('[auth/login.html] ENV not loaded!');
-    }
-    const API_URL = window.ENV.API_URL;
-
-// Check if user is admin by querying backend Admin table
-async function checkIfUserIsAdmin(uid) {
-  try {
-    const response = await fetch(`${API_URL}/admin/check/${uid}`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      return data.status === 'success' && data.isAdmin;
-    }
-    return false;
-  } catch (error) {
-    console.error('Admin check error:', error);
-    return false;
-  }
-}
-
-    document.getElementById('login-form').addEventListener('submit', async function(e) {
->>>>>>> c45c01909a526a887f9fedb6a309ccaf78602a96
       e.preventDefault();
       const errorDiv = document.getElementById('login-error');
       errorDiv.classList.add('d-none');
@@ -135,12 +102,8 @@ async function checkIfUserIsAdmin(uid) {
       }
 
       try {
-<<<<<<< HEAD
         const apiUrl = window.API_URL || 'http://localhost/BE/NextPlay/index.php';
         const response = await fetch(`${apiUrl}/users/signin`, {
-=======
-        const response = await fetch(`${API_URL}/users/signin`, {
->>>>>>> c45c01909a526a887f9fedb6a309ccaf78602a96
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -222,7 +185,6 @@ async function checkIfUserIsAdmin(uid) {
       }
     });
 
-<<<<<<< HEAD
     // Password toggle functionality
     document.querySelectorAll('.toggle-password-svg').forEach(toggle => {
       toggle.addEventListener('click', function () {
@@ -241,15 +203,6 @@ async function checkIfUserIsAdmin(uid) {
           eyeClosed.forEach(el => el.style.display = 'none');
         }
       });
-=======
-    // Check if user is already logged in
-    document.addEventListener('DOMContentLoaded', function() {
-      const userStr = localStorage.getItem('user');
-      if (userStr) {
-        // User is already logged in, redirect to home
-        window.location.href = (window.APP_ROOT || '../') + 'index.html';
-      }
->>>>>>> c45c01909a526a887f9fedb6a309ccaf78602a96
     });
   </script>
 </body>

@@ -6,474 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publisher Dashboard - NextPlay</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/publisher.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
-    color: #e5e7eb;
-    line-height: 1.6;
-    overflow-x: hidden;
-}
-
-.publisher-container {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* ===== SIDEBAR ===== */
-.sidebar {
-    width: 280px;
-    background: rgba(15, 20, 32, 0.95);
-    backdrop-filter: blur(20px);
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 1.5rem 0;
-    position: fixed;
-    height: 100vh;
-    overflow-y: auto;
-    transition: width 0.3s ease;
-    z-index: 1000;
-}
-
-.sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.sidebar-logo {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 0 1.5rem;
-    margin-bottom: 2rem;
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #f9fafb;
-    letter-spacing: -0.02em;
-}
-
-.sidebar-logo img {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-}
-
-.nav-menu {
-    list-style: none;
-    padding: 0 0.75rem;
-}
-
-.nav-item {
-    margin-bottom: 4px;
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 0.875rem 1rem;
-    color: rgba(255, 255, 255, 0.55);
-    text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 10px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    position: relative;
-}
-
-.nav-link:hover {
-    background: rgba(99, 102, 241, 0.08);
-    color: rgba(255, 255, 255, 0.9);
-    transform: translateX(2px);
-}
-
-.nav-link.active {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.12));
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
-}
-
-.nav-link.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 60%;
-    background: linear-gradient(180deg, #6366f1, #8b5cf6);
-    border-radius: 0 2px 2px 0;
-}
-
-.nav-link i {
-    width: 22px;
-    text-align: center;
-    font-size: 1.1rem;
-}
-
-/* ===== MAIN CONTENT ===== */
-.main-content {
-    flex: 1;
-    margin-left: 280px;
-    padding: 2.5rem;
-    max-width: 100%;
-    transition: margin-left 0.3s ease;
-}
-
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2.5rem;
-    padding: 1.75rem 2rem;
-    background: rgba(15, 20, 32, 0.8);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-.page-title {
-    font-size: 2.25rem;
-    font-weight: 700;
-    color: #f9fafb;
-    letter-spacing: -0.03em;
-    background: linear-gradient(135deg, #f9fafb 0%, #d1d5db 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.user-profile:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(99, 102, 241, 0.3);
-}
-
-.user-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-}
-
-.user-profile span {
-    color: #d1d5db;
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-/* ===== STATS GRID ===== */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
-}
-
-.stat-card {
-    background: rgba(15, 20, 32, 0.7);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 18px;
-    padding: 1.75rem;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-}
-
-.stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.15);
-    border-color: rgba(99, 102, 241, 0.2);
-    background: rgba(15, 20, 32, 0.85);
-}
-
-.stat-card:hover::before {
-    opacity: 1;
-}
-
-.stat-title {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-bottom: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.stat-value {
-    font-size: 2.25rem;
-    font-weight: 800;
-    color: #f9fafb;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-}
-
-.stat-change {
-    font-size: 0.875rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.stat-change.positive {
-    color: #10b981;
-}
-
-.stat-change.negative {
-    color: #ef4444;
-}
-
-.stat-icon {
-    position: absolute;
-    top: 1.75rem;
-    right: 1.75rem;
-    font-size: 3rem;
-    color: rgba(99, 102, 241, 0.08);
-    transition: all 0.3s ease;
-}
-
-.stat-card:hover .stat-icon {
-    color: rgba(99, 102, 241, 0.15);
-    transform: scale(1.1) rotate(-5deg);
-}
-
-/* ===== CHARTS SECTION ===== */
-.charts-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-    gap: 1.5rem;
-}
-
-.chart-container {
-    background: rgba(15, 20, 32, 0.7);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 18px;
-    padding: 2rem;
-    transition: all 0.3s ease;
-}
-
-.chart-container:hover {
-    border-color: rgba(99, 102, 241, 0.15);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.chart-container h3 {
-    margin: 0 0 1.5rem 0;
-    color: #f9fafb;
-    font-weight: 700;
-    font-size: 1.25rem;
-    letter-spacing: -0.02em;
-}
-
-/* ===== FEEDBACK ITEMS ===== */
-.feedback-item {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 14px;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
-}
-
-.feedback-item:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(99, 102, 241, 0.25);
-    transform: translateX(4px);
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
-}
-
-.feedback-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.75rem;
-}
-
-.feedback-game {
-    font-weight: 700;
-    color: #f9fafb;
-    font-size: 1.05rem;
-}
-
-.feedback-rating {
-    color: #fbbf24;
-    font-size: 1.1rem;
-}
-
-.feedback-content {
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 0.75rem;
-}
-
-.feedback-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.4);
-}
-
-/* ===== LOADING STATE ===== */
-.loading {
-    text-align: center;
-    padding: 3rem;
-    color: rgba(255, 255, 255, 0.4);
-}
-
-.loading::after {
-    content: '';
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    margin-top: 1rem;
-    border: 3px solid rgba(99, 102, 241, 0.2);
-    border-top-color: #6366f1;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1024px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .charts-section {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .sidebar {
-        width: 75px;
-        padding: 1rem 0;
-    }
-
-    .sidebar-logo span,
-    .nav-link span {
-        display: none;
-    }
-
-    .sidebar-logo {
-        justify-content: center;
-        padding: 0;
-    }
-
-    .nav-menu {
-        padding: 0 0.5rem;
-    }
-
-    .nav-link {
-        justify-content: center;
-        padding: 1rem;
-    }
-
-    .main-content {
-        margin-left: 75px;
-        padding: 1.5rem;
-    }
-
-    .page-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-
-    .page-title {
-        font-size: 1.75rem;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .stat-value {
-        font-size: 1.875rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .main-content {
-        padding: 1rem;
-    }
-
-    .page-header {
-        padding: 1.25rem;
-    }
-
-    .stat-card {
-        padding: 1.25rem;
-    }
-
-    .chart-container {
-        padding: 1.5rem;
-    }
-}
-    </style>
 </head>
 
 <body>
@@ -481,38 +17,32 @@ body {
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <img src="../assets/images/logo.png" alt="NextPlay">
-                <span>NextPlay</span>
+                <i class="fas fa-gamepad"></i> NextPlay
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
                     <a href="dashboard.html" class="nav-link active">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
+                        <i class="fas fa-home"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="games.html" class="nav-link">
-                        <i class="fas fa-box-open"></i>
-                        <span>Manage Games</span>
+                        <i class="fas fa-box-open"></i> Manage Games
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="reviews.html" class="nav-link">
-                        <i class="fas fa-star"></i>
-                        <span>Reviews</span>
+                        <i class="fas fa-star"></i> Reviews
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="revenue.html" class="nav-link">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Revenue</span>
+                        <i class="fas fa-chart-line"></i> Revenue
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="settings.html" class="nav-link">
-                        <i class="fas fa-cog"></i>
-                        <span>Settings</span>
+                        <i class="fas fa-cog"></i> Settings
                     </a>
                 </li>
             </ul>
@@ -523,8 +53,25 @@ body {
             <div class="page-header">
                 <h1 class="page-title">Dashboard</h1>
                 <div class="user-profile">
-                    <span>Welcome, <strong id="publisher-name">Publisher</strong></span>
+                    <div class="user-info">
+                        <div style="font-weight: 600; color: var(--text-light);" id="publisher-name">Publisher</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Publisher</div>
+                    </div>
                     <div class="user-avatar" id="user-avatar">P</div>
+                </div>
+            </div>
+
+            <!-- Welcome Message -->
+            <div
+                style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border-radius: 16px; padding: 30px; margin-bottom: 30px; position: relative; overflow: hidden;">
+                <div style="position: relative; z-index: 1;">
+                    <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 10px;">Hello <span
+                            id="publisher-name-welcome">Publisher</span>!</h2>
+                    <p style="font-size: 16px; opacity: 0.9; margin: 0;">Welcome back! Here's what's happening with your
+                        games today.</p>
+                </div>
+                <div
+                    style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;">
                 </div>
             </div>
 
@@ -532,41 +79,99 @@ body {
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-title">Total Games</div>
-                    <div class="stat-value" id="total-games">-</div>
-                    <i class="fas fa-gamepad stat-icon"></i>
+                    <div class="stat-value" id="total-games">0</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> 12.5% from last month
+                    </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-title">Total Purchases</div>
-                    <div class="stat-value" id="total-purchases">-</div>
-                    <i class="fas fa-shopping-cart stat-icon"></i>
+                    <div class="stat-title">Total Users</div>
+                    <div class="stat-value" id="total-users">0</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> 8.2% increase
+                    </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Total Revenue</div>
-                    <div class="stat-value" id="total-revenue">-</div>
-                    <i class="fas fa-dollar-sign stat-icon"></i>
+                    <div class="stat-value" id="total-revenue">$0</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> 15.3% growth
+                    </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Avg Rating</div>
-                    <div class="stat-value" id="avg-rating">-</div>
-                    <i class="fas fa-star stat-icon"></i>
+                    <div class="stat-value" id="avg-rating">0.0</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> +0.3 points
+                    </div>
                 </div>
             </div>
 
-            <!-- Charts & Feedback -->
+            <!-- Charts Section -->
             <div class="charts-section">
                 <div class="chart-container">
-                    <h3>Revenue Overview</h3>
-                    <canvas id="revenueChart"></canvas>
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-size: 20px; font-weight: 700;">Revenue Growth</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="period-btn">Week</button>
+                            <button class="period-btn active">Month</button>
+                            <button class="period-btn">Year</button>
+                        </div>
+                    </div>
+                    <canvas id="revenueChart" style="height: 300px;"></canvas>
                 </div>
-                <div class="chart-container" style="max-height: 500px; overflow-y: auto;">
-                    <h3>Recent Feedback</h3>
-                    <div id="recent-feedback-list">
-                        <div class="loading">Loading feedback...</div>
+                <div class="chart-container">
+                    <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; font-weight: 700;">Quick Stats</h3>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px;">
+                            <div
+                                style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+                                Active Games</div>
+                            <div style="font-size: 24px; font-weight: 700;" id="active-games">0</div>
+                        </div>
+                        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px;">
+                            <div
+                                style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+                                Pending Reviews</div>
+                            <div style="font-size: 24px; font-weight: 700;" id="pending-reviews">0</div>
+                        </div>
+                        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px;">
+                            <div
+                                style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+                                New Purchases</div>
+                            <div style="font-size: 24px; font-weight: 700;" id="new-purchases">0</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
+
+    <style>
+        .period-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .period-btn:hover {
+            background: rgba(108, 92, 231, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .period-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+    </style>
 
     <script>
         const API_URL = 'http://localhost/BE/NextPlay/index.php';
@@ -574,6 +179,7 @@ body {
 
         if (user.uname) {
             document.getElementById('publisher-name').textContent = user.uname;
+            document.getElementById('publisher-name-welcome').textContent = user.uname;
             document.getElementById('user-avatar').textContent = user.uname.charAt(0).toUpperCase();
         }
 
@@ -587,15 +193,18 @@ body {
                 if (gamesData.status === 'success' && gamesData.data) {
                     const games = gamesData.data;
                     document.getElementById('total-games').textContent = games.length;
+                    document.getElementById('active-games').textContent = games.filter(g => g.rating > 0).length;
 
-                    let totalPurchases = 0;
+                    let totalUsers = 0;
                     let totalRevenue = 0;
                     let totalRating = 0;
                     let ratingCount = 0;
+                    let totalReviews = 0;
 
                     games.forEach(game => {
-                        totalPurchases += Math.floor(Math.random() * 1000);
+                        totalUsers += Math.floor(Math.random() * 500);
                         totalRevenue += parseFloat(game.price || 0) * Math.floor(Math.random() * 100);
+                        totalReviews += parseInt(game.reviews || 0);
 
                         if (game.rating) {
                             totalRating += parseFloat(game.rating);
@@ -603,77 +212,64 @@ body {
                         }
                     });
 
-                    document.getElementById('total-purchases').textContent = totalPurchases.toLocaleString();
-                    document.getElementById('total-revenue').textContent = '$' + totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 });
+                    document.getElementById('total-users').textContent = totalUsers.toLocaleString();
+                    document.getElementById('total-revenue').textContent = '$' + totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 0 });
                     document.getElementById('avg-rating').textContent = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : '0.0';
+                    document.getElementById('pending-reviews').textContent = totalReviews;
+                    document.getElementById('new-purchases').textContent = Math.floor(totalUsers * 0.15);
 
                     initRevenueChart();
                 }
-
-                await fetchRecentFeedback();
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
-                document.getElementById('total-games').textContent = '0';
-                document.getElementById('total-purchases').textContent = '0';
-                document.getElementById('total-revenue').textContent = '$0';
-                document.getElementById('avg-rating').textContent = '0.0';
-            }
-        }
-
-        async function fetchRecentFeedback() {
-            try {
-                const response = await fetch(`${API_URL}/reviews?publisher_id=${user.uid}&limit=5`, {
-                    credentials: 'include'
-                });
-                const data = await response.json();
-
-                const feedbackList = document.getElementById('recent-feedback-list');
-
-                if (data.status === 'success' && data.data && data.data.length > 0) {
-                    feedbackList.innerHTML = data.data.map(review => `
-                        <div class="feedback-item">
-                            <div class="feedback-header">
-                                <span class="feedback-game">${review.game_name || 'Game'}</span>
-                                <span class="feedback-rating">${'★'.repeat(review.rating || 0)}${'☆'.repeat(5 - (review.rating || 0))}</span>
-                            </div>
-                            <div class="feedback-content">${review.content || review.comment || 'No comment'}</div>
-                            <div class="feedback-meta">
-                                <span>${review.user_name || 'Anonymous'}</span>
-                                <span>${new Date(review.created_at || Date.now()).toLocaleDateString()}</span>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    feedbackList.innerHTML = '<div class="loading">No feedback yet</div>';
-                }
-            } catch (error) {
-                console.error('Error fetching feedback:', error);
-                document.getElementById('recent-feedback-list').innerHTML = '<div class="loading">Unable to load feedback</div>';
             }
         }
 
         function initRevenueChart() {
             const ctx = document.getElementById('revenueChart').getContext('2d');
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(108, 92, 231, 0.3)');
+            gradient.addColorStop(1, 'rgba(108, 92, 231, 0.01)');
+
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
                     datasets: [{
-                        label: 'Revenue ($)',
-                        data: [12000, 19000, 15000, 25000, 22000, 30000],
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        label: 'Revenue',
+                        data: [12000, 19000, 15000, 25000, 22000, 30000, 35000],
+                        borderColor: '#6c5ce7',
+                        backgroundColor: gradient,
                         tension: 0.4,
-                        fill: true
+                        fill: true,
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#6c5ce7',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 7
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            labels: {
-                                color: '#d1d5db'
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#2d2d44',
+                            titleColor: '#f5f6fa',
+                            bodyColor: '#b2bec3',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function (context) {
+                                    return '$' + context.parsed.y.toLocaleString();
+                                }
                             }
                         }
                     },
@@ -681,18 +277,22 @@ body {
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                color: 'rgba(255, 255, 255, 0.5)'
+                                color: '#b2bec3',
+                                callback: function (value) {
+                                    return '$' + (value / 1000) + 'K';
+                                }
                             },
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.05)'
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false
                             }
                         },
                         x: {
                             ticks: {
-                                color: 'rgba(255, 255, 255, 0.5)'
+                                color: '#b2bec3'
                             },
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.05)'
+                                display: false
                             }
                         }
                     }
