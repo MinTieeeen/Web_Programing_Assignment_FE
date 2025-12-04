@@ -317,7 +317,7 @@
       };
 
       try {
-        const apiUrl = 'http://localhost/BE/NextPlay/index.php';
+        const apiUrl = window.ENV.API_URL;
         const response = await fetch(`${apiUrl}/users/register`, {
           method: 'POST',
           headers: {

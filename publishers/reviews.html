@@ -130,7 +130,7 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost/BE/NextPlay/index.php';
+        const API_URL = window.ENV.API_URL;
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         let allReviews = [];
         let gamesData = [];

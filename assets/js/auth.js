@@ -1,6 +1,10 @@
 // Auth Logic
 (function () {
-  const API_URL = 'http://localhost/BE/NextPlay/index.php'; // Adjust if needed
+  if (!window.ENV || !window.ENV.API_URL) {
+    console.error('ENV or ENV.API_URL is not defined');
+    return;
+  }
+  const API_URL = window.ENV.API_URL;
 
   // Calculate APP_ROOT if not set
   if (!window.APP_ROOT) {

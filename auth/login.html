@@ -100,7 +100,7 @@
       }
 
       try {
-        const apiUrl = window.API_URL || 'http://localhost/BE/NextPlay/index.php';
+        const apiUrl = window.ENV.API_URL;
         const response = await fetch(`${apiUrl}/users/signin`, {
           method: 'POST',
           credentials: 'include',
