@@ -1,46 +1,51 @@
-<!-- Admin Sidebar Component -->
+<<!-- Admin Sidebar Component -->
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <h4><i class="bi bi-controller"></i> Game Admin</h4>
     </div>
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link" href="index.html" data-page="dashboard">
+            <a class="nav-link" href="/admin/index.html" data-page="dashboard">
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="users.html" data-page="users">
+            <a class="nav-link" href="/admin/users.html" data-page="users">
                 <i class="bi bi-people"></i> Users
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="products.html" data-page="products">
+            <a class="nav-link" href="/admin/admin-users.html" data-page="admin-users">
+                <i class="bi bi-shield-check"></i> Admin Management
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/products.html" data-page="products">
                 <i class="bi bi-joystick"></i> Games
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="orders.html" data-page="orders">
+            <a class="nav-link" href="/admin/orders.html" data-page="orders">
                 <i class="bi bi-cart3"></i> Orders & Carts
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="comments.html" data-page="comments">
+            <a class="nav-link" href="/admin/comments.html" data-page="comments">
                 <i class="bi bi-chat-square-text"></i> Reviews
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="contacts.html" data-page="contacts">
+            <a class="nav-link" href="/admin/contacts.html" data-page="contacts">
                 <i class="bi bi-building"></i> Publishers
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="posts.html" data-page="posts">
+            <a class="nav-link" href="/admin/posts.html" data-page="posts">
                 <i class="bi bi-tags"></i> Categories
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="settings.html" data-page="settings">
+            <a class="nav-link" href="/admin/settings.html" data-page="settings">
                 <i class="bi bi-gear"></i> Settings
             </a>
         </li>
@@ -55,3 +60,20 @@
         </button>
     </div>
 </div>
+
+<script>
+// Add active class to current page
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.sidebar .nav-link');
+    
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (currentPath.endsWith(href) || (href.includes('index.html') && currentPath.endsWith('/admin/') || currentPath.endsWith('/admin'))) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+});
+</script>

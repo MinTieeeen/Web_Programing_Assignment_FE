@@ -1,47 +1,55 @@
 (function(){
+  // Determine the base path based on the script location
+  // We assume this script is at /assets/js/include-components.js
+  // So we need to go up 2 levels to get to the root (public/)
+  var scripts = document.getElementsByTagName('script');
+  var scriptPath = scripts[scripts.length - 1].src;
+  // If loaded asynchronously, this might be wrong, but usually it's fine for this setup.
+  // Better way: look for the script by name
+  for(var i=0; i<scripts.length; i++) {
+    if(scripts[i].src && scripts[i].src.indexOf('include-components.js') !== -1) {
+      scriptPath = scripts[i].src;
+      break;
+    }
+  }
+  
+  // scriptPath is like http://localhost/.../assets/js/include-components.js
+  // We want http://localhost/.../
+  var rootPath = scriptPath.replace(/\/assets\/js\/include-components\.js.*/, '/');
+  window.APP_ROOT = rootPath;
+
   function include(selector, url){
     var el = document.querySelector(selector);
     if(!el){ return; }
-    fetch(url).then(function(r){return r.text();}).then(function(html){
-      el.innerHTML = html;
+    
+    // Remove leading slash if present to append to rootPath
+    var relativeUrl = url.startsWith('/') ? url.substring(1) : url;
+    var fullUrl = rootPath + relativeUrl;
+
+    fetch(fullUrl).then(function(r){
+      if(!r.ok) throw new Error('Network response was not ok: ' + r.statusText);
+      return r.text();
+    }).then(function(html){
+      console.log('Included component:', selector);
+      // Fix relative links in the loaded HTML
+      // This is a simple regex fix for common attributes
+      // It replaces href="/" with href="rootPath"
+      // But we need to be careful not to break external links
+      // For now, let's just load the HTML. 
+      // The links in header.html are like /index.html, which are absolute to domain root.
+      // We need to fix them to be relative to rootPath.
+      
+      var fixedHtml = html.replace(/href="\//g, 'href="' + rootPath)
+                          .replace(/src="\//g, 'src="' + rootPath);
+
+      el.innerHTML = fixedHtml;
       wireToggle(el);
       
-      // If this is the header, execute any scripts and then trigger the header initialization
-      if(selector === '[data-include="header"]') {
-        // Execute any script tags in the inserted HTML
-        var scripts = el.querySelectorAll('script');
-        scripts.forEach(function(script) {
-          var newScript = document.createElement('script');
-          if (script.src) {
-            newScript.src = script.src;
-            newScript.onload = function() {
-              // After header script loads, initialize the header
-              setTimeout(function() {
-                if(window.initializeHeader) {
-                  console.log('Calling initializeHeader from include-components.js after script load');
-                  window.initializeHeader();
-                }
-              }, 50);
-            };
-          } else {
-            newScript.textContent = script.textContent;
-          }
-          document.head.appendChild(newScript);
-        });
-        
-        // Also try after a delay in case script is already loaded
-        setTimeout(function() {
-          if(window.initializeHeader) {
-            console.log('Calling initializeHeader from include-components.js with delay');
-            window.initializeHeader();
-          }
-          if(window.updateHeaderLoginStatus) {
-            console.log('Calling updateHeaderLoginStatus from include-components.js');
-            window.updateHeaderLoginStatus();
-          }
-        }, 200);
+      // If this is header, trigger status update
+      if(selector === '[data-include="header"]' && window.updateHeaderLoginStatus) {
+        window.updateHeaderLoginStatus();
       }
-    }).catch(function(){ /* ignore */ });
+    }).catch(function(e){ console.error('Include error for ' + selector + ':', e); });
   }
 
   function wireToggle(scope){
@@ -55,8 +63,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', function(){
-    include('[data-include="header"]', '/components/header.html');
-    include('[data-include="footer"]', '/components/footer.html');
+    include('[data-include="header"]', 'components/header.html');
+    include('[data-include="footer"]', 'components/footer.html');
   });
 })();
 

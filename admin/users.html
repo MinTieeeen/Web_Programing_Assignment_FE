@@ -235,17 +235,22 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/admin-utils.js"></script>
-    <script src="../assets/js/admin-components.js"></script>
-    <script src="../assets/js/admin-users.js"></script>
+    <script src="../env.js"></script>
+    <script src="../assets/js/admin/utils.js"></script>
+    <script src="../assets/js/admin/components.js"></script>
+    <script src="../assets/js/admin/users.js"></script>
     <script>
         // Initialize components when DOM is loaded
         document.addEventListener('DOMContentLoaded', async () => {
-            await AdminComponents.init('users');
-            // Initialize the existing UserManager if it exists
-            if (typeof UserManager !== 'undefined') {
-                const userManager = new UserManager();
-                userManager.init();
+            // Check authentication first
+            const authResult = await AdminUtils.checkAuthentication();
+            if (authResult) {
+                await AdminComponents.init('users');
+                // Initialize the existing UserManager if it exists
+                if (typeof UserManager !== 'undefined') {
+                    const userManager = new UserManager();
+                    userManager.init();
+                }
             }
         });
     </script>

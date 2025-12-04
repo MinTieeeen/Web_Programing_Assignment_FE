@@ -3,24 +3,316 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tin tức - NextPlay</title>
+  <title>Tin tức & Sự kiện - NextPlay</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
+  <link rel="stylesheet" href="../assets/css/news.css?v=7">
 </head>
 <body>
   <div data-include="header"></div>
 
-  <div class="container mt-5 mb-5">
-    <h1>Tin tức</h1>
-    <p>Chuyên mục đang được cập nhật...</p>
+  <div class="container mt-4 pt-5">
+    
+    <!-- Top News Section (Magazine Layout) -->
+    <div class="top-news-container">
+        <div class="row">
+            <!-- Left Column: Main Featured + Sub Featured -->
+            <div class="col-lg-8">
+                <!-- Main Featured Article -->
+                <div id="main-featured-container">
+                    <!-- Injected via JS -->
+                </div>
+
+                <!-- Sub Featured Grid (3 items) -->
+                <div class="row mt-4" id="sub-featured-container">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- Right Column: Side News List -->
+            <div class="col-lg-4">
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Đáng chú ý</h3>
+                    <div class="side-news-list" id="side-news-container">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Layout (Latest News + Sidebar) -->
+    <div class="news-layout">
+      
+      <!-- Left Column: Latest News List -->
+      <div class="main-column">
+        
+        <!-- Section: Latest News -->
+        <div class="mb-5">
+            <h2 class="news-section-title">Mới nhất</h2>
+            <div id="latest-news-list">
+              <!-- Injected via JS -->
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-outline-light rounded-pill px-4">Xem thêm</button>
+            </div>
+        </div>
+
+        <!-- Section: Technology (Grid Layout) -->
+        <div class="topic-section">
+            <div class="topic-header">
+                <h2 class="topic-title">Góc Công Nghệ</h2>
+                <a href="#" class="topic-link">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="topic-grid" id="tech-news-grid">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- Section: Game Reviews (Grid Layout) -->
+        <div class="topic-section">
+            <div class="topic-header">
+                <h2 class="topic-title">Review Game</h2>
+                <a href="#" class="topic-link">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="topic-grid" id="review-news-grid">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Sidebar -->
+      <div class="sidebar-column">
+        
+        <!-- Search Widget -->
+        <div class="sidebar-widget">
+          <div class="news-search-container mb-0">
+            <input type="text" class="news-search-input" id="search-input" placeholder="Tìm kiếm bài viết...">
+            <i class="bi bi-search news-search-icon"></i>
+          </div>
+        </div>
+
+        <!-- Categories Widget -->
+        <div class="sidebar-widget">
+          <h3 class="widget-title">Chuyên mục</h3>
+          <ul class="category-list">
+            <li class="category-item"><a href="#" class="category-link"><span>Tin Game</span> <span class="badge bg-secondary">12</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Esports</span> <span class="badge bg-secondary">8</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Review</span> <span class="badge bg-secondary">5</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Công nghệ</span> <span class="badge bg-secondary">15</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Cộng đồng</span> <span class="badge bg-secondary">4</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter Widget -->
+        <div class="sidebar-widget text-center">
+            <h3 class="widget-title text-center">Đăng ký nhận tin</h3>
+            <p class="text-secondary small mb-3">Nhận thông báo về các bài viết mới nhất qua email.</p>
+            <input type="email" class="form-control bg-dark text-white border-secondary mb-2" placeholder="Email của bạn">
+            <button class="btn btn-primary w-100">Đăng ký</button>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
   <div data-include="footer"></div>
 
+  <script src="../env.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script>
+    function renderMagazineLayout(newsList) {
+        if (newsList.length === 0) return;
+
+        // 1. Main Featured (First Item)
+        const mainItem = newsList[0];
+        const mainContainer = document.getElementById('main-featured-container');
+        if (mainContainer) {
+            mainContainer.innerHTML = `
+                <div class="main-featured-card">
+                    <div class="main-featured-img-wrapper">
+                        <a href="detail.html?id=${mainItem.id}">
+                            <img src="${mainItem.image}" class="main-featured-img" alt="${mainItem.title}">
+                        </a>
+                        <div class="main-featured-overlay">
+                            <div class="mb-2">
+                                <span class="source-badge">${mainItem.source}</span>
+                            </div>
+                            <h2 class="main-featured-title">
+                                <a href="detail.html?id=${mainItem.id}">${mainItem.title}</a>
+                            </h2>
+                            <div class="main-featured-meta">
+                                <span><i class="bi bi-calendar3"></i> ${mainItem.date}</span>
+                                <span><i class="bi bi-eye"></i> ${mainItem.views} lượt xem</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 2. Sub Featured (Next 3 Items)
+        const subItems = newsList.slice(1, 4);
+        const subContainer = document.getElementById('sub-featured-container');
+        if (subContainer) {
+            subContainer.innerHTML = subItems.map(item => `
+                <div class="col-md-4">
+                    <div class="sub-featured-card">
+                        <div class="sub-featured-img-wrapper">
+                            <a href="detail.html?id=${item.id}">
+                                <img src="${item.image}" class="sub-featured-img" alt="${item.title}">
+                            </a>
+                        </div>
+                        <h4 class="sub-featured-title">
+                            <a href="detail.html?id=${item.id}">${item.title}</a>
+                        </h4>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 3. Side News List (Next 4 Items)
+        const sideItems = newsList.slice(4, 8);
+        const sideContainer = document.getElementById('side-news-container');
+        if (sideContainer) {
+            sideContainer.innerHTML = sideItems.map(item => `
+                <div class="side-news-item">
+                    <a href="detail.html?id=${item.id}">
+                        <img src="${item.image}" class="side-news-thumb" alt="${item.title}">
+                    </a>
+                    <div class="side-news-content">
+                        <h5 class="side-news-title">
+                            <a href="detail.html?id=${item.id}">${item.title}</a>
+                        </h5>
+                        <div class="side-news-meta">
+                            <span class="side-news-source">${item.source}</span>
+                            <span>${item.date}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    function renderLatest(newsList) {
+      const container = document.getElementById('latest-news-list');
+      if (!container) return;
+      
+      if (newsList.length === 0) {
+        container.innerHTML = '<div class="text-center text-secondary py-5">Không tìm thấy bài viết nào.</div>';
+        return;
+      }
+      // Take only first 4 for latest list to save space for topics
+      const displayList = newsList.slice(0, 4); 
+      container.innerHTML = displayList.map(item => `
+        <div class="news-list-item">
+            <a href="detail.html?id=${item.id}">
+                <img src="${item.image}" class="news-list-img" alt="${item.title}">
+            </a>
+            <div class="news-list-content">
+                <div class="mb-2">
+                    <span class="badge bg-dark border border-secondary text-secondary">${item.category}</span>
+                    <span class="text-secondary small ms-2"><i class="bi bi-calendar3"></i> ${item.date}</span>
+                </div>
+                <a href="detail.html?id=${item.id}" class="text-decoration-none">
+                    <h3 class="news-list-title">${item.title}</h3>
+                </a>
+                <p class="news-list-excerpt">${item.excerpt}</p>
+                <div class="d-flex align-items-center text-secondary small">
+                    <span class="me-3"><i class="bi bi-person"></i> ${item.author}</span>
+                    <span><i class="bi bi-eye"></i> ${item.views} lượt xem</span>
+                </div>
+            </div>
+        </div>
+      `).join('');
+    }
+
+    function renderTopicGrid(newsList, containerId, category) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        // Filter by category if provided, otherwise just take some items
+        let filtered = category ? newsList.filter(n => n.category === category) : newsList;
+        // Fallback if no specific category match (for demo)
+        if (filtered.length === 0) filtered = newsList.slice(0, 2);
+        
+        container.innerHTML = filtered.slice(0, 2).map(item => `
+            <div class="topic-card">
+                <a href="detail.html?id=${item.id}">
+                    <img src="${item.image}" class="topic-img" alt="${item.title}">
+                </a>
+                <div class="topic-content">
+                    <div class="mb-2">
+                        <span class="source-badge" style="font-size: 0.7rem">${item.category}</span>
+                    </div>
+                    <h3 class="topic-card-title">
+                        <a href="detail.html?id=${item.id}" class="text-decoration-none text-white">${item.title}</a>
+                    </h3>
+                    <div class="topic-card-meta">
+                        <span><i class="bi bi-calendar3"></i> ${item.date}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Ensure ENV is loaded
+        if (!window.ENV || !window.ENV.API_URL) {
+            console.error('ENV not loaded!');
+            return;
+        }
+        const API_URL = window.ENV.API_URL;
+        
+        // Fetch News
+        const response = await fetch(`${API_URL}/news`);
+        const data = await response.json();
+        
+        let newsList = [];
+        if (data.status === 'success' && data.data) {
+            newsList = data.data.map(item => ({
+                id: item.id,
+                title: item.title,
+                excerpt: item.content.substring(0, 100) + '...', // Create excerpt from content
+                image: item.thumbnail || 'https://via.placeholder.com/800x400',
+                date: new Date(item.created_at).toLocaleDateString('vi-VN'),
+                author: item.author_name || 'Admin',
+                source: item.source || 'NextPlay',
+                views: item.views,
+                category: item.category || 'Tin tức'
+            }));
+        }
+
+        // Render functions (same as before but using fetched list)
+        renderMagazineLayout(newsList);
+        renderLatest(newsList);
+        renderTopicGrid(newsList, 'tech-news-grid', 'Công nghệ');
+        renderTopicGrid(newsList, 'review-news-grid', 'Review');
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredNews = newsList.filter(item => 
+            item.title.toLowerCase().includes(keyword) || 
+            item.excerpt.toLowerCase().includes(keyword)
+            );
+            renderLatest(filteredNews);
+        });
+
+      } catch (error) {
+          console.error('Error loading news:', error);
+      }
+    });
+  </script>
 </body>
 </html>

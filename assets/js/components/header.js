@@ -1,5 +1,26 @@
+// Check if user is admin by querying backend
+async function checkIfUserIsAdmin(uid) {
+  try {
+    const response = await fetch(`/nextplay/index.php/admin/check/${uid}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data.status === 'success' && data.isAdmin;
+    }
+    return false;
+  } catch (error) {
+    console.error('Admin check error:', error);
+    return false;
+  }
+}
+
 // Check user login status and update header
-window.updateHeaderLoginStatus = function() {
+window.updateHeaderLoginStatus = async function() {
   console.log('updateHeaderLoginStatus called');
   const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
   console.log('Current user:', currentUser);
@@ -31,10 +52,13 @@ window.updateHeaderLoginStatus = function() {
     }
     if (mobileUserName) mobileUserName.textContent = userData.name || userData.username;
     
-    // Show/hide admin panel links based on user role
+    // Check admin status by querying backend
+    const isAdmin = await checkIfUserIsAdmin(userData.uid);
+    
+    // Show/hide admin panel links based on backend check
     const adminPanelLink = document.getElementById('adminPanelLink');
     const mobileAdminPanelLink = document.getElementById('mobileAdminPanelLink');
-    if (userData.role === 'admin') {
+    if (isAdmin) {
       if (adminPanelLink) adminPanelLink.classList.remove('d-none');
       if (mobileAdminPanelLink) mobileAdminPanelLink.classList.remove('d-none');
       console.log('Admin panel links shown for admin user');

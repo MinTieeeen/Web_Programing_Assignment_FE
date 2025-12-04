@@ -5,8 +5,9 @@
             <i class="bi bi-list"></i>
         </button>
         <span class="navbar-brand mb-0 h1 ms-3" id="pageTitle">Admin Dashboard</span>
-        <div class="ms-auto">
-            <div class="dropdown">
+        <div class="ms-auto d-flex align-items-center">
+            <!-- Notifications Dropdown -->
+            <div class="dropdown me-3">
                 <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" id="notificationDropdown">
                     <i class="bi bi-bell"></i> 
                     <span class="badge bg-danger" id="notificationCount">3</span>
@@ -20,6 +21,10 @@
                     <li><a class="dropdown-item text-center" href="#" onclick="AdminUtils.markAllNotificationsRead()">Mark all as read</a></li>
                 </ul>
             </div>
+            <!-- Logout Button -->
+            <button class="btn btn-outline-light" onclick="AdminUtils.logout()" title="Logout">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
         </div>
     </div>
 </nav>

@@ -280,11 +280,284 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/admin-utils.js"></script>
-    <script src="../assets/js/admin-components.js"></script>
+    <script src="../env.js"></script>
+    <script src="../assets/js/admin/utils.js"></script>
+    <script src="../assets/js/admin/components.js"></script>
     <script>
-        // Initialize components
-        AdminComponents.init('orders');
+        // Ensure ENV is loaded
+        if (!window.ENV || !window.ENV.API_URL) {
+            document.body.innerHTML = '<div class="alert alert-danger m-5"><h4>Configuration Error</h4><p>ENV not loaded! Make sure env.js is included and API_URL is configured.</p></div>';
+            throw new Error('[admin/orders.html] ENV not loaded!');
+        }
+        const API_BASE_URL = window.ENV.API_URL;
+        let allCarts = [];
+        let allOrders = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            const authResult = await AdminUtils.checkAuthentication();
+            if (authResult) {
+                await AdminComponents.init('orders');
+                await loadStats();
+                await loadCarts();
+                await loadOrders();
+                setupFilters();
+            }
+        });
+
+        // Load cart and order statistics
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/carts/stats`, {
+                    credentials: 'include',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const stats = result.data.stats;
+                    
+                    // Cart stats
+                    document.getElementById('activeCartsCount').textContent = stats.active_carts || 0;
+                    document.getElementById('pendingValue').textContent = AdminUtils.formatCurrency(stats.pending_value || 0);
+                    
+                    // Order stats
+                    document.getElementById('totalOrders').textContent = stats.completed_orders || 0;
+                    document.getElementById('totalRevenue').textContent = AdminUtils.formatCurrency(stats.total_revenue || 0);
+                    
+                    // Calculate avg order value
+                    const avgValue = stats.completed_orders > 0 ? 
+                        (stats.total_revenue / stats.completed_orders) : 0;
+                    document.getElementById('avgOrderValue').textContent = AdminUtils.formatCurrency(avgValue);
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load active carts
+        async function loadCarts() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/carts?status=active`, {
+                    credentials: 'include',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    allCarts = result.data;
+                    displayCarts();
+                }
+            } catch (error) {
+                console.error('Error loading carts:', error);
+            }
+        }
+
+        function displayCarts() {
+            const tbody = document.querySelector('#cartsTable tbody');
+            const searchTerm = document.getElementById('searchCarts')?.value.toLowerCase() || '';
+            
+            const filtered = allCarts.filter(cart => {
+                return !searchTerm || 
+                    cart.uname.toLowerCase().includes(searchTerm) ||
+                    (cart.email && cart.email.toLowerCase().includes(searchTerm));
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No active carts</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(cart => `
+                <tr>
+                    <td>#${cart.uid}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            ${cart.avatar 
+                                ? `<img src="${cart.avatar}" class="rounded-circle me-2" width="32" height="32">` 
+                                : `<div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width:32px;height:32px">${(cart.fname || cart.uname)[0].toUpperCase()}</div>`
+                            }
+                            <div>
+                                <strong>${cart.fname || ''} ${cart.lname || cart.uname}</strong>
+                                <br><small class="text-muted">${cart.email}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${cart.item_count} items</td>
+                    <td><strong>${AdminUtils.formatCurrency(cart.total_amount)}</strong></td>
+                    <td>-</td>
+                    <td><span class="badge bg-warning">Active</span></td>
+                    <td>${AdminUtils.formatDate(cart.created_date)}</td>
+                    <td>
+                        <button class="btn btn-info btn-sm" onclick="viewCartDetails(${cart.uid})">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load completed orders
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/carts/orders`, {
+                    credentials: 'include',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    allOrders = result.data;
+                    displayOrders();
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        function displayOrders() {
+            const tbody = document.querySelector('#ordersTable tbody');
+            const searchTerm = document.getElementById('searchOrders')?.value.toLowerCase() || '';
+            
+            const filtered = allOrders.filter(order => {
+                return !searchTerm || 
+                    order.uname.toLowerCase().includes(searchTerm) ||
+                    (order.email && order.email.toLowerCase().includes(searchTerm));
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No orders found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(order => `
+                <tr>
+                    <td>#${order.uid}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            ${order.avatar 
+                                ? `<img src="${order.avatar}" class="rounded-circle me-2" width="32" height="32">` 
+                                : `<div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width:32px;height:32px">${(order.fname || order.uname)[0].toUpperCase()}</div>`
+                            }
+                            <div>
+                                <strong>${order.fname || ''} ${order.lname || order.uname}</strong>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${order.item_count} games</td>
+                    <td><strong>${AdminUtils.formatCurrency(order.total_amount)}</strong></td>
+                    <td>Balance</td>
+                    <td>${AdminUtils.formatDate(order.created_date)}</td>
+                    <td><span class="badge bg-success">Completed</span></td>
+                    <td>
+                        <button class="btn btn-info btn-sm" onclick="viewOrderDetails(${order.uid})">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // View cart details
+        async function viewCartDetails(uid) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/carts/${uid}/active`, {
+                    credentials: 'include',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const cart = result.data;
+                    showCartModal(cart, 'Cart');
+                }
+            } catch (error) {
+                console.error('Error loading cart details:', error);
+            }
+        }
+
+        // View order details
+        async function viewOrderDetails(uid) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/carts/${uid}/purchased`, {
+                    credentials: 'include',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const order = result.data;
+                    showCartModal(order, 'Order');
+                }
+            } catch (error) {
+                console.error('Error loading order details:', error);
+            }
+        }
+
+        function showCartModal(data, type) {
+            const content = document.getElementById('orderDetailsContent');
+            const itemsHtml = data.items && data.items.length > 0 
+                ? data.items.map(item => `
+                    <tr>
+                        <td>
+                            <img src="${item.thumbnail || 'https://via.placeholder.com/50'}" 
+                                 alt="${item.name}" width="50" class="me-2">
+                            ${item.name}
+                        </td>
+                        <td>${AdminUtils.formatCurrency(item.price)}</td>
+                        <td>${item.quantity}</td>
+                        <td>${AdminUtils.formatCurrency(item.subtotal)}</td>
+                    </tr>
+                `).join('')
+                : '<tr><td colspan="4" class="text-center">No items</td></tr>';
+
+            content.innerHTML = `
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6>Customer Information</h6>
+                        <p><strong>Name:</strong> ${data.fname || ''} ${data.lname || data.uname}</p>
+                        <p><strong>Email:</strong> ${data.email}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>${type} Information</h6>
+                        <p><strong>Status:</strong> <span class="badge bg-${data.status === 'purchased' ? 'success' : 'warning'}">${data.status}</span></p>
+                        <p><strong>Date:</strong> ${AdminUtils.formatDate(data.created_date)}</p>
+                    </div>
+                </div>
+                <h6>Items</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Game</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsHtml}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="text-end">Total:</th>
+                            <th>${AdminUtils.formatCurrency(data.total)}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            `;
+            
+            document.getElementById('refundBtn').style.display = data.status === 'purchased' ? 'block' : 'none';
+            new bootstrap.Modal(document.getElementById('orderDetailsModal')).show();
+        }
+
+        function setupFilters() {
+            document.getElementById('searchCarts')?.addEventListener('input', displayCarts);
+            document.getElementById('searchOrders')?.addEventListener('input', displayOrders);
+        }
+
+        function refundOrder() {
+            alert('Refund functionality not yet implemented');
+        }
     </script>
 </body>
 </html>

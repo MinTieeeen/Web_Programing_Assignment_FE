@@ -9,7 +9,29 @@
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
   <link rel="stylesheet" href="../assets/css/register.css">
+  <style>
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password-svg {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .toggle-password-svg:hover {
+      opacity: 1;
+    }
+  </style>
 </head>
+
 <body>
   <div data-include="header"></div>
 
@@ -18,23 +40,38 @@
     <section class="register-card">
       <h1 class="register-title">Đăng nhập NextPlay</h1>
       <form class="register-form" id="login-form" novalidate>
-        
         <div class="alert alert-danger d-none" id="login-error"></div>
 
         <div class="form-field">
           <label for="username" class="form-label">Tên người dùng hoặc Email</label>
-          <input type="text" id="username" name="username" class="form-control" placeholder="Nhập tên người dùng hoặc email" required>
+          <input type="text" id="username" name="username" class="form-control"
+            placeholder="Nhập tên người dùng hoặc email" required>
         </div>
 
         <div class="form-field">
           <label for="password" class="form-label">Mật khẩu</label>
-          <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
+          
+          <div class="password-wrapper">
+            <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu"
+              required>
+            <svg class="toggle-password-svg" data-target="password" xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle class="eye-open" cx="12" cy="12" r="3"></circle>
+              <path class="eye-closed"
+                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                style="display:none;"></path>
+              <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" style="display:none;"></line>
+            </svg>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary register-submit">Đăng nhập</button>
-        
+
         <div class="mt-3 text-center">
           <a href="../auth/register.html" class="text-white">Chưa có tài khoản? Đăng ký ngay</a>
+          
         </div>
       </form>
     </section>
@@ -43,45 +80,129 @@
   <div data-include="footer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../env.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script>
-    document.getElementById('login-form').addEventListener('submit', async function(e) {
+    document.getElementById('login-form').addEventListener('submit', async function (e) {
       e.preventDefault();
       const errorDiv = document.getElementById('login-error');
       errorDiv.classList.add('d-none');
       errorDiv.textContent = '';
 
-      const formData = {
-        uname: document.getElementById('username').value,
-        password: document.getElementById('password').value
-      };
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        errorDiv.textContent = 'Vui lòng nhập đầy đủ thông tin';
+        errorDiv.classList.remove('d-none');
+        return;
+      }
 
       try {
-        const response = await fetch('http://localhost:8000/users/signin', {
+        const apiUrl = window.API_URL || 'http://localhost/BE/NextPlay/index.php';
+        const response = await fetch(`${apiUrl}/users/signin`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify({
+            uname: username,
+            password: password
+          })
         });
+
+        // Check if response is ok and content type is JSON
+        if (!response.ok) {
+          const responseText = await response.text();
+          console.error('HTTP Error:', response.status, responseText);
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const responseText = await response.text();
+          console.error('Non-JSON response:', responseText);
+          throw new Error('Server returned non-JSON response');
+        }
 
         const data = await response.json();
 
         if (data.status === 'success') {
-          // Save user to localStorage
-          localStorage.setItem('user', JSON.stringify(data.user));
-          window.location.href = (window.APP_ROOT || '/') + 'index.html';
+          // Check if user is admin by querying backend
+          const isAdmin = await checkIfUserIsAdmin(data.user.uid);
+          
+          // Store user data in localStorage
+          const userData = {
+            uid: data.user.uid,
+            username: data.user.uname,
+            uname: data.user.uname,
+            email: data.user.email,
+            name: `${data.user.fname} ${data.user.lname}`,
+            fname: data.user.fname,
+            lname: data.user.lname,
+            avatar: data.user.avatar,
+            DOB: data.user.DOB,
+            role: isAdmin ? 'admin' : 'user', // Role determined by Admin table check
+            balance: data.user.balance || 0,
+            loginTime: new Date().toISOString()
+          };
+
+          // Store user data in both storage keys for compatibility
+          localStorage.setItem('user', JSON.stringify(userData));
+          localStorage.setItem('currentUser', JSON.stringify(userData));
+          
+          // Update header login status
+          if (window.updateHeaderLoginStatus) {
+            window.updateHeaderLoginStatus();
+          }
+          
+          // Redirect to home page
+          window.location.href = (window.APP_ROOT || '../') + 'index.html';
         } else {
           errorDiv.textContent = data.message || 'Đăng nhập thất bại';
           errorDiv.classList.remove('d-none');
         }
-      } catch (err) {
-        console.error(err);
-        errorDiv.textContent = 'Có lỗi xảy ra. Vui lòng thử lại.';
+      } catch (error) {
+        console.error('Login error:', error);
+        // Show detailed error message to user
+        let errorMessage = 'Có lỗi xảy ra khi đăng nhập: ';
+        if (error.message.includes('Server error')) {
+          errorMessage += 'Máy chủ trả về lỗi. Kiểm tra console để xem chi tiết.';
+        } else if (error.message.includes('non-JSON response')) {
+          errorMessage += 'Lỗi định dạng phản hồi từ máy chủ. Kiểm tra console để xem chi tiết.';
+        } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+          errorMessage += 'Không thể kết nối với máy chủ. Đảm bảo XAMPP đang chạy.';
+        } else {
+          errorMessage += error.message;
+        }
+        errorDiv.textContent = errorMessage;
         errorDiv.classList.remove('d-none');
       }
     });
+
+    // Password toggle functionality
+    document.querySelectorAll('.toggle-password-svg').forEach(toggle => {
+      toggle.addEventListener('click', function () {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        const eyeOpen = this.querySelectorAll('.eye-open');
+        const eyeClosed = this.querySelectorAll('.eye-closed');
+
+        if (input.type === 'password') {
+          input.type = 'text';
+          eyeOpen.forEach(el => el.style.display = 'none');
+          eyeClosed.forEach(el => el.style.display = 'block');
+        } else {
+          input.type = 'password';
+          eyeOpen.forEach(el => el.style.display = 'block');
+          eyeClosed.forEach(el => el.style.display = 'none');
+        }
+      });
+    });
   </script>
 </body>
+
 </html>

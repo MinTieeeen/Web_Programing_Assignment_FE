@@ -1,10 +1,3 @@
-// Demo users for testing
-const demoUsers = [
-    { username: 'admin', email: 'admin@nextplay.com', password: 'admin123', name: 'Administrator' },
-    { username: 'gamer1', email: 'gamer1@nextplay.com', password: 'gamer123', name: 'Pro Gamer' },
-    { username: 'test', email: 'test@nextplay.com', password: 'test123', name: 'Test User' }
-];
-
 // Password toggle function
 function togglePassword() {
     const passwordInput = document.getElementById('password');
@@ -46,38 +39,113 @@ function checkLoginStatus() {
     }
 }
 
-// Login function
-function login(identifier, password, rememberMe) {
-    // Find user by username or email
-    const user = demoUsers.find(u => 
-    (u.username === identifier || u.email === identifier) && u.password === password
-    );
-
-    if (user) {
-    // Login successful
-    const userData = {
-        username: user.username,
-        email: user.email,
-        name: user.name,
-        role: user.username === 'admin' ? 'admin' : 'user',
-        loginTime: new Date().toISOString()
-    };
-
-    // Store user data
-    if (rememberMe) {
-        localStorage.setItem('currentUser', JSON.stringify(userData));
-    } else {
-        sessionStorage.setItem('currentUser', JSON.stringify(userData));
+// Check if user is admin by querying backend
+async function checkUserRole(uid) {
+    try {
+        // Check if user is in Admin table
+        const adminResponse = await fetch(`/nextplay/index.php/admin/check/${uid}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (adminResponse.ok) {
+            const adminData = await adminResponse.json();
+            if (adminData.status === 'success' && adminData.isAdmin) {
+                return 'admin';
+            }
+        }
+        
+        // Check if user is in Publisher table
+        const publisherResponse = await fetch(`/nextplay/index.php/publisher/check/${uid}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (publisherResponse.ok) {
+            const publisherData = await publisherResponse.json();
+            if (publisherData.status === 'success' && publisherData.isPublisher) {
+                return 'publisher';
+            }
+        }
+        
+        // Check if user is in Customer table
+        const customerResponse = await fetch(`/nextplay/index.php/customer/check/${uid}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (customerResponse.ok) {
+            const customerData = await customerResponse.json();
+            if (customerData.status === 'success' && customerData.isCustomer) {
+                return 'customer';
+            }
+        }
+        
+        return 'user';
+    } catch (error) {
+        console.error('Role check error:', error);
+        return 'user';
     }
+}
 
-    return { success: true, user: userData };
-    } else {
-    return { success: false, message: 'Email/tên đăng nhập hoặc mật khẩu không chính xác' };
+// Login function using backend API
+async function login(identifier, password, rememberMe) {
+    try {
+        const response = await fetch('/Assignment/NextPlay/users/signin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                uname: identifier,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            // Check user role by querying backend tables
+            const userRole = await checkUserRole(data.user.uid);
+            
+            const userData = {
+                uid: data.user.uid,
+                username: data.user.uname,
+                email: data.user.email,
+                name: `${data.user.fname} ${data.user.lname}`,
+                fname: data.user.fname,
+                lname: data.user.lname,
+                avatar: data.user.avatar,
+                DOB: data.user.DOB,
+                role: userRole, // Role determined by table membership check
+                loginTime: new Date().toISOString()
+            };
+
+            // Store user data based on remember me preference
+            if (rememberMe) {
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+            } else {
+                sessionStorage.setItem('currentUser', JSON.stringify(userData));
+            }
+
+            return { success: true, user: userData };
+        } else {
+            return { success: false, message: data.message || 'Đăng nhập thất bại' };
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        return { success: false, message: 'Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.' };
     }
 }
 
 // Form submission
-document.getElementById('loginForm').addEventListener('submit', function(e) {
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     hideError();
     
@@ -93,9 +161,8 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     submitBtn.disabled = true;
     spinner.classList.remove('d-none');
     
-    // Simulate API call delay
-    setTimeout(() => {
-        const result = login(identifier, password, rememberMe);
+    // Call async login function
+    const result = await login(identifier, password, rememberMe);
         
         if (result.success) {
         // Check if user is admin and show appropriate message
@@ -120,12 +187,11 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         } else {
         // Show error
         showError(result.message);
+        }
         
         // Reset loading state
         submitBtn.disabled = false;
         spinner.classList.add('d-none');
-        }
-    }, 1500);
     }
     
     this.classList.add('was-validated');

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - NextPlay Publisher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/publisher.css">
+</head>
+
+<body>
+    <div class="publisher-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-gamepad"></i> NextPlay
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="games.html" class="nav-link">
+                        <i class="fas fa-box-open"></i> Manage Games
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reviews.html" class="nav-link">
+                        <i class="fas fa-star"></i> Reviews
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="revenue.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i> Revenue
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link active">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Settings</h1>
+            </div>
+
+            <div class="chart-container" style="max-width: 800px;">
+                <form id="settingsForm" onsubmit="handleSettingsSubmit(event)">
+                    <h3 style="margin-top: 0; margin-bottom: 20px;">Publisher Information</h3>
+
+                    <div class="form-group">
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div id="publisherAvatar"
+                                style="width: 80px; height: 80px; background: var(--secondary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; color: white; font-weight: 700;">
+                                P
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 5px;" id="publisherNameDisplay">Publisher
+                                    Name</div>
+                                <button type="button" class="btn btn-sm btn-primary"
+                                    onclick="alert('Avatar upload feature coming soon!')">Change Avatar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Publisher Name</label>
+                        <input type="text" class="form-control" id="publisherName" value="" readonly
+                            style="background: rgba(0,0,0,0.3); cursor: not-allowed;">
+                        <small style="color: var(--text-muted); font-size: 12px;">Publisher name cannot be
+                            changed</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="publisherEmail" value="" readonly
+                            style="background: rgba(0,0,0,0.3); cursor: not-allowed;">
+                        <small style="color: var(--text-muted); font-size: 12px;">Email cannot be changed</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="description" rows="3"
+                            placeholder="Tell us about your company..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <label class="form-label">Tax Code</label>
+                                <input type="text" class="form-control" id="taxcode" placeholder="TX-123456789">
+                            </div>
+                            <div>
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-control" id="location" placeholder="City, Country">
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 30px; margin-bottom: 20px;">Account Information</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="dob">
+                    </div>
+
+                    <div class="form-group">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="fname" placeholder="First name">
+                            </div>
+                            <div>
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lname" placeholder="Last name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="margin-top: 30px; text-align: right; display: flex; gap: 10px; justify-content: flex-end;">
+                        <button type="button" class="btn" onclick="loadPublisherData()"
+                            style="background: rgba(255,255,255,0.1); color: var(--text-light);">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost/BE/NextPlay/index.php';
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        async function loadPublisherData() {
+            try {
+                // Load user data
+                if (user.uname) {
+                    document.getElementById('publisherName').value = user.uname;
+                    document.getElementById('publisherNameDisplay').textContent = user.uname;
+                    document.getElementById('publisherAvatar').textContent = user.uname.charAt(0).toUpperCase();
+                }
+                if (user.email) {
+                    document.getElementById('publisherEmail').value = user.email;
+                }
+                if (user.DOB) {
+                    document.getElementById('dob').value = user.DOB;
+                }
+                if (user.fname) {
+                    document.getElementById('fname').value = user.fname;
+                }
+                if (user.lname) {
+                    document.getElementById('lname').value = user.lname;
+                }
+
+                // Fetch publisher-specific data
+                const response = await fetch(`${API_URL}/publisher/${user.uid}`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+
+                if (data.status === 'success' && data.data) {
+                    const publisher = data.data;
+                    if (publisher.description) {
+                        document.getElementById('description').value = publisher.description;
+                    }
+                    if (publisher.taxcode) {
+                        document.getElementById('taxcode').value = publisher.taxcode;
+                    }
+                    if (publisher.location) {
+                        document.getElementById('location').value = publisher.location;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading publisher data:', error);
+            }
+        }
+
+        async function handleSettingsSubmit(event) {
+            event.preventDefault();
+
+            const formData = {
+                description: document.getElementById('description').value,
+                taxcode: document.getElementById('taxcode').value,
+                location: document.getElementById('location').value,
+                DOB: document.getElementById('dob').value,
+                fname: document.getElementById('fname').value,
+                lname: document.getElementById('lname').value
+            };
+
+            try {
+                // Update publisher data
+                const publisherResponse = await fetch(`${API_URL}/publisher/${user.uid}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        description: formData.description,
+                        taxcode: formData.taxcode,
+                        location: formData.location
+                    })
+                });
+
+                // Update user data
+                const userResponse = await fetch(`${API_URL}/user/${user.uid}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        DOB: formData.DOB,
+                        fname: formData.fname,
+                        lname: formData.lname
+                    })
+                });
+
+                const publisherData = await publisherResponse.json();
+                const userData = await userResponse.json();
+
+                if (publisherData.status === 'success' || userData.status === 'success') {
+                    // Update local storage
+                    const updatedUser = { ...user, ...formData };
+                    localStorage.setItem('user', JSON.stringify(updatedUser));
+
+                    alert('Settings saved successfully!');
+                } else {
+                    alert('Failed to save some settings. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                alert('Failed to save settings. Please try again.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPublisherData);
+    </script>
+</body>
+
+</html>
