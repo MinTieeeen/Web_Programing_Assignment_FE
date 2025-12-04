@@ -17,21 +17,23 @@
   <div data-include="header"></div>
 
   <div class="profile-section">
-    <!-- Banner -->
-    <div class="profile-banner"></div>
+    <!-- Banner Removed -->
+    <!-- <div class="profile-banner"></div> -->
 
     <div class="profile-container">
-      <!-- Left Sidebar -->
-      <div class="profile-sidebar">
-        <div class="avatar-container">
-          <img src="" alt="Avatar" class="profile-avatar" id="avatar-img">
-          <label for="avatar-input" class="btn-edit-avatar" title="Đổi ảnh đại diện">
-            <i class="bi bi-camera-fill"></i>
-          </label>
-          <input type="file" id="avatar-input" hidden accept="image/*">
-        </div>
-
+      <!-- Main Content: User Info (Centered) -->
+      <div class="user-info-section">
         <div class="user-info-card">
+          <div class="avatar-wrapper">
+            <div class="avatar-container">
+              <img src="" alt="Avatar" class="profile-avatar" id="avatar-img">
+              <label for="avatar-input" class="btn-edit-avatar" title="Đổi ảnh đại diện">
+                <i class="bi bi-camera-fill"></i>
+              </label>
+              <input type="file" id="avatar-input" hidden accept="image/*">
+            </div>
+          </div>
+
           <h2 class="user-display-name" id="display-name">Loading...</h2>
           <span class="user-username" id="username">@loading</span>
 
@@ -62,23 +64,21 @@
         </div>
       </div>
 
-      <!-- Right Content -->
-      <div class="profile-content">
+      <!-- Side Content: Library (Corner) -->
+      <div class="library-section">
         <div class="section-header">
-          <h3 class="section-title">Kho game của tôi</h3>
-
-          <!-- Optional Filter/Search could go here -->
-          <div class="library-filters">
-            <!-- <input type="text" class="form-control bg-dark border-secondary text-white" placeholder="Tìm game..."> -->
-          </div>
+          <h3 class="section-title">Kho game</h3>
         </div>
 
-        <div class="game-grid" id="game-grid">
-          <!-- Games will be injected here -->
-          <div class="text-center w-100 py-5 text-secondary">
-            <div class="spinner-border text-primary mb-3" role="status"></div>
-            <p>Đang tải thư viện game...</p>
-          </div>
+        <div id="game-list" class="game-list-vertical">
+          <!-- Games injected here -->
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination-controls" class="pagination-container d-none">
+            <button class="btn-page" id="btn-prev"><i class="bi bi-chevron-left"></i></button>
+            <span id="page-info" class="page-info">1 / 1</span>
+            <button class="btn-page" id="btn-next"><i class="bi bi-chevron-right"></i></button>
         </div>
       </div>
     </div>
@@ -91,7 +91,19 @@
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', async function () {
+    // Helper function to get API URL
+    function getApiUrl() {
+      if (!window.ENV || !window.ENV.API_URL) {
+        throw new Error('ENV.API_URL is not defined.');
+      }
+      return window.ENV.API_URL;
+    }
+
+    let allGames = [];
+    let currentPage = 1;
+    const itemsPerPage = 4;
+
+    document.addEventListener('DOMContentLoaded', async function() {
       const userStr = localStorage.getItem('user');
       if (!userStr) {
         window.location.href = (window.APP_ROOT || '/') + 'auth/login.html';
@@ -102,82 +114,120 @@
       const uid = user.uid || user.id;
 
       try {
-        // Ensure API_URL is available
-        const apiUrl = window.API_URL || 'http://localhost/BE/NextPlay/index.php';
-        console.log('Using API URL:', apiUrl);
-
+        const apiUrl = getApiUrl();
+        
         // Fetch User Data
         const userRes = await fetch(`${apiUrl}/users/${uid}`);
         const userData = await userRes.json();
-
-        if (userData.status !== 'success') {
-          throw new Error('Failed to fetch user data');
-        }
-
+        
+        if (userData.status !== 'success') throw new Error('Failed to fetch user data');
         const userInfo = userData.data;
 
-        // Fetch Games - Correct endpoint is /library
-        const gamesRes = await fetch(`${apiUrl}/library`, {
-          credentials: 'include'
-        });
+        // Fetch Games
+        const gamesRes = await fetch(`${apiUrl}/library`, { credentials: 'include' });
         const gamesData = await gamesRes.json();
-        let games = gamesData.data || [];
-        if (!Array.isArray(games)) games = [];
+        allGames = gamesData.data || [];
+        if (!Array.isArray(allGames)) allGames = [];
 
-        renderProfile(userInfo, games);
+        renderUserInfo(userInfo);
+        renderGameLibrary();
 
       } catch (err) {
         console.error(err);
-        document.getElementById('game-grid').innerHTML = '<div class="text-center text-danger py-5">Có lỗi xảy ra khi tải thông tin.</div>';
+        document.getElementById('game-list').innerHTML = '<div class="text-center text-danger py-3">Lỗi tải dữ liệu.</div>';
       }
     });
 
-    function renderProfile(user, games) {
-      const avatarUrl = user.avatar ? user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
+    function renderUserInfo(user) {
+      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
       const balance = user.balance ? new Intl.NumberFormat('vi-VN').format(user.balance) : '0';
-      const dob = user.DOB ? new Date(user.DOB).toLocaleDateString('vi-VN') : 'Chưa cập nhật';
-      const joinDate = user.joinDate ? new Date(user.joinDate).toLocaleDateString('vi-VN') : 'Chưa cập nhật'; 
+      const joinDate = user.created_at ? new Date(user.created_at).toLocaleDateString('vi-VN') : 'Mới tham gia';
 
-      // Render Games
-      const grid = document.getElementById('game-grid');
-      if (games.length === 0) {
-        grid.innerHTML = `
-            <div class="col-12 text-center py-5">
-                <i class="bi bi-controller display-1 text-secondary mb-3"></i>
-                <p class="text-secondary">Bạn chưa sở hữu game nào.</p>
-                <a href="../products/index.html" class="btn btn-primary-glow mt-3">Khám phá cửa hàng</a>
-            </div>
-        `;
-        // Override grid layout for empty state
-        grid.style.display = 'block';
-      } else {
-        gamesHtml = '<div class="row">';
-        games.forEach(game => {
-          const gameName = game.name || 'Unknown Game';
-          const gameImage = game.thumbnail || game.image || '../assets/images/default-game.png';
-          const gamePrice = game.price === 0 || game.price === '0' ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(game.price) + ' ₫';
-          
-          gamesHtml += `
-            <div class="col-md-3 mb-4">
-              <div class="card bg-dark text-white border-secondary h-100">
-                <div style="height: 150px; background: #2a3b4c; display: flex; align-items: center; justify-content: center; color: #8aa3b7; background-image: url('${gameImage}'); background-size: cover; background-position: center;">
-                  ${gameImage.includes('default') ? 'Game Image' : ''}
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title text-truncate">${gameName}</h5>
-                  <p class="card-text small text-muted">
-                    Giá: ${gamePrice}
-                  </p>
-                  <a href="#" class="btn btn-sm btn-primary w-100 mt-2">Chơi ngay</a>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
-
-      // Attach avatar upload listener
+      document.getElementById('display-name').textContent = (user.fname && user.lname) ? `${user.fname} ${user.lname}` : user.uname;
+      document.getElementById('username').textContent = '@' + user.uname;
+      document.getElementById('game-count').textContent = allGames.length;
+      document.getElementById('join-date').textContent = joinDate;
+      document.getElementById('balance-display').textContent = balance + ' đ';
+      document.getElementById('avatar-img').src = avatarUrl; 
+      
+      // Avatar upload listener
       document.getElementById('avatar-input').addEventListener('change', uploadAvatar);
+    }
+
+    function renderGameLibrary() {
+        const listContainer = document.getElementById('game-list');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if (allGames.length === 0) {
+            listContainer.innerHTML = `
+                <div class="text-center py-4 text-secondary">
+                    <i class="bi bi-controller fs-1 mb-2"></i>
+                    <p>Chưa có game nào.</p>
+                    <a href="../products/index.html" class="btn btn-sm btn-outline-primary mt-2">Khám phá</a>
+                </div>
+            `;
+            paginationContainer.classList.add('d-none');
+            return;
+        }
+
+        // Pagination Logic
+        const totalPages = Math.ceil(allGames.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const currentGames = allGames.slice(start, end);
+
+        let html = '';
+        currentGames.forEach(game => {
+            const gameName = game.name || 'Unknown Game';
+            const gameImage = game.thumbnail || game.image || '../assets/images/default-game.png';
+            
+            html += `
+                <div class="game-item-card">
+                    <div class="game-item-img">
+                        <img src="${window.ENV && window.ENV.getThumbnailUrl ? window.ENV.getThumbnailUrl(gameImage) : gameImage}" 
+                             alt="${gameName}" onerror="this.src='../assets/images/default-game.png'">
+                    </div>
+                    <div class="game-item-info">
+                        <h5 class="game-item-title" title="${gameName}">${gameName}</h5>
+                        <a href="../products/detail.html?id=${game.id || game.Gid}" class="btn-play-mini">
+                            <i class="bi bi-play-fill"></i> Chơi
+                        </a>
+                    </div>
+                </div>
+            `;
+        });
+        listContainer.innerHTML = html;
+
+        // Update Pagination Controls
+        if (totalPages > 1) {
+            paginationContainer.classList.remove('d-none');
+            document.getElementById('page-info').textContent = `${currentPage} / ${totalPages}`;
+            
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            
+            btnPrev.disabled = currentPage === 1;
+            btnNext.disabled = currentPage === totalPages;
+            
+            btnPrev.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderGameLibrary();
+                }
+            };
+            
+            btnNext.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderGameLibrary();
+                }
+            };
+        } else {
+            paginationContainer.classList.add('d-none');
+        }
     }
 
     async function uploadAvatar(e) {
@@ -396,6 +446,21 @@
         alert('Lỗi kết nối');
       }
     }
+
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        }
+    }
   </script>
 
   <!-- Deposit Modal -->
@@ -497,19 +562,31 @@
                 <input type="text" autocomplete="username" style="display:none;">
 
                 <div class="mb-4">
-                  <label class="form-label">Mật khẩu hiện tại</label>
-                  <input type="password" class="form-control" id="current-pass" placeholder="Nhập mật khẩu hiện tại"
-                    autocomplete="current-password">
+                    <label class="form-label">Mật khẩu hiện tại</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control border-end-0" id="current-pass" placeholder="Nhập mật khẩu hiện tại" autocomplete="current-password">
+                        <span class="input-group-text btn-toggle-password" onclick="togglePassword('current-pass', this)">
+                            <i class="bi bi-eye-slash"></i>
+                        </span>
+                    </div>
                 </div>
                 <div class="mb-4">
-                  <label class="form-label">Mật khẩu mới</label>
-                  <input type="password" class="form-control" id="new-pass"
-                    placeholder="Nhập mật khẩu mới (tối thiểu 8 ký tự)" autocomplete="new-password">
+                    <label class="form-label">Mật khẩu mới</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control border-end-0" id="new-pass" placeholder="Nhập mật khẩu mới (tối thiểu 8 ký tự)" autocomplete="new-password">
+                        <span class="input-group-text btn-toggle-password" onclick="togglePassword('new-pass', this)">
+                            <i class="bi bi-eye-slash"></i>
+                        </span>
+                    </div>
                 </div>
                 <div class="mb-4">
-                  <label class="form-label">Nhập lại mật khẩu mới</label>
-                  <input type="password" class="form-control" id="confirm-pass" placeholder="Xác nhận mật khẩu mới"
-                    autocomplete="new-password">
+                    <label class="form-label">Nhập lại mật khẩu mới</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control border-end-0" id="confirm-pass" placeholder="Xác nhận mật khẩu mới" autocomplete="new-password">
+                        <span class="input-group-text btn-toggle-password" onclick="togglePassword('confirm-pass', this)">
+                            <i class="bi bi-eye-slash"></i>
+                        </span>
+                    </div>
                 </div>
               </form>
               <div class="d-flex justify-content-end gap-3 mt-5">

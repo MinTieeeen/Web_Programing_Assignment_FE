@@ -96,7 +96,17 @@
           </div>
         </div>
 
-        <!-- Categories Widget Removed -->
+        <!-- Categories Widget -->
+        <div class="sidebar-widget">
+          <h3 class="widget-title">Chuyên mục</h3>
+          <ul class="category-list">
+            <li class="category-item"><a href="#" class="category-link"><span>Tin Game</span> <span class="badge bg-secondary">12</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Esports</span> <span class="badge bg-secondary">8</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Review</span> <span class="badge bg-secondary">5</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Công nghệ</span> <span class="badge bg-secondary">15</span></a></li>
+            <li class="category-item"><a href="#" class="category-link"><span>Cộng đồng</span> <span class="badge bg-secondary">4</span></a></li>
+          </ul>
+        </div>
 
         <!-- Newsletter Widget -->
         <div class="sidebar-widget text-center">
@@ -113,173 +123,89 @@
 
   <div data-include="footer"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../env.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/include-components.js"></script>
-  <script src="../assets/js/auth.js?v=2"></script>
-  <script src="../assets/js/cart.js?v=2"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/cart.js"></script>
   <script>
-    // Extended Mock Data
-    const mockNews = [
-      {
-        id: 1,
-        title: "Giải đấu NextPlay Championship 2025 chính thức khởi tranh",
-        excerpt: "Sự kiện eSports lớn nhất năm đã trở lại với tổng giải thưởng lên đến 1 tỷ đồng.",
-        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop",
-        date: "01/12/2025",
-        author: "Admin",
-        source: "NextPlay Esports",
-        views: 1200,
-        category: "Esports"
-      },
-      {
-        id: 2,
-        title: "Top 10 game nhập vai đáng chơi nhất tháng 12",
-        excerpt: "Tổng hợp những tựa game RPG đình đám vừa ra mắt.",
-        image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071&auto=format&fit=crop",
-        date: "28/11/2025",
-        author: "Editor Choice",
-        source: "GameK",
-        views: 850,
-        category: "Review"
-      },
-      {
-        id: 3,
-        title: "Bản cập nhật mới của 'Cyber Future' có gì hot?",
-        excerpt: "Nhà phát triển vừa tung ra bản vá lỗi lớn cùng DLC mở rộng bản đồ.",
-        image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070&auto=format&fit=crop",
-        date: "25/11/2025",
-        author: "Tech Reviewer",
-        source: "GenK",
-        views: 2100,
-        category: "Tin Game"
-      },
-      {
-        id: 4,
-        title: "Hướng dẫn build PC chơi game giá rẻ năm 2025",
-        excerpt: "Tối ưu hiệu năng trên giá thành với cấu hình PC gaming tầm trung.",
-        image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=2070&auto=format&fit=crop",
-        date: "20/11/2025",
-        author: "Hardware Guru",
-        source: "TinhTe",
-        views: 3500,
-        category: "Công nghệ"
-      },
-      {
-        id: 5,
-        title: "Review: 'Lost Kingdom' - Siêu phẩm hay bom xịt?",
-        excerpt: "Đánh giá chi tiết tựa game được mong chờ nhất năm.",
-        image: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=2165&auto=format&fit=crop",
-        date: "15/11/2025",
-        author: "Game Critic",
-        source: "Game4V",
-        views: 1500,
-        category: "Review"
-      },
-      {
-        id: 6,
-        title: "Cộng đồng game thủ Việt nói gì về sự kiện sắp tới?",
-        excerpt: "Những ý kiến trái chiều xoay quanh việc thay đổi thể thức thi đấu.",
-        image: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=2070&auto=format&fit=crop",
-        date: "10/11/2025",
-        author: "Reporter",
-        source: "ThanhNien",
-        views: 500,
-        category: "Cộng đồng"
-      },
-      {
-        id: 7,
-        title: "Sony công bố PlayStation 6: Cấu hình khủng khiếp",
-        excerpt: "Những thông tin rò rỉ đầu tiên về thế hệ console tiếp theo.",
-        image: "https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=2000&auto=format&fit=crop",
-        date: "05/11/2025",
-        author: "Sony Fan",
-        source: "Sony",
-        views: 5000,
-        category: "Công nghệ"
-      },
-      {
-        id: 8,
-        title: "GTA VI lộ diện trailer mới: Đồ họa siêu thực",
-        excerpt: "Rockstar Games tiếp tục khiến cộng đồng đứng ngồi không yên.",
-        image: "https://images.unsplash.com/photo-1628260412297-a3377e45006f?q=80&w=2000&auto=format&fit=crop",
-        date: "01/11/2025",
-        author: "Gamer",
-        source: "Rockstar",
-        views: 8000,
-        category: "Tin Game"
-      }
-    ];
-
     function renderMagazineLayout(newsList) {
         if (newsList.length === 0) return;
 
         // 1. Main Featured (First Item)
         const mainItem = newsList[0];
         const mainContainer = document.getElementById('main-featured-container');
-        mainContainer.innerHTML = `
-            <div class="main-featured-card">
-                <div class="main-featured-img-wrapper">
-                    <a href="detail.html?id=${mainItem.id}">
-                        <img src="${mainItem.image}" class="main-featured-img" alt="${mainItem.title}">
-                    </a>
-                    <div class="main-featured-overlay">
-                        <div class="mb-2">
-                            <span class="source-badge">${mainItem.source}</span>
-                        </div>
-                        <h2 class="main-featured-title">
-                            <a href="detail.html?id=${mainItem.id}">${mainItem.title}</a>
-                        </h2>
-                        <div class="main-featured-meta">
-                            <span><i class="bi bi-calendar3"></i> ${mainItem.date}</span>
-                            <span><i class="bi bi-eye"></i> ${mainItem.views} lượt xem</span>
+        if (mainContainer) {
+            mainContainer.innerHTML = `
+                <div class="main-featured-card">
+                    <div class="main-featured-img-wrapper">
+                        <a href="detail.html?id=${mainItem.id}">
+                            <img src="${mainItem.image}" class="main-featured-img" alt="${mainItem.title}">
+                        </a>
+                        <div class="main-featured-overlay">
+                            <div class="mb-2">
+                                <span class="source-badge">${mainItem.source}</span>
+                            </div>
+                            <h2 class="main-featured-title">
+                                <a href="detail.html?id=${mainItem.id}">${mainItem.title}</a>
+                            </h2>
+                            <div class="main-featured-meta">
+                                <span><i class="bi bi-calendar3"></i> ${mainItem.date}</span>
+                                <span><i class="bi bi-eye"></i> ${mainItem.views} lượt xem</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
 
         // 2. Sub Featured (Next 3 Items)
         const subItems = newsList.slice(1, 4);
         const subContainer = document.getElementById('sub-featured-container');
-        subContainer.innerHTML = subItems.map(item => `
-            <div class="col-md-4">
-                <div class="sub-featured-card">
-                    <div class="sub-featured-img-wrapper">
-                        <a href="detail.html?id=${item.id}">
-                            <img src="${item.image}" class="sub-featured-img" alt="${item.title}">
-                        </a>
+        if (subContainer) {
+            subContainer.innerHTML = subItems.map(item => `
+                <div class="col-md-4">
+                    <div class="sub-featured-card">
+                        <div class="sub-featured-img-wrapper">
+                            <a href="detail.html?id=${item.id}">
+                                <img src="${item.image}" class="sub-featured-img" alt="${item.title}">
+                            </a>
+                        </div>
+                        <h4 class="sub-featured-title">
+                            <a href="detail.html?id=${item.id}">${item.title}</a>
+                        </h4>
                     </div>
-                    <h4 class="sub-featured-title">
-                        <a href="detail.html?id=${item.id}">${item.title}</a>
-                    </h4>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
+        }
 
         // 3. Side News List (Next 4 Items)
         const sideItems = newsList.slice(4, 8);
         const sideContainer = document.getElementById('side-news-container');
-        sideContainer.innerHTML = sideItems.map(item => `
-            <div class="side-news-item">
-                <a href="detail.html?id=${item.id}">
-                    <img src="${item.image}" class="side-news-thumb" alt="${item.title}">
-                </a>
-                <div class="side-news-content">
-                    <h5 class="side-news-title">
-                        <a href="detail.html?id=${item.id}">${item.title}</a>
-                    </h5>
-                    <div class="side-news-meta">
-                        <span class="side-news-source">${item.source}</span>
-                        <span>${item.date}</span>
+        if (sideContainer) {
+            sideContainer.innerHTML = sideItems.map(item => `
+                <div class="side-news-item">
+                    <a href="detail.html?id=${item.id}">
+                        <img src="${item.image}" class="side-news-thumb" alt="${item.title}">
+                    </a>
+                    <div class="side-news-content">
+                        <h5 class="side-news-title">
+                            <a href="detail.html?id=${item.id}">${item.title}</a>
+                        </h5>
+                        <div class="side-news-meta">
+                            <span class="side-news-source">${item.source}</span>
+                            <span>${item.date}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
+        }
     }
 
     function renderLatest(newsList) {
       const container = document.getElementById('latest-news-list');
+      if (!container) return;
+      
       if (newsList.length === 0) {
         container.innerHTML = '<div class="text-center text-secondary py-5">Không tìm thấy bài viết nào.</div>';
         return;
@@ -311,6 +237,8 @@
 
     function renderTopicGrid(newsList, containerId, category) {
         const container = document.getElementById(containerId);
+        if (!container) return;
+
         // Filter by category if provided, otherwise just take some items
         let filtered = category ? newsList.filter(n => n.category === category) : newsList;
         // Fallback if no specific category match (for demo)
@@ -336,22 +264,54 @@
         `).join('');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      renderMagazineLayout(mockNews);
-      renderLatest(mockNews);
-      renderTopicGrid(mockNews, 'tech-news-grid', 'Công nghệ');
-      renderTopicGrid(mockNews, 'review-news-grid', 'Review');
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Ensure ENV is loaded
+        if (!window.ENV || !window.ENV.API_URL) {
+            console.error('ENV not loaded!');
+            return;
+        }
+        const API_URL = window.ENV.API_URL;
+        
+        // Fetch News
+        const response = await fetch(`${API_URL}/news`);
+        const data = await response.json();
+        
+        let newsList = [];
+        if (data.status === 'success' && data.data) {
+            newsList = data.data.map(item => ({
+                id: item.id,
+                title: item.title,
+                excerpt: item.content.substring(0, 100) + '...', // Create excerpt from content
+                image: item.thumbnail || 'https://via.placeholder.com/800x400',
+                date: new Date(item.created_at).toLocaleDateString('vi-VN'),
+                author: item.author_name || 'Admin',
+                source: item.source || 'NextPlay',
+                views: item.views,
+                category: item.category || 'Tin tức'
+            }));
+        }
 
-      // Search functionality
-      const searchInput = document.getElementById('search-input');
-      searchInput.addEventListener('input', (e) => {
-        const keyword = e.target.value.toLowerCase();
-        const filteredNews = mockNews.filter(item => 
-          item.title.toLowerCase().includes(keyword) || 
-          item.excerpt.toLowerCase().includes(keyword)
-        );
-        renderLatest(filteredNews);
-      });
+        // Render functions (same as before but using fetched list)
+        renderMagazineLayout(newsList);
+        renderLatest(newsList);
+        renderTopicGrid(newsList, 'tech-news-grid', 'Công nghệ');
+        renderTopicGrid(newsList, 'review-news-grid', 'Review');
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredNews = newsList.filter(item => 
+            item.title.toLowerCase().includes(keyword) || 
+            item.excerpt.toLowerCase().includes(keyword)
+            );
+            renderLatest(filteredNews);
+        });
+
+      } catch (error) {
+          console.error('Error loading news:', error);
+      }
     });
   </script>
 </body>

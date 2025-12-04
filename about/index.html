@@ -68,6 +68,7 @@
     <div data-include="footer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../env.js"></script>
     <script src="../assets/js/include-components.js"></script>
     <script src="../assets/js/auth.js?v=2"></script>
     <script src="../assets/js/cart.js?v=2"></script>
@@ -86,7 +87,7 @@
                 let apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
                 if (apiUrl.includes(':8000')) apiUrl = 'http://localhost/BTL_LTW/BTL_LTW_BE';
 
-                const response = await fetch(`${apiUrl}/index.php/pages/about`);
+                const response = await fetch(`${apiUrl}/pages/about`);
                 const result = await response.json();
 
                 if (result.status === 'success') {
@@ -228,7 +229,7 @@
                 let apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE';
                 if (apiUrl.includes(':8000')) apiUrl = 'http://localhost/BTL_LTW/BTL_LTW_BE';
 
-                const response = await fetch(`${apiUrl}/index.php/pages/about`, {
+                const response = await fetch(`${apiUrl}/pages/about`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
