@@ -652,25 +652,18 @@ html{
       }
 
       // Prepare data
-      const userData = {
+      const formData = {
         lname: document.getElementById('lastName').value.trim(),
         fname: document.getElementById('firstName').value.trim(),
         email: document.getElementById('email').value.trim(),
         uname: document.getElementById('username').value.trim(),
         password: document.getElementById('password').value,
-        DOB: document.getElementById('birthdate').value || null
-      };
-
-      const publisherData = {
+        DOB: document.getElementById('birthdate').value || null,
         taxcode: taxcode,
         location: document.getElementById('location').value.trim(),
         description: document.getElementById('description').value.trim() || null
       };
-
-      const formData = {
-        user: userData,
-        publisher: publisherData
-      };
+      console.log(formData);
 
       try {
         const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE/index.php';

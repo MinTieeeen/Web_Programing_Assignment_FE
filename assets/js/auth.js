@@ -79,7 +79,20 @@
     window.location.href = (window.APP_ROOT || '/') + 'auth/login.html';
   }
 
+  async function checkIfUserIsAdmin(uid) {
+    try {
+      const response = await fetch(`${API_URL}/users/check_admin?uid=${uid}`);
+      if (!response.ok) return false;
+      const data = await response.json();
+      return data.isAdmin === true;
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+      return false;
+    }
+  }
+
   // Expose function globally
+  window.checkIfUserIsAdmin = checkIfUserIsAdmin;
   window.updateHeaderLoginStatus = updateHeaderLoginStatus;
   window.API_URL = API_URL;
 
