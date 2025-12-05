@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 
 <head>
-    
+
     <base href="/Web_Programing_Assignment_FE/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -240,7 +239,23 @@
 
         <section data-include="footer"></section>
     </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="env.js?v=2"></script>
+    <script src="assets/js/include-components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/toast.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script>
+        // Check and update header login status when page loads
+        window.addEventListener('load', function () {
+            // Wait a bit for header to load and then update status
+            setTimeout(function () {
+                if (window.updateHeaderLoginStatus) {
+                    window.updateHeaderLoginStatus();
+                }
+            }, 200);
+        });
+    </script>
     <script src="app.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
