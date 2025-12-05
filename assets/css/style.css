@@ -6,6 +6,7 @@
 body {
     margin: 0;
     padding: 0;
+    padding-top: 80px;
     background: #0f1f2b;
     background-image: url('../images/starry-night-sky 1.png');
     background-size: cover;
