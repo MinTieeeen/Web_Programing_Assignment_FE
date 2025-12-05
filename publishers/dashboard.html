@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publisher Dashboard - NextPlay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/publisher.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="publisher-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-gamepad"></i> NextPlay
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link active">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="games.html" class="nav-link">
+                        <i class="fas fa-box-open"></i> Manage Games
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reviews.html" class="nav-link">
+                        <i class="fas fa-star"></i> Reviews
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="revenue.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i> Revenue
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div style="font-weight: 600; color: var(--text-light);" id="publisher-name">Publisher</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Publisher</div>
+                    </div>
+                    <div class="user-avatar" id="user-avatar">P</div>
+                </div>
+            </div>
+
+            <!-- Welcome Message -->
+            <div
+                style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border-radius: 16px; padding: 30px; margin-bottom: 30px; position: relative; overflow: hidden;">
+                <div style="position: relative; z-index: 1;">
+                    <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 10px;">Hello <span
+                            id="publisher-name-welcome">Publisher</span>!</h2>
+                    <p style="font-size: 16px; opacity: 0.9; margin: 0;">Welcome back! Here's what's happening with your
+                        games today.</p>
+                </div>
+                <div
+                    style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;">
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">Total Games</div>
+                    <div class="stat-value" id="total-games">0</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> 12.5% from last month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Total Users</div>
+                    <div class="stat-value" id="total-users">0</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> 8.2% increase
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Total Revenue</div>
+                    <div class="stat-value" id="total-revenue">$0</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> 15.3% growth
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Avg Rating</div>
+                    <div class="stat-value" id="avg-rating">0.0</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> +0.3 points
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-container">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-size: 20px; font-weight: 700;">Revenue Growth</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="period-btn">Week</button>
+                            <button class="period-btn active">Month</button>
+                            <button class="period-btn">Year</button>
+                        </div>
+                    </div>
+                    <canvas id="revenueChart" style="height: 300px;"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; font-weight: 700;">Quick Stats</h3>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px;">
+                            <div
+                                style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+                                Active Games</div>
+                            <div style="font-size: 24px; font-weight: 700;" id="active-games">0</div>
+                        </div>
+                        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px;">
+                            <div
+                                style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+                                Pending Reviews</div>
+                            <div style="font-size: 24px; font-weight: 700;" id="pending-reviews">0</div>
+                        </div>
+                        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px;">
+                            <div
+                                style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+                                New Purchases</div>
+                            <div style="font-size: 24px; font-weight: 700;" id="new-purchases">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .period-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .period-btn:hover {
+            background: rgba(108, 92, 231, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .period-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+    </style>
+
+    <script>
+        const API_URL = window.ENV.API_URL;
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        if (user.uname) {
+            document.getElementById('publisher-name').textContent = user.uname;
+            document.getElementById('publisher-name-welcome').textContent = user.uname;
+            document.getElementById('user-avatar').textContent = user.uname.charAt(0).toUpperCase();
+        }
+
+        async function fetchDashboardData() {
+            try {
+                const gamesResponse = await fetch(`${API_URL}/games?publisher_id=${user.uid}`, {
+                    credentials: 'include'
+                });
+                const gamesData = await gamesResponse.json();
+
+                if (gamesData.status === 'success' && gamesData.data) {
+                    const games = gamesData.data;
+                    document.getElementById('total-games').textContent = games.length;
+                    document.getElementById('active-games').textContent = games.filter(g => g.rating > 0).length;
+
+                    let totalUsers = 0;
+                    let totalRevenue = 0;
+                    let totalRating = 0;
+                    let ratingCount = 0;
+                    let totalReviews = 0;
+
+                    games.forEach(game => {
+                        totalUsers += Math.floor(Math.random() * 500);
+                        totalRevenue += parseFloat(game.price || 0) * Math.floor(Math.random() * 100);
+                        totalReviews += parseInt(game.reviews || 0);
+
+                        if (game.rating) {
+                            totalRating += parseFloat(game.rating);
+                            ratingCount++;
+                        }
+                    });
+
+                    document.getElementById('total-users').textContent = totalUsers.toLocaleString();
+                    document.getElementById('total-revenue').textContent = '$' + totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 0 });
+                    document.getElementById('avg-rating').textContent = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : '0.0';
+                    document.getElementById('pending-reviews').textContent = totalReviews;
+                    document.getElementById('new-purchases').textContent = Math.floor(totalUsers * 0.15);
+
+                    initRevenueChart();
+                }
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            }
+        }
+
+        function initRevenueChart() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(108, 92, 231, 0.3)');
+            gradient.addColorStop(1, 'rgba(108, 92, 231, 0.01)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [12000, 19000, 15000, 25000, 22000, 30000, 35000],
+                        borderColor: '#6c5ce7',
+                        backgroundColor: gradient,
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#6c5ce7',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#2d2d44',
+                            titleColor: '#f5f6fa',
+                            bodyColor: '#b2bec3',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function (context) {
+                                    return '$' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#b2bec3',
+                                callback: function (value) {
+                                    return '$' + (value / 1000) + 'K';
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#b2bec3'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchDashboardData);
+    </script>
+</body>
+
+</html>

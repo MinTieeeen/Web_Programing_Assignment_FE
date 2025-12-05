@@ -542,7 +542,7 @@ html {
 }
 
 .tq-skills-image {
-    width: 100%;
+    width: 90%;
     max-width: 300px;
     object-fit: contain;
 }

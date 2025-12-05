@@ -10,6 +10,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     let spotlightIndex = 0; // Track current spotlight position
 
     // --- 1. Fetch Data ---
+    // Backup: Try to update header login status after a short delay
+    setTimeout(() => {
+        if (window.updateHeaderLoginStatus) {
+            console.log('Backup: Updating header login status...');
+            window.updateHeaderLoginStatus();
+        }
+    }, 1000);
+
     console.log('Fetching games from:', API_URL);
     try {
         let response;

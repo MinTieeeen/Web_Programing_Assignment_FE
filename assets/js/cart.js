@@ -79,13 +79,13 @@ window.Cart = {
                 const result = await response.json();
                 if (result.status === 'success') {
                     this.updateCartCount();
-                    alert('Đã thêm vào giỏ hàng (DB)!');
+                    Toast.success('Đã thêm vào giỏ hàng!');
                 } else {
-                    alert('Lỗi khi thêm vào giỏ hàng: ' + result.message);
+                    Toast.error('Lỗi khi thêm vào giỏ hàng: ' + result.message);
                 }
             } catch (error) {
                 console.error('Error adding to cart:', error);
-                alert('Lỗi kết nối!');
+                Toast.error('Lỗi kết nối!');
             }
         } else {
             // Guest user
@@ -93,7 +93,7 @@ window.Cart = {
             const existingItem = items.find(item => item.id === game.id);
 
             if (existingItem) {
-                alert('Game này đã có trong giỏ hàng của bạn!');
+                Toast.warning('Game này đã có trong giỏ hàng của bạn!');
             } else {
                 items.push({
                     id: game.id,
@@ -103,7 +103,7 @@ window.Cart = {
                     quantity: 1
                 });
                 this.saveItems(items);
-                alert('Đã thêm vào giỏ hàng thành công!');
+                Toast.success('Đã thêm vào giỏ hàng thành công!');
             }
         }
     },
@@ -126,11 +126,11 @@ window.Cart = {
                         location.reload();
                     }
                 } else {
-                    alert('Lỗi khi xóa khỏi giỏ hàng: ' + result.message);
+                    Toast.error('Lỗi khi xóa khỏi giỏ hàng: ' + result.message);
                 }
             } catch (error) {
                 console.error('Error removing from cart:', error);
-                alert('Lỗi kết nối!');
+                Toast.error('Lỗi kết nối!');
             }
         } else {
             let items = this.getItems();
@@ -223,63 +223,61 @@ window.Cart = {
     async checkout() {
         const userStr = localStorage.getItem('user');
         if (!userStr) {
-            alert('Vui lòng đăng nhập để thanh toán!');
+            Toast.warning('Vui lòng đăng nhập để thanh toán!');
             window.location.href = '../auth/login.html';
             return;
         }
 
-        if (!confirm('Bạn có chắc chắn muốn thanh toán?')) {
-            return;
-        }
+        Toast.confirm('Bạn có chắc chắn muốn thanh toán?', async () => {
+            try {
+                // 1. Get cart items to get Game IDs
+                const apiUrl = getApiUrl();
 
-        try {
-            // 1. Get cart items to get Game IDs
-            const apiUrl = getApiUrl();
+                const cartResponse = await fetch(`${apiUrl}/wishlists/Cart/games`, {
+                    credentials: 'include'
+                });
+                const cartResult = await cartResponse.json();
 
-            const cartResponse = await fetch(`${apiUrl}/wishlists/Cart/games`, {
-                credentials: 'include'
-            });
-            const cartResult = await cartResponse.json();
-
-            if (cartResult.status !== 'success' || !cartResult.data || !cartResult.data.games || cartResult.data.games.length === 0) {
-                alert('Giỏ hàng trống!');
-                return;
-            }
-
-            const gameIds = cartResult.data.games.map(item => item.Gid);
-
-            // 2. Call Payment API
-            const response = await fetch(`${apiUrl}/payments`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    wishlist_name: 'Cart',
-                    game_ids: gameIds
-                }),
-                credentials: 'include'
-            });
-            const result = await response.json();
-
-            if (result.status === 'success') {
-                alert(`Thanh toán thành công!`);
-                this.updateCartCount();
-                if (window.location.pathname.includes('cart')) {
-                    location.reload();
+                if (cartResult.status !== 'success' || !cartResult.data || !cartResult.data.games || cartResult.data.games.length === 0) {
+                    Toast.warning('Giỏ hàng trống!');
+                    return;
                 }
-            } else if (response.status === 402) {
-                // Insufficient balance
-                const needed = new Intl.NumberFormat('vi-VN').format(result.data.needed_amount) + ' đ';
-                const current = new Intl.NumberFormat('vi-VN').format(result.data.current_balance) + ' đ';
-                alert(`Số dư không đủ!\nSố dư hiện tại: ${current}\nCần thêm: ${needed}`);
-            } else {
-                alert('Thanh toán thất bại: ' + (result.message || 'Lỗi không xác định'));
+
+                const gameIds = cartResult.data.games.map(item => item.Gid);
+
+                // 2. Call Payment API
+                const response = await fetch(`${apiUrl}/payments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        wishlist_name: 'Cart',
+                        game_ids: gameIds
+                    }),
+                    credentials: 'include'
+                });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    Toast.success(`Thanh toán thành công!`);
+                    this.updateCartCount();
+                    if (window.location.pathname.includes('cart')) {
+                        location.reload();
+                    }
+                } else if (response.status === 402) {
+                    // Insufficient balance
+                    const needed = new Intl.NumberFormat('vi-VN').format(result.data.needed_amount) + ' đ';
+                    const current = new Intl.NumberFormat('vi-VN').format(result.data.current_balance) + ' đ';
+                    Toast.error(`Số dư không đủ!\nSố dư hiện tại: ${current}\nCần thêm: ${needed}`);
+                } else {
+                    Toast.error('Thanh toán thất bại: ' + (result.message || 'Lỗi không xác định'));
+                }
+            } catch (error) {
+                console.error('Checkout error:', error);
+                Toast.error('Lỗi kết nối khi thanh toán!');
             }
-        } catch (error) {
-            console.error('Checkout error:', error);
-            alert('Lỗi kết nối khi thanh toán!');
-        }
+        });
     }
 };
 

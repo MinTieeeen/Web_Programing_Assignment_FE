@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
+
+  <link rel="stylesheet" href="../assets/css/toast.css">
   <link rel="stylesheet" href="../assets/css/register.css">
   <style>
     
@@ -563,8 +565,7 @@ html{
 
       // Validate current step before moving
       if (!validateStep(currentStep)) {
-        errorDiv.textContent = 'Vui lòng điền đầy đủ thông tin bắt buộc';
-        errorDiv.classList.remove('d-none');
+        // Error is handled in validateStep now
         return;
       }
 
@@ -606,6 +607,7 @@ html{
       for (let input of inputs) {
         if (!input.value.trim() || !input.checkValidity()) {
           input.focus();
+          Toast.warning('Vui lòng điền đầy đủ thông tin');
           return false;
         }
       }
@@ -615,8 +617,7 @@ html{
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm_password').value;
         if (password !== confirmPassword) {
-          document.getElementById('register-error').textContent = 'Mật khẩu xác nhận không khớp';
-          document.getElementById('register-error').classList.remove('d-none');
+          Toast.warning('Mật khẩu xác nhận không khớp');
           return false;
         }
       }
@@ -627,10 +628,7 @@ html{
     // Form Submission
     document.getElementById('publisher-register-form').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const errorDiv = document.getElementById('register-error');
-      errorDiv.classList.add('d-none');
-      errorDiv.textContent = '';
-
+      
       // Final validation
       if (!validateStep(3)) {
         return;
@@ -639,38 +637,29 @@ html{
       // Validate tax code format
       const taxcode = document.getElementById('taxcode').value.trim();
       if (taxcode.length < 10 || taxcode.length > 13 || !/^\d+$/.test(taxcode)) {
-        errorDiv.textContent = 'Mã số thuế không hợp lệ (phải là 10-13 chữ số)';
-        errorDiv.classList.remove('d-none');
+        Toast.warning('Mã số thuế không hợp lệ (phải là 10-13 chữ số)');
         return;
       }
 
       // Check terms
       if (!document.getElementById('terms').checked) {
-        errorDiv.textContent = 'Bạn phải đồng ý với điều khoản để tiếp tục';
-        errorDiv.classList.remove('d-none');
+        Toast.warning('Bạn phải đồng ý với điều khoản để tiếp tục');
         return;
       }
 
       // Prepare data
-      const userData = {
+      const formData = {
         lname: document.getElementById('lastName').value.trim(),
         fname: document.getElementById('firstName').value.trim(),
         email: document.getElementById('email').value.trim(),
         uname: document.getElementById('username').value.trim(),
         password: document.getElementById('password').value,
-        DOB: document.getElementById('birthdate').value || null
-      };
-
-      const publisherData = {
+        DOB: document.getElementById('birthdate').value || null,
         taxcode: taxcode,
         location: document.getElementById('location').value.trim(),
         description: document.getElementById('description').value.trim() || null
       };
-
-      const formData = {
-        user: userData,
-        publisher: publisherData
-      };
+      console.log(formData);
 
       try {
         const apiUrl = window.API_URL || 'http://localhost/BTL_LTW/BTL_LTW_BE/index.php';
@@ -686,21 +675,20 @@ html{
         const data = await response.json();
 
         if (data.status === 'success') {
-          alert('Đăng ký Publisher thành công! Vui lòng đăng nhập để bắt đầu xuất bản game.');
-          window.location.href = 'login.html';
+          Toast.success('Đăng ký Publisher thành công! Vui lòng đăng nhập để bắt đầu xuất bản game.');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1500);
         } else {
-          errorDiv.textContent = data.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.';
-          errorDiv.classList.remove('d-none');
+          Toast.error(data.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.');
         }
       } catch (err) {
         console.error('Registration error:', err);
-        errorDiv.textContent = 'Có lỗi xảy ra khi kết nối đến server. Vui lòng thử lại.';
-        errorDiv.classList.remove('d-none');
+        Toast.error('Có lỗi xảy ra khi kết nối đến server. Vui lòng thử lại.');
       }
-    }
+    });
     
-  );
-   // Password toggle functionality
+    // Password toggle functionality
     document.querySelectorAll('.toggle-password-svg').forEach(toggle => {
       toggle.addEventListener('click', function () {
         const targetId = this.getAttribute('data-target');
@@ -719,6 +707,8 @@ html{
         }
       });
     });
+
   </script>
+  <script src="../assets/js/toast.js"></script>
 </body>
 </html>

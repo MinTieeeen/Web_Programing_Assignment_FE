@@ -1,6 +1,11 @@
 // Auth Logic
 (function () {
-  const API_URL = 'http://localhost/BE/NextPlay/index.php'; // Adjust if needed
+  if (!window.ENV || !window.ENV.API_URL) {
+    console.error('ENV or ENV.API_URL is not defined in auth.js');
+    console.log('window.ENV:', window.ENV);
+    return;
+  }
+  const API_URL = window.ENV.API_URL;
 
   // Calculate APP_ROOT if not set
   if (!window.APP_ROOT) {
@@ -35,7 +40,9 @@
     if (userStr) {
       const user = JSON.parse(userStr);
       // Show Avatar and Dropdown
-      const avatarUrl = user.avatar ? (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar : (window.APP_ROOT || '/') + 'assets/images/default-avatar.png';
+      const avatarUrl = user.avatar 
+        ? (user.avatar.startsWith('http') ? user.avatar : (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar)
+        : (window.APP_ROOT || '/') + 'assets/images/default-avatar.png';
 
       authActions.innerHTML = `
         <div class="d-flex align-items-center">
@@ -75,7 +82,20 @@
     window.location.href = (window.APP_ROOT || '/') + 'auth/login.html';
   }
 
+  async function checkIfUserIsAdmin(uid) {
+    try {
+      const response = await fetch(`${API_URL}/users/check_admin?uid=${uid}`);
+      if (!response.ok) return false;
+      const data = await response.json();
+      return data.isAdmin === true;
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+      return false;
+    }
+  }
+
   // Expose function globally
+  window.checkIfUserIsAdmin = checkIfUserIsAdmin;
   window.updateHeaderLoginStatus = updateHeaderLoginStatus;
   window.API_URL = API_URL;
 

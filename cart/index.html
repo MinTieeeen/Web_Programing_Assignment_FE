@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
+  <link rel="stylesheet" href="../assets/css/toast.css">
   <style>
     body {
         background-color: #0f1f2b;
@@ -125,11 +126,12 @@
   <script src="../env.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js?v=2"></script>
+  <script src="../assets/js/toast.js"></script>
   <script src="../assets/js/cart.js?v=2"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
         if (!localStorage.getItem('user')) {
-            alert('Vui lòng đăng nhập để xem giỏ hàng!');
+            Toast.warning('Vui lòng đăng nhập để xem giỏ hàng!');
             window.location.href = '../auth/login.html';
             return;
         }
@@ -210,13 +212,13 @@
     }
 
     function removeItem(id) {
-        if(confirm('Bạn có chắc muốn xóa game này khỏi giỏ hàng?')) {
+        Toast.confirm('Bạn có chắc muốn xóa game này khỏi giỏ hàng?', () => {
             Cart.removeItem(id);
-            renderCart();
-            // Header badge updates automatically via Cart.removeItem -> saveItems -> updateCartCount
-            // But we might need to trigger it manually if not reactive
-            Cart.updateCartCount(); 
-        }
+            // renderCart will be called by Cart.removeItem if it reloads, 
+            // but since Cart.removeItem reloads the page if on cart page, we might not need this.
+            // However, let's keep it consistent with previous logic or rely on reload.
+            // Actually Cart.removeItem does location.reload() if on cart page.
+        });
     }
 
   </script>

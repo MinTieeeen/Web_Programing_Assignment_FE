@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue Reports - NextPlay Publisher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/publisher.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="publisher-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-gamepad"></i> NextPlay
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="games.html" class="nav-link">
+                        <i class="fas fa-box-open"></i> Manage Games
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reviews.html" class="nav-link">
+                        <i class="fas fa-star"></i> Reviews
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="revenue.html" class="nav-link active">
+                        <i class="fas fa-chart-line"></i> Revenue
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Revenue Reports</h1>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <select class="form-control" style="width: 150px;" id="periodFilter" onchange="updateCharts()">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30" selected>Last 30 Days</option>
+                        <option value="365">This Year</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">Total Revenue</div>
+                    <div class="stat-value" id="total-revenue">$0</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> <span id="revenue-change">0%</span> vs last period
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Daily Average</div>
+                    <div class="stat-value" id="daily-avg">$0</div>
+                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
+                        <i class="fas fa-arrow-up"></i> <span id="avg-change">0%</span> vs last period
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Top Game</div>
+                    <div class="stat-value" style="font-size: 20px;" id="top-game">-</div>
+                    <div style="color: var(--text-muted); font-size: 14px; margin-top: 5px;" id="top-game-revenue">
+                        $0 revenue
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-section" style="grid-template-columns: 1fr 1fr;">
+                <div class="chart-container">
+                    <h3 style="margin-top: 0; margin-bottom: 20px;">Revenue Trend</h3>
+                    <canvas id="revenueTrendChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 style="margin-top: 0; margin-bottom: 20px;">Revenue by Game</h3>
+                    <canvas id="revenueByGameChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_URL = window.ENV.API_URL;
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        let gamesData = [];
+        let trendChart = null;
+        let gameChart = null;
+
+        async function fetchRevenueData() {
+            try {
+                const response = await fetch(`${API_URL}/games?publisher_id=${user.uid}`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+
+                if (data.status === 'success' && data.data) {
+                    gamesData = data.data;
+                    calculateRevenue();
+                    updateCharts();
+                }
+            } catch (error) {
+                console.error('Error fetching revenue data:', error);
+            }
+        }
+
+        function calculateRevenue() {
+            const period = parseInt(document.getElementById('periodFilter').value);
+
+            // Calculate total revenue (mock calculation based on price and random sales)
+            let totalRevenue = 0;
+            let gameRevenues = [];
+
+            gamesData.forEach(game => {
+                const sales = Math.floor(Math.random() * 100) + 10;
+                const revenue = parseFloat(game.price || 0) * sales;
+                totalRevenue += revenue;
+                gameRevenues.push({
+                    name: game.name,
+                    revenue: revenue
+                });
+            });
+
+            // Sort by revenue
+            gameRevenues.sort((a, b) => b.revenue - a.revenue);
+
+            // Update stats
+            document.getElementById('total-revenue').textContent = '$' + totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 0 });
+            document.getElementById('daily-avg').textContent = '$' + Math.floor(totalRevenue / period).toLocaleString();
+            document.getElementById('revenue-change').textContent = (Math.random() * 20 + 5).toFixed(1) + '%';
+            document.getElementById('avg-change').textContent = (Math.random() * 15 + 2).toFixed(1) + '%';
+
+            if (gameRevenues.length > 0) {
+                document.getElementById('top-game').textContent = gameRevenues[0].name;
+                document.getElementById('top-game-revenue').textContent = '$' + gameRevenues[0].revenue.toLocaleString() + ' revenue';
+            }
+
+            return { totalRevenue, gameRevenues };
+        }
+
+        function updateCharts() {
+            const { gameRevenues } = calculateRevenue();
+            const period = parseInt(document.getElementById('periodFilter').value);
+
+            // Generate trend data
+            const labels = [];
+            const data = [];
+            const points = Math.min(period, 30);
+
+            for (let i = points - 1; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                data.push(Math.floor(Math.random() * 5000) + 1000);
+            }
+
+            // Revenue Trend Chart
+            const ctxTrend = document.getElementById('revenueTrendChart');
+            if (trendChart) {
+                trendChart.destroy();
+            }
+
+            const gradient = ctxTrend.getContext('2d').createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(0, 184, 148, 0.3)');
+            gradient.addColorStop(1, 'rgba(0, 184, 148, 0.01)');
+
+            trendChart = new Chart(ctxTrend, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue ($)',
+                        data: data,
+                        borderColor: '#00b894',
+                        backgroundColor: gradient,
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#00b894',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#2d2d44',
+                            titleColor: '#f5f6fa',
+                            bodyColor: '#b2bec3',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#b2bec3' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#b2bec3' }
+                        }
+                    }
+                }
+            });
+
+            // Revenue by Game Chart
+            const ctxGame = document.getElementById('revenueByGameChart');
+            if (gameChart) {
+                gameChart.destroy();
+            }
+
+            const topGames = gameRevenues.slice(0, 5);
+            const colors = ['#6c5ce7', '#00b894', '#fdcb6e', '#d63031', '#a29bfe'];
+
+            gameChart = new Chart(ctxGame, {
+                type: 'doughnut',
+                data: {
+                    labels: topGames.map(g => g.name),
+                    datasets: [{
+                        data: topGames.map(g => g.revenue),
+                        backgroundColor: colors.slice(0, topGames.length),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#b2bec3', padding: 15 }
+                        },
+                        tooltip: {
+                            backgroundColor: '#2d2d44',
+                            titleColor: '#f5f6fa',
+                            bodyColor: '#b2bec3',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function (context) {
+                                    return context.label + ': $' + context.parsed.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchRevenueData);
+    </script>
+</body>
+
+</html>
