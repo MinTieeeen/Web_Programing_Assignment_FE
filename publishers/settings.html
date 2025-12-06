@@ -1,46 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - NextPlay Publisher</title>
+    <title>Đăng game mới - NextPlay Publisher</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
     <link rel="stylesheet" href="../assets/css/publisher.css">
-</head>
+    <style>
+        .game-cover-upload {
+            border: 2px dashed #4a5568;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            background-color: rgba(74, 85, 104, 0.1);
+        }
+
+        .game-cover-upload:hover {
+            border-color: #4299e1;
+            background-color: rgba(66, 153, 225, 0.1);
+        }
+
+        .game-cover-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            display: none;
+            margin: 0 auto 1rem;
+        }
+
+        .screenshot-upload {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .screenshot-item {
+            position: relative;
+            width: 150px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #4a5568;
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-screenshot {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .add-screenshot {
+            width: 150px;
+            height: 100px;
+            border: 2px dashed #4a5568;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-screenshot:hover {
+            border-color: #4299e1;
+            color: #4299e1;
+        }
+
+        .form-section {
+            background: #1a202c;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-section h3 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #2d3748;
+            color: #e2e8f0;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            background-color: #2d3748;
+            border: 1px solid #4a5568;
+            border-radius: 4px;
+            min-height: 42px;
+            color: #e2e8f0;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #2d3748;
+            border: 1px solid #4a5568;
+            color: #e2e8f0;
+            margin-right: 5px;
+            margin-top: 5px;
+        }
+        
+        .select2-container--default .select2-results__option {
+            background-color: #2d3748;
+            color: #e2e8f0;
+        }
+        
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #4299e1;
+            color: white;
+        }
+        
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border: 1px solid #4a5568;
+        }
+        
+        .select2-dropdown {
+            background-color: #2d3748;
+            border: 1px solid #4a5568;
+        }
+        
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #e2e8f0;
+            margin-right: 5px;
+        }
+        
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+            color: #fff;
+        }
+
+        .select2-container--default .select2-search--inline .select2-search__field {
+            color: #e2e8f0;
+        }
+    </style>
 
 <body>
     <div class="publisher-container">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <i class="fas fa-gamepad"></i> NextPlay
+                <i class="fas fa-gamepad"></i> NextPlay Publisher
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
                     <a href="dashboard.html" class="nav-link">
-                        <i class="fas fa-home"></i> Dashboard
+                        <i class="fas fa-home"></i> Tổng quan
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="games.html" class="nav-link">
-                        <i class="fas fa-box-open"></i> Manage Games
+                        <i class="fas fa-box-open"></i> Quản lí Game
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="reviews.html" class="nav-link">
-                        <i class="fas fa-star"></i> Reviews
+                        <i class="fas fa-star"></i> Đánh giá
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="revenue.html" class="nav-link">
                         <i class="fas fa-chart-line"></i> Revenue
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="settings.html" class="nav-link active">
-                        <i class="fas fa-cog"></i> Settings
+                </li> -->
+                <li class="nav-item active">
+                    <a href="settings.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i> Đăng game mới
                     </a>
                 </li>
             </ul>
@@ -49,201 +198,282 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="page-header">
-                <h1 class="page-title">Settings</h1>
+                <h1 class="page-title">Đăng game mới</h1>
+                <p class="page-subtitle">Điền đầy đủ thông tin bên dưới để đăng tải game mới lên hệ thống</p>
             </div>
 
-            <div class="chart-container" style="max-width: 800px;">
-                <form id="settingsForm" onsubmit="handleSettingsSubmit(event)">
-                    <h3 style="margin-top: 0; margin-bottom: 20px;">Publisher Information</h3>
+            <div class="chart-container">
+                <form id="gameForm" onsubmit="handleGameSubmit(event)" enctype="multipart/form-data">
+                    <div class="form-section">
+                        <h3><i class="fas fa-info-circle"></i> Thông tin game</h3>
 
-                    <div class="form-group">
-                        <div style="display: flex; align-items: center; gap: 20px;">
-                            <div id="publisherAvatar"
-                                style="width: 80px; height: 80px; background: var(--secondary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; color: white; font-weight: 700;">
-                                P
-                            </div>
-                            <div>
-                                <div style="font-weight: 600; margin-bottom: 5px;" id="publisherNameDisplay">Publisher
-                                    Name</div>
-                                <button type="button" class="btn btn-sm btn-primary"
-                                    onclick="alert('Avatar upload feature coming soon!')">Change Avatar</button>
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">Tên game <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="name" placeholder="Nhập tên game" required>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Publisher Name</label>
-                        <input type="text" class="form-control" id="publisherName" value="" readonly
-                            style="background: rgba(0,0,0,0.3); cursor: not-allowed;">
-                        <small style="color: var(--text-muted); font-size: 12px;">Publisher name cannot be
-                            changed</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="publisherEmail" value="" readonly
-                            style="background: rgba(0,0,0,0.3); cursor: not-allowed;">
-                        <small style="color: var(--text-muted); font-size: 12px;">Email cannot be changed</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" id="description" rows="3"
-                            placeholder="Tell us about your company..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div>
-                                <label class="form-label">Tax Code</label>
-                                <input type="text" class="form-control" id="taxcode" placeholder="TX-123456789">
-                            </div>
-                            <div>
-                                <label class="form-label">Location</label>
-                                <input type="text" class="form-control" id="location" placeholder="City, Country">
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">Mô tả chi tiết <span class="text-danger">*</span></label>
+                            <textarea class="form-control" name="description" rows="4"
+                                placeholder="Mô tả chi tiết về game" required></textarea>
                         </div>
-                    </div>
 
-                    <h3 style="margin-top: 30px; margin-bottom: 20px;">Account Information</h3>
-
-                    <div class="form-group">
-                        <label class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control" id="dob">
-                    </div>
-
-                    <div class="form-group">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div>
-                                <label class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="fname" placeholder="First name">
-                            </div>
-                            <div>
-                                <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="lname" placeholder="Last name">
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">Giá (VND) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" name="price" min="0" step="1000"
+                                placeholder="Nhập giá bán" required>
                         </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Ảnh bìa <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="thumbnail" accept="image/*" required>
+                            <small class="text-muted">Kích thước khuyến nghị: 1200x630px</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Thể loại <span class="text-danger">*</span></label>
+                            <select class="form-control" name="category" required>
+                                <option value="">Chọn thể loại</option>
+                                <option value="Hành động">Hành động</option>
+                                <option value="Phiêu lưu">Phiêu lưu</option>
+                                <option value="Nhập vai">Nhập vai</option>
+                                <option value="Chiến thuật">Chiến thuật</option>
+                                <option value="Thể thao">Thể thao</option>
+                                <option value="Đua xe">Đua xe</option>
+                                <option value="Mô phỏng">Mô phỏng</option>
+                                <option value="Giải đố">Giải đố</option>
+                                <option value="Kinh dị">Kinh dị</option>
+                                <option value="FPS">Bắn súng góc nhìn thứ nhất</option>
+                                <option value="MOBA">MOBA</option>
+                                <option value="MMORPG">MMORPG</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tags <span class="text-muted">(Nhấn Enter sau mỗi
+                                    tag)</span></label>
+                            <input type="text" class="form-control" id="tagsInput" name="tags" data-role="tagsinput"
+                                placeholder="Nhập tag và nhấn Enter">
+                            <small class="text-muted">Ví dụ: hành động, phiêu lưu, nhiều người chơi</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nhà phát triển <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="developer"
+                                placeholder="Nhập tên nhà phát triển" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nhà phát hành <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="publisher"
+                                placeholder="Nhập tên nhà phát hành" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Ngày phát hành <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="release_date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Đường dẫn trailer (YouTube) <span
+                                    class="text-danger">*</span></label>
+                            <input type="url" class="form-control" name="trailer"
+                                placeholder="https://www.youtube.com/watch?v=..." required>
+                        </div>
+
+                        <div class="form-actions text-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-upload me-2"></i> Đăng game
+                            </button>
+                            <button type="reset" class="btn btn-outline-secondary ms-2 px-4">
+                                <i class="fas fa-undo me-2"></i> Đặt lại
+                            </button>
+                        </div>
+
+
+
                     </div>
 
-                    <div
-                        style="margin-top: 30px; text-align: right; display: flex; gap: 10px; justify-content: flex-end;">
-                        <button type="button" class="btn" onclick="loadPublisherData()"
-                            style="background: rgba(255,255,255,0.1); color: var(--text-light);">
-                            <i class="fas fa-undo"></i> Reset
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
-                    </div>
-                </form>
             </div>
-        </main>
     </div>
 
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+    </form>
+    </div>
+    </main>
+    </div>
+
+    <!-- jQuery (required for Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script>
-        const API_URL = window.ENV.API_URL;
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        // Initialize Select2
+        $(document).ready(function () {
+            // Multiple select with search
+            $('.select2-multiple').select2({
+                placeholder: 'Chọn hoặc nhập để tìm kiếm',
+                allowClear: true,
+                tags: true,
+                tokenSeparators: [',', ' ']
+            });
 
-        async function loadPublisherData() {
-            try {
-                // Load user data
-                if (user.uname) {
-                    document.getElementById('publisherName').value = user.uname;
-                    document.getElementById('publisherNameDisplay').textContent = user.uname;
-                    document.getElementById('publisherAvatar').textContent = user.uname.charAt(0).toUpperCase();
-                }
-                if (user.email) {
-                    document.getElementById('publisherEmail').value = user.email;
-                }
-                if (user.DOB) {
-                    document.getElementById('dob').value = user.DOB;
-                }
-                if (user.fname) {
-                    document.getElementById('fname').value = user.fname;
-                }
-                if (user.lname) {
-                    document.getElementById('lname').value = user.lname;
-                }
-
-                // Fetch publisher-specific data
-                const response = await fetch(`${API_URL}/publisher/${user.uid}`, {
-                    credentials: 'include'
-                });
-                const data = await response.json();
-
-                if (data.status === 'success' && data.data) {
-                    const publisher = data.data;
-                    if (publisher.description) {
-                        document.getElementById('description').value = publisher.description;
-                    }
-                    if (publisher.taxcode) {
-                        document.getElementById('taxcode').value = publisher.taxcode;
-                    }
-                    if (publisher.location) {
-                        document.getElementById('location').value = publisher.location;
+            // Tags input
+            $('.select2-tags').select2({
+                tags: true,
+                tokenSeparators: [',', ' '],
+                placeholder: 'Nhập từ khóa và nhấn Enter',
+                createTag: function (params) {
+                    return {
+                        id: params.term,
+                        text: params.term,
+                        newTag: true
                     }
                 }
-            } catch (error) {
-                console.error('Error loading publisher data:', error);
+            });
+
+            // Preload some common tags
+            const commonTags = ['hành động', 'phiêu lưu', 'nhập vai', 'chiến thuật', 'sinh tồn', 'thế giới mở', 'đồ họa đẹp', 'nhiều người chơi', 'chiến đấu', 'cốt truyện hấp dẫn'];
+            commonTags.forEach(tag => {
+                var newOption = new Option(tag, tag, false, false);
+                $('#gameTags').append(newOption);
+            });
+            $('#gameTags').trigger('change');
+
+            // Set today's date as default release date
+            // Set default release date to today and set min date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelector('input[name="release_date"]').value = today;
+            document.querySelector('input[name="release_date"]').min = today;
+        });
+
+        // Initialize Select2 for tags input
+        $('input[data-role="tagsinput"]').tagsinput({
+            trimValue: true,
+            maxTags: 10,
+            maxChars: 20,
+            confirmKeys: [13, 44], // Enter and comma
+            tagClass: 'badge bg-primary me-1 mb-1',
+            focusClass: 'focus-border'
+        });
+
+        // Add some common tags as suggestions
+        const commonTags = [
+            'hành động', 'phiêu lưu', 'nhập vai', 'chiến thuật',
+            'đồ họa đẹp', 'thế giới mở', 'nhiều người chơi', 'chiến đấu',
+            'cốt truyện', 'sinh tồn', 'mô phỏng', 'giải đố', 'kinh dị'
+        ];
+
+        commonTags.forEach(tag => {
+            $('input[data-role="tagsinput"]').tagsinput('add', tag);
+        });
+
+        // Preview thumbnail image
+        document.querySelector('input[name="thumbnail"]').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    // Create preview if it doesn't exist
+                    let preview = document.getElementById('thumbnailPreview');
+                    if (!preview) {
+                        preview = document.createElement('img');
+                        preview.id = 'thumbnailPreview';
+                        preview.style.maxWidth = '200px';
+                        preview.style.marginTop = '10px';
+                        preview.style.borderRadius = '4px';
+                        this.parentNode.appendChild(preview);
+                    }
+                    preview.src = event.target.result;
+                }.bind(this);
+                reader.readAsDataURL(file);
             }
-        }
+        });
 
-        async function handleSettingsSubmit(event) {
+        // Form submission
+        async function handleGameSubmit(event) {
             event.preventDefault();
 
-            const formData = {
-                description: document.getElementById('description').value,
-                taxcode: document.getElementById('taxcode').value,
-                location: document.getElementById('location').value,
-                DOB: document.getElementById('dob').value,
-                fname: document.getElementById('fname').value,
-                lname: document.getElementById('lname').value
-            };
+            const form = document.getElementById('gameForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Hiển thị loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Đang xử lý...';
 
             try {
-                // Update publisher data
-                const publisherResponse = await fetch(`${API_URL}/publisher/${user.uid}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        description: formData.description,
-                        taxcode: formData.taxcode,
-                        location: formData.location
-                    })
+                const formData = new FormData(form);
+                const user = JSON.parse(localStorage.getItem('user'));
+
+                // Thêm publisher ID vào form data
+                formData.append('publisher', user.uid);
+
+                // Lấy và xử lý tags từ tagsinput
+                const tags = [];
+                $('input[data-role="tagsinput"]').tagsinput('items').forEach(tag => {
+                    if (tag && tag.trim() !== '') {
+                        tags.push(tag.trim());
+                    }
                 });
 
-                // Update user data
-                const userResponse = await fetch(`${API_URL}/user/${user.uid}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        DOB: formData.DOB,
-                        fname: formData.fname,
-                        lname: formData.lname
-                    })
+                // Thêm tags vào form data dưới dạng JSON string
+                formData.set('tags', JSON.stringify(tags));
+
+                // Gửi dữ liệu lên server
+                const response = await fetch('http://localhost:3000/api/games', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
                 });
 
-                const publisherData = await publisherResponse.json();
-                const userData = await userResponse.json();
+                const result = await response.json();
 
-                if (publisherData.status === 'success' || userData.status === 'success') {
-                    // Update local storage
-                    const updatedUser = { ...user, ...formData };
-                    localStorage.setItem('user', JSON.stringify(updatedUser));
-
-                    alert('Settings saved successfully!');
+                if (response.ok) {
+                    // Hiển thị thông báo thành công
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'Đăng game mới thành công!',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false
+                    }).then(() => {
+                        // Chuyển hướng về trang danh sách game sau khi đăng thành công
+                        window.location.href = 'games.html';
+                    });
                 } else {
-                    alert('Failed to save some settings. Please try again.');
+                    throw new Error(result.message || 'Có lỗi xảy ra khi đăng game');
                 }
             } catch (error) {
-                console.error('Error saving settings:', error);
-                alert('Failed to save settings. Please try again.');
+                console.error('Lỗi khi đăng game:', error);
+
+                // Hiển thị thông báo lỗi
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: error.message || 'Có lỗi xảy ra khi đăng game. Vui lòng thử lại sau.',
+                    confirmButtonText: 'Đã hiểu'
+                });
+            } finally {
+                // Khôi phục trạng thái nút submit
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
             }
         }
 

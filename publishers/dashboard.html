@@ -22,27 +22,27 @@
             <ul class="nav-menu">
                 <li class="nav-item">
                     <a href="dashboard.html" class="nav-link active">
-                        <i class="fas fa-home"></i> Dashboard
+                        <i class="fas fa-home"></i> Tổng quan
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="games.html" class="nav-link">
-                        <i class="fas fa-box-open"></i> Manage Games
+                        <i class="fas fa-box-open"></i> Quản lí Game
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="reviews.html" class="nav-link">
-                        <i class="fas fa-star"></i> Reviews
+                        <i class="fas fa-star"></i> Đánh giá
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="revenue.html" class="nav-link">
                         <i class="fas fa-chart-line"></i> Revenue
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a href="settings.html" class="nav-link">
-                        <i class="fas fa-cog"></i> Settings
+                        <i class="fas fa-plus-circle"></i>Đăng game mới
                     </a>
                 </li>
             </ul>
@@ -78,69 +78,60 @@
             <!-- Stats Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-title">Total Games</div>
+                    <div class="stat-title">Tổng số game</div>
                     <div class="stat-value" id="total-games">0</div>
                     <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
-                        <i class="fas fa-arrow-up"></i> 12.5% from last month
+                        <i class="fas fa-gamepad"></i> Tất cả game của bạn
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-title">Total Users</div>
-                    <div class="stat-value" id="total-users">0</div>
+                    <div class="stat-title">Người chơi tích cực</div>
+                    <div class="stat-value" id="active-users">0</div>
                     <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
-                        <i class="fas fa-arrow-up"></i> 8.2% increase
+                        <i class="fas fa-users"></i> Đang trực tuyến
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-title">Total Revenue</div>
-                    <div class="stat-value" id="total-revenue">$0</div>
+                    <div class="stat-title">Doanh thu tháng</div>
+                    <div class="stat-value" id="monthly-revenue">0đ</div>
                     <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
-                        <i class="fas fa-arrow-up"></i> 15.3% growth
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-title">Avg Rating</div>
-                    <div class="stat-value" id="avg-rating">0.0</div>
-                    <div style="color: var(--success); font-size: 14px; margin-top: 5px;">
-                        <i class="fas fa-arrow-up"></i> +0.3 points
+                        <i class="fas fa-chart-line"></i> Tháng này
                     </div>
                 </div>
             </div>
-
             <!-- Charts Section -->
             <div class="charts-section">
                 <div class="chart-container">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin: 0; font-size: 20px; font-weight: 700;">Revenue Growth</h3>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="period-btn">Week</button>
-                            <button class="period-btn active">Month</button>
-                            <button class="period-btn">Year</button>
-                        </div>
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-size: 20px; font-weight: 700;">Game được phát hành</h3>
                     </div>
                     <canvas id="revenueChart" style="height: 300px;"></canvas>
                 </div>
                 <div class="chart-container">
-                    <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; font-weight: 700;">Quick Stats</h3>
-                    <div style="display: flex; flex-direction: column; gap: 15px;">
-                        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px;">
-                            <div
-                                style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Active Games</div>
-                            <div style="font-size: 24px; font-weight: 700;" id="active-games">0</div>
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-size: 20px; font-weight: 700;">Hoạt động gần đây</h3>
+                    </div>
+                    <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; height: 300px; overflow-y: auto;">
+                        <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; margin-right: 10px;"></div>
+                            <div>
+                                <div style="font-size: 14px;">Đã cập nhật thông tin game</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">Hôm nay, 14:30</div>
+                            </div>
                         </div>
-                        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px;">
-                            <div
-                                style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Pending Reviews</div>
-                            <div style="font-size: 24px; font-weight: 700;" id="pending-reviews">0</div>
+                        <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <div style="width: 8px; height: 8px; background: var(--warning); border-radius: 50%; margin-right: 10px;"></div>
+                            <div>
+                                <div style="font-size: 14px;">Có 3 đánh giá mới cần kiểm duyệt</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">Hôm nay, 11:15</div>
+                            </div>
                         </div>
-                        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px;">
-                            <div
-                                style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                New Purchases</div>
-                            <div style="font-size: 24px; font-weight: 700;" id="new-purchases">0</div>
+                        <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <div style="width: 8px; height: 8px; background: var(--primary); border-radius: 50%; margin-right: 10px;"></div>
+                            <div>
+                                <div style="font-size: 14px;">Đã thêm game mới: "Đấu Trường Siêu Cấp"</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">Hôm qua, 16:45</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -171,6 +162,13 @@
             color: white;
             border-color: var(--primary-color);
         }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
     </style>
 
     <script>
@@ -185,44 +183,34 @@
 
         async function fetchDashboardData() {
             try {
-                const gamesResponse = await fetch(`${API_URL}/games?publisher_id=${user.uid}`, {
-                    credentials: 'include'
-                });
-                const gamesData = await gamesResponse.json();
+                // Giả lập dữ liệu thống kê
+                const stats = {
+                    totalGames: 12,
+                    activeUsers: Math.floor(Math.random() * 5000) + 1000,
+                    monthlyRevenue: (Math.random() * 50000 + 10000).toFixed(0),
+                    newReviews: Math.floor(Math.random() * 50) + 5
+                };
 
-                if (gamesData.status === 'success' && gamesData.data) {
-                    const games = gamesData.data;
-                    document.getElementById('total-games').textContent = games.length;
-                    document.getElementById('active-games').textContent = games.filter(g => g.rating > 0).length;
+                // Cập nhật giao diện với dữ liệu mới
+                document.getElementById('total-games').textContent = stats.totalGames;
+                document.getElementById('active-users').textContent = stats.activeUsers.toLocaleString();
+                document.getElementById('monthly-revenue').textContent = formatCurrency(stats.monthlyRevenue);
+                document.getElementById('new-reviews').textContent = stats.newReviews;
 
-                    let totalUsers = 0;
-                    let totalRevenue = 0;
-                    let totalRating = 0;
-                    let ratingCount = 0;
-                    let totalReviews = 0;
-
-                    games.forEach(game => {
-                        totalUsers += Math.floor(Math.random() * 500);
-                        totalRevenue += parseFloat(game.price || 0) * Math.floor(Math.random() * 100);
-                        totalReviews += parseInt(game.reviews || 0);
-
-                        if (game.rating) {
-                            totalRating += parseFloat(game.rating);
-                            ratingCount++;
-                        }
-                    });
-
-                    document.getElementById('total-users').textContent = totalUsers.toLocaleString();
-                    document.getElementById('total-revenue').textContent = '$' + totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 0 });
-                    document.getElementById('avg-rating').textContent = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : '0.0';
-                    document.getElementById('pending-reviews').textContent = totalReviews;
-                    document.getElementById('new-purchases').textContent = Math.floor(totalUsers * 0.15);
-
-                    initRevenueChart();
-                }
+                // Khởi tạo biểu đồ
+                initRevenueChart();
             } catch (error) {
-                console.error('Error fetching dashboard data:', error);
+                console.error('Lỗi khi tải dữ liệu:', error);
             }
+        }
+
+        // Hàm định dạng tiền tệ
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { 
+                style: 'currency', 
+                currency: 'VND',
+                maximumFractionDigits: 0
+            }).format(amount);
         }
 
         function initRevenueChart() {
@@ -232,23 +220,30 @@
             gradient.addColorStop(0, 'rgba(108, 92, 231, 0.3)');
             gradient.addColorStop(1, 'rgba(108, 92, 231, 0.01)');
 
+            // Dữ liệu mock cho 12 tháng gần nhất
+            const months = ['Th1', 'Th2', 'Th3', 'Th4', 'Th5', 'Th6', 'Th7', 'Th8', 'Th9', 'Th10', 'Th11', 'Th12'];
+            
+            // Dữ liệu số game phát hành cố định cho 12 tháng
+            const gameData = [2, 3, 1, 4, 3, 5, 4, 6, 5, 7, 6, 8];
+            
+            // Đảm bảo có ít nhất 1 game phát hành mỗi tháng
+            gameData.forEach((value, index) => {
+                if (value < 1) gameData[index] = 1;
+            });
+
             new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    labels: months,
                     datasets: [{
-                        label: 'Revenue',
-                        data: [12000, 19000, 15000, 25000, 22000, 30000, 35000],
+                        label: 'Số game phát hành',
+                        data: gameData,
+                        backgroundColor: 'rgba(108, 92, 231, 0.8)',
                         borderColor: '#6c5ce7',
-                        backgroundColor: gradient,
-                        tension: 0.4,
-                        fill: true,
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        pointBackgroundColor: '#6c5ce7',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 7
+                        borderWidth: 2,
+                        borderRadius: 4,
+                        barThickness: 20,
+                        hoverBackgroundColor: 'rgba(92, 74, 231, 1)'
                     }]
                 },
                 options: {

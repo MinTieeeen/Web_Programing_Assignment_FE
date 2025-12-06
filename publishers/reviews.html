@@ -71,27 +71,27 @@
             <ul class="nav-menu">
                 <li class="nav-item">
                     <a href="dashboard.html" class="nav-link">
-                        <i class="fas fa-home"></i> Dashboard
+                        <i class="fas fa-home"></i> Tổng quan
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="games.html" class="nav-link">
-                        <i class="fas fa-box-open"></i> Manage Games
+                        <i class="fas fa-box-open"></i> Quản lí Game
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="reviews.html" class="nav-link active">
-                        <i class="fas fa-star"></i> Reviews
+                        <i class="fas fa-star"></i> Đánh giá
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="revenue.html" class="nav-link">
                         <i class="fas fa-chart-line"></i> Revenue
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a href="settings.html" class="nav-link">
-                        <i class="fas fa-cog"></i> Settings
+                        <i class="fas fa-plus-circle"></i> Đăng game mới
                     </a>
                 </li>
             </ul>
@@ -104,19 +104,14 @@
             </div>
 
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('all')">All Reviews</button>
-                <button class="tab-btn" onclick="switchTab('positive')">Positive</button>
-                <button class="tab-btn" onclick="switchTab('negative')">Negative</button>
+                <button class="tab-btn active" onclick="switchTab('all')">Tấc cả đánh giá</button>
+                <button class="tab-btn" onclick="switchTab('positive')">Tích cực</button>
+                <button class="tab-btn" onclick="switchTab('negative')">Tiêu cực</button>
             </div>
 
             <div class="filter-bar">
-                <select class="form-control" style="width: 200px;" id="gameFilter" onchange="filterReviews()">
-                    <option value="all">All Games</option>
-                </select>
-                <select class="form-control" style="width: 150px;" id="sortFilter" onchange="filterReviews()">
-                    <option value="recent">Most Recent</option>
-                    <option value="rating_high">Highest Rating</option>
-                    <option value="rating_low">Lowest Rating</option>
+                <select class="form-control" style="width: 100%; max-width: 300px;" id="gameFilter" onchange="filterReviews()">
+                    <option value="all">Tất cả game</option>
                 </select>
             </div>
 
@@ -130,15 +125,86 @@
     </div>
 
     <script>
-        const API_URL = window.ENV.API_URL;
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        // Mock data
+        const mockUser = { uid: 'publisher123', uname: 'GameStudio' };
+        
+        // Mock games data
+        const mockGames = [
+            { Gid: 1, name: 'Cyber Adventure' },
+            { Gid: 2, name: 'Space Explorer' },
+            { Gid: 3, name: 'Racing Legends' },
+            { Gid: 4, name: 'Dungeon Crawler' },
+            { Gid: 5, name: 'Zombie Survival' }
+        ];
+        
+        // Mock reviews data
+        const mockReviews = [
+            {
+                gameId: 1,
+                gameName: 'Cyber Adventure',
+                user: 'Gamer123',
+                rating: 5,
+                content: 'Trò chơi đồ họa đẹp, gameplay mượt mà. Rất đáng tiền!',
+                date: '2025-12-05'
+            },
+            {
+                gameId: 2,
+                gameName: 'Space Explorer',
+                user: 'StarGazer',
+                rating: 4,
+                content: 'Chơi rất thú vị nhưng cần thêm nhiều hành tinh để khám phá.',
+                date: '2025-12-03'
+            },
+            {
+                gameId: 3,
+                gameName: 'Racing Legends',
+                user: 'SpeedDemon',
+                rating: 2,
+                content: 'Đồ họa tốt nhưng có quá nhiều quảng cáo trong game.',
+                date: '2025-11-28'
+            },
+            {
+                gameId: 1,
+                gameName: 'Cyber Adventure',
+                user: 'ProGamer',
+                rating: 5,
+                content: 'Cốt truyện hấp dẫn, nhân vật đa dạng. Đáng chơi!',
+                date: '2025-11-25'
+            },
+            {
+                gameId: 4,
+                gameName: 'Dungeon Crawler',
+                user: 'AdventureSeeker',
+                rating: 3,
+                content: 'Game khá ổn nhưng độ khó hơi cao với người mới.',
+                date: '2025-11-20'
+            },
+            {
+                gameId: 5,
+                gameName: 'Zombie Survival',
+                user: 'SurvivalExpert',
+                rating: 4,
+                content: 'Chơi cùng bạn bè rất vui, đồ họa ấn tượng.',
+                date: '2025-11-15'
+            },
+            {
+                gameId: 2,
+                gameName: 'Space Explorer',
+                user: 'CosmicTraveler',
+                rating: 1,
+                content: 'Game bị lỗi nhiều, cần cập nhật sửa lỗi gấp!',
+                date: '2025-11-10'
+            }
+        ];
+
         let allReviews = [];
         let gamesData = [];
         let currentTab = 'all';
 
         async function fetchData() {
             try {
-                // Fetch games
+                // Comment phần gọi API thật
+                /*
                 const gamesResponse = await fetch(`${API_URL}/games?publisher_id=${user.uid}`, {
                     credentials: 'include'
                 });
@@ -148,14 +214,21 @@
                     gamesData = gamesResult.data;
                     populateGameFilter();
                 }
-
-                // Fetch reviews (mock for now - would need backend endpoint)
-                // For now, generate mock reviews based on games
-                allReviews = generateMockReviews();
+                */
+                
+                // Sử dụng dữ liệu mock
+                gamesData = mockGames;
+                allReviews = mockReviews;
+                populateGameFilter();
                 renderReviews();
+                
             } catch (error) {
-                console.error('Error fetching data:', error);
-                showError('Failed to load reviews');
+                console.error('Error:', error);
+                // Vẫn hiển thị dữ liệu mock nếu có lỗi
+                gamesData = mockGames;
+                allReviews = mockReviews;
+                populateGameFilter();
+                renderReviews();
             }
         }
 
@@ -212,7 +285,6 @@
         function renderReviews() {
             const container = document.getElementById('reviews-container');
             const gameFilter = document.getElementById('gameFilter').value;
-            const sortFilter = document.getElementById('sortFilter').value;
 
             let filtered = allReviews.filter(review => {
                 if (gameFilter !== 'all' && review.gameId != gameFilter) return false;
@@ -221,14 +293,17 @@
                 return true;
             });
 
-            // Sort
-            if (sortFilter === 'rating_high') {
-                filtered.sort((a, b) => b.rating - a.rating);
-            } else if (sortFilter === 'rating_low') {
-                filtered.sort((a, b) => a.rating - b.rating);
-            } else {
-                filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-            }
+            // Sort - Commented out as per user request
+            // if (sortFilter === 'rating_high') {
+            //     filtered.sort((a, b) => b.rating - a.rating);
+            // } else if (sortFilter === 'rating_low') {
+            //     filtered.sort((a, b) => a.rating - b.rating);
+            // } else {
+            //     filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            // }
+            
+            // Always sort by most recent
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             if (filtered.length === 0) {
                 container.innerHTML = `

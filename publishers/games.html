@@ -20,27 +20,27 @@
             <ul class="nav-menu">
                 <li class="nav-item">
                     <a href="dashboard.html" class="nav-link">
-                        <i class="fas fa-home"></i> Dashboard
+                        <i class="fas fa-home"></i> Tổng quan
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="games.html" class="nav-link active">
-                        <i class="fas fa-box-open"></i> Manage Games
+                        <i class="fas fa-box-open"></i> Quản lí Game
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="reviews.html" class="nav-link">
-                        <i class="fas fa-star"></i> Reviews
+                        <i class="fas fa-star"></i> Đánh giá
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="revenue.html" class="nav-link">
                         <i class="fas fa-chart-line"></i> Revenue
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a href="settings.html" class="nav-link">
-                        <i class="fas fa-cog"></i> Settings
+                        <i class="fas fa-plus-circle"></i> Đăng game mới
                     </a>
                 </li>
             </ul>
@@ -49,10 +49,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="page-header">
-                <h1 class="page-title">Manage Games</h1>
-                <button class="btn btn-primary" onclick="openGameModal()">
-                    <i class="fas fa-plus"></i> Upload New Game
-                </button>
+                <h1 class="page-title">Quản lí Game</h1>
             </div>
 
             <!-- Games List -->
@@ -66,7 +63,6 @@
                             <th>Price</th>
                             <th>Rating</th>
                             <th>Reviews</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="games-table-body">
@@ -198,26 +194,79 @@
     </style>
 
     <script>
-        const API_URL = window.ENV.API_URL;
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        // Mock data
+        const mockGames = [
+            {
+                Gid: 1,
+                name: 'Cyber Adventure',
+                description: 'Một trò chơi phiêu lưu thế giới mở đầy thú vị',
+                price: '29.99',
+                version: '1.0.0',
+                category: 'Hành động, Phiêu lưu',
+                developer: 'Cyber Studio',
+                thumbnail: 'https://via.placeholder.com/150',
+                rating: 4.5,
+                reviews: 128
+            },
+            {
+                Gid: 2,
+                name: 'Space Explorer',
+                description: 'Khám phá vũ trụ rộng lớn và các hành tinh xa xôi',
+                price: '19.99',
+                version: '1.2.1',
+                category: 'Mô phỏng, Khám phá',
+                developer: 'Galaxy Games',
+                thumbnail: 'https://via.placeholder.com/150',
+                rating: 4.2,
+                reviews: 87
+            },
+            {
+                Gid: 3,
+                name: 'Racing Legends',
+                description: 'Đua xe tốc độ cao với đồ họa chân thực',
+                price: '39.99',
+                version: '2.0.3',
+                category: 'Đua xe, Hành động',
+                developer: 'Speed Masters',
+                thumbnail: 'https://via.placeholder.com/150',
+                rating: 4.7,
+                reviews: 215
+            }
+        ];
+
+        // Mock user
+        const user = {
+            uid: 'publisher123',
+            uname: 'Cyber Studio'
+        };
+
         let gamesData = [];
 
+        // Mock fetch function
         async function fetchGames() {
             try {
-                const response = await fetch(`${API_URL}/games?publisher_id=${user.uid}`, {
-                    credentials: 'include'
-                });
-                const data = await response.json();
+                // Comment phần gọi API thật
+                // const response = await fetch(`${API_URL}/games?publisher_id=${user.uid}`, {
+                //     credentials: 'include'
+                // });
+                // const data = await response.json();
 
-                if (data.status === 'success' && data.data) {
-                    gamesData = data.data;
-                    renderGames();
-                } else {
-                    showError('No games found');
-                }
+                // if (data.status === 'success' && data.data) {
+                //     gamesData = data.data;
+                //     renderGames();
+                // } else {
+                //     showError('No games found');
+                // }
+
+                // Sử dụng dữ liệu mock
+                gamesData = mockGames;
+                renderGames();
+
             } catch (error) {
-                console.error('Error fetching games:', error);
-                showError('Failed to load games');
+                console.error('Error:', error);
+                // Vẫn hiển thị dữ liệu mock nếu có lỗi
+                gamesData = mockGames;
+                renderGames();
             }
         }
 
@@ -227,7 +276,7 @@
             if (gamesData.length === 0) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
                             <i class="fas fa-box-open" style="font-size: 48px; opacity: 0.3; margin-bottom: 10px;"></i>
                             <div>No games found. Upload your first game!</div>
                         </td>
@@ -251,14 +300,6 @@
                         </div>
                     </td>
                     <td>${game.reviews || 0} reviews</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" onclick="editGame(${game.Gid})" style="margin-right: 5px;">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteGame(${game.Gid})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
                 </tr>
             `).join('');
         }
@@ -267,7 +308,7 @@
             const tableBody = document.getElementById('games-table-body');
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="7" style="text-align: center; padding: 40px; color: var(--danger);">
+                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--danger);">
                         <i class="fas fa-exclamation-circle" style="font-size: 48px; margin-bottom: 10px;"></i>
                         <div>${message}</div>
                     </td>
@@ -311,26 +352,36 @@
         }
 
         async function deleteGame(gameId) {
-            if (!confirm('Are you sure you want to delete this game?')) {
+            if (!confirm('Bạn có chắc chắn muốn xóa game này?')) {
                 return;
             }
 
             try {
-                const response = await fetch(`${API_URL}/games/${gameId}`, {
-                    method: 'DELETE',
-                    credentials: 'include'
-                });
-                const data = await response.json();
+                // Comment phần gọi API thật
+                // const response = await fetch(`${API_URL}/games/${gameId}`, {
+                //     method: 'DELETE',
+                //     credentials: 'include'
+                // });
+                // const data = await response.json();
 
-                if (data.status === 'success') {
-                    alert('Game deleted successfully!');
-                    fetchGames();
-                } else {
-                    alert('Failed to delete game: ' + (data.message || 'Unknown error'));
+                // if (data.status === 'success') {
+                //     alert('Xóa game thành công!');
+                //     fetchGames();
+                // } else {
+                //     alert('Lỗi khi xóa game: ' + (data.message || 'Lỗi không xác định'));
+                // }
+
+                // Xử lý xóa với dữ liệu mock
+                const index = gamesData.findIndex(g => g.Gid === gameId);
+                if (index !== -1) {
+                    gamesData.splice(index, 1);
+                    alert('Xóa game thành công! (Mock)');
+                    renderGames();
                 }
+
             } catch (error) {
-                console.error('Error deleting game:', error);
-                alert('Failed to delete game');
+                console.error('Lỗi khi xóa game:', error);
+                alert('Lỗi khi xóa game');
             }
         }
 
@@ -342,40 +393,69 @@
             const formData = {
                 name: form.name.value,
                 description: form.description.value,
-                price: parseFloat(form.price.value),
+                price: parseFloat(form.price.value).toFixed(2),
                 version: form.version.value,
                 category: form.category.value,
                 developer: form.developer.value,
-                thumbnail: form.thumbnail.value,
-                publisher: user.uname,
-                publisherid: user.uid
+                thumbnail: form.thumbnail.value || 'https://via.placeholder.com/150',
+                rating: 0,
+                reviews: 0
             };
 
             try {
-                const url = gameId ? `${API_URL}/games/${gameId}` : `${API_URL}/games`;
-                const method = gameId ? 'PUT' : 'POST';
+                // Comment phần gọi API thật
+                // const url = gameId ? `${API_URL}/games/${gameId}` : `${API_URL}/games`;
+                // const method = gameId ? 'PUT' : 'POST';
 
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(formData)
-                });
+                // const response = await fetch(url, {
+                //     method: method,
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     credentials: 'include',
+                //     body: JSON.stringify({
+                //         ...formData,
+                //         publisher: user.uname,
+                //         publisherid: user.uid
+                //     })
+                // });
 
-                const data = await response.json();
+                // const data = await response.json();
 
-                if (data.status === 'success') {
-                    alert(gameId ? 'Game updated successfully!' : 'Game created successfully!');
-                    closeGameModal();
-                    fetchGames();
+                // if (data.status === 'success') {
+                //     alert(gameId ? 'Cập nhật game thành công!' : 'Tạo game mới thành công!');
+                //     closeGameModal();
+                //     fetchGames();
+                // } else {
+                //     alert('Lỗi khi lưu game: ' + (data.message || 'Lỗi không xác định'));
+                // }
+
+                // Xử lý với dữ liệu mock
+                if (gameId) {
+                    // Cập nhật game
+                    const index = gamesData.findIndex(g => g.Gid === parseInt(gameId));
+                    if (index !== -1) {
+                        gamesData[index] = { ...gamesData[index], ...formData };
+                    }
+                    alert('Cập nhật game thành công! (Mock)');
                 } else {
-                    alert('Failed to save game: ' + (data.message || 'Unknown error'));
+                    // Thêm game mới
+                    const newGame = {
+                        ...formData,
+                        Gid: Math.max(0, ...gamesData.map(g => g.Gid)) + 1,
+                        rating: (Math.random() * 5).toFixed(1),
+                        reviews: Math.floor(Math.random() * 100)
+                    };
+                    gamesData.unshift(newGame);
+                    alert('Tạo game mới thành công! (Mock)');
                 }
+
+                closeGameModal();
+                renderGames();
+
             } catch (error) {
-                console.error('Error saving game:', error);
-                alert('Failed to save game');
+                console.error('Lỗi khi lưu game:', error);
+                alert('Lỗi khi lưu game');
             }
         }
 
