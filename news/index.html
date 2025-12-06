@@ -124,7 +124,7 @@
 
   <div data-include="footer"></div>
 
-  <script src="../env.js"></script>
+  <!-- <script src="../env.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
@@ -315,6 +315,200 @@
           console.error('Error loading news:', error);
       }
     });
-  </script>
+  </script> -->
+  <script>
+  // MOCK DATA — bạn có thể chỉnh sửa thoải mái
+  const newsList = [
+    {
+      id: 1,
+      title: "Liên Minh Huyền Thoại ra mắt chế độ mới cực cháy",
+      excerpt: "Riot Games chính thức công bố chế độ chơi hoàn toàn mới...",
+      image: "https://i.imgur.com/JZcB0yT.jpeg",
+      date: "12/12/2025",
+      author: "Admin",
+      source: "NextPlay",
+      views: 2331,
+      category: "Tin Game"
+    },
+    {
+      id: 2,
+      title: "Top 10 tựa game sinh tồn hay nhất mọi thời đại",
+      excerpt: "Danh sách những tựa game sinh tồn đáng chơi nhất...",
+      image: "https://i.imgur.com/IvS4gXq.jpeg",
+      date: "10/12/2025",
+      author: "Minh Khang",
+      source: "GameHub",
+      views: 1900,
+      category: "Review"
+    },
+    {
+      id: 3,
+      title: "PS6 rò rỉ cấu hình khủng khiến cộng đồng dậy sóng",
+      excerpt: "Nhiều thông tin bất ngờ về PS6 vừa xuất hiện...",
+      image: "https://i.imgur.com/bYVq1Vu.jpeg",
+      date: "09/12/2025",
+      author: "Admin",
+      source: "TechRadar",
+      views: 5410,
+      category: "Công nghệ"
+    },
+    {
+      id: 4,
+      title: "Valorant chuẩn bị cập nhật bản đồ hoàn toàn mới",
+      excerpt: "Bản đồ mới dự kiến sẽ thay đổi hoàn toàn meta...",
+      image: "https://i.imgur.com/EQ7jsmF.jpeg",
+      date: "08/12/2025",
+      author: "Mai Hương",
+      source: "NextPlay",
+      views: 981,
+      category: "Esports"
+    },
+    {
+      id: 5,
+      title: "Tổng hợp sự kiện game tháng 12 bạn không thể bỏ lỡ",
+      excerpt: "Danh sách sự kiện hấp dẫn trong tháng 12...",
+      image: "https://i.imgur.com/Tcs0I6Q.jpeg",
+      date: "05/12/2025",
+      author: "NextPlay",
+      source: "NextPlay",
+      views: 720,
+      category: "Tin Game"
+    },
+    {
+      id: 6,
+      title: "Đánh giá nhanh Assassin’s Creed Shadows",
+      excerpt: "Một tựa game với gameplay đột phá và đồ họa tuyệt đẹp...",
+      image: "https://i.imgur.com/3QdV3Qy.jpeg",
+      date: "03/12/2025",
+      author: "Hữu Phú",
+      source: "IGN",
+      views: 4021,
+      category: "Review"
+    }
+  ];
+
+  // ========== Các hàm render giữ nguyên ==========
+
+  function renderMagazineLayout(list) {
+    if (list.length === 0) return;
+
+    const mainItem = list[0];
+    const mainContainer = document.getElementById('main-featured-container');
+
+    if (mainContainer) {
+      mainContainer.innerHTML = `
+        <div class="main-featured-card">
+          <div class="main-featured-img-wrapper">
+            <a href="detail.html?id=${mainItem.id}">
+              <img src="${mainItem.image}" class="main-featured-img">
+            </a>
+            <div class="main-featured-overlay">
+              <div class="mb-2">
+                <span class="source-badge">${mainItem.source}</span>
+              </div>
+              <h2 class="main-featured-title">
+                <a href="detail.html?id=${mainItem.id}">${mainItem.title}</a>
+              </h2>
+              <div class="main-featured-meta">
+                <span><i class="bi bi-calendar3"></i> ${mainItem.date}</span>
+                <span><i class="bi bi-eye"></i> ${mainItem.views} lượt xem</span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    // Sub Featured (3 bài tiếp theo)
+    const subItems = list.slice(1, 4);
+    const subContainer = document.getElementById("sub-featured-container");
+    if (subContainer) {
+      subContainer.innerHTML = subItems.map(item => `
+        <div class="col-md-4">
+          <div class="sub-featured-card">
+            <a href="detail.html?id=${item.id}">
+              <img src="${item.image}" class="sub-featured-img">
+            </a>
+            <h4 class="sub-featured-title">${item.title}</h4>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // Side News (4 bài tiếp theo)
+    const sideItems = list.slice(4, 8);
+    const sideContainer = document.getElementById("side-news-container");
+    if (sideContainer) {
+      sideContainer.innerHTML = sideItems.map(item => `
+        <div class="side-news-item">
+          <img src="${item.image}" class="side-news-thumb">
+          <div class="side-news-content">
+            <h5 class="side-news-title">${item.title}</h5>
+            <div class="side-news-meta">
+              <span>${item.source}</span>
+              <span>${item.date}</span>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+  }
+
+  function renderLatest(list) {
+    const container = document.getElementById("latest-news-list");
+    if (!container) return;
+
+    const display = list.slice(0, 4);
+    container.innerHTML = display.map(item => `
+      <div class="news-list-item">
+        <img src="${item.image}" class="news-list-img">
+        <div class="news-list-content">
+          <div class="mb-2">
+            <span class="badge bg-dark">${item.category}</span>
+            <span class="ms-2"><i class="bi bi-calendar3"></i> ${item.date}</span>
+          </div>
+          <h3 class="news-list-title">${item.title}</h3>
+          <p class="news-list-excerpt">${item.excerpt}</p>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function renderTopicGrid(list, containerId, category) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let filtered = list.filter(n => n.category === category);
+    if (filtered.length === 0) filtered = list.slice(0, 2);
+
+    container.innerHTML = filtered.slice(0, 2).map(item => `
+      <div class="topic-card">
+        <img src="${item.image}" class="topic-img">
+        <div class="topic-content">
+          <span class="source-badge">${item.category}</span>
+          <h3 class="topic-card-title">${item.title}</h3>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  // ========== Khi DOM load thì render mock data ==========
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMagazineLayout(newsList);
+    renderLatest(newsList);
+    renderTopicGrid(newsList, "tech-news-grid", "Công nghệ");
+    renderTopicGrid(newsList, "review-news-grid", "Review");
+
+    // Search
+    document.getElementById("search-input").addEventListener("input", (e) => {
+      const keyword = e.target.value.toLowerCase();
+      const filtered = newsList.filter(n =>
+        n.title.toLowerCase().includes(keyword) ||
+        n.excerpt.toLowerCase().includes(keyword)
+      );
+      renderLatest(filtered);
+    });
+  });
+</script>
+
 </body>
 </html>

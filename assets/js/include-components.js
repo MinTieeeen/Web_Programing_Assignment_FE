@@ -75,9 +75,13 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
-    include('[data-include="header"]', 'components/header.html');
-    include('[data-include="footer"]', 'components/footer.html');
-  });
+  // Auto-load components disabled — use manually instead
+  // document.addEventListener('DOMContentLoaded', function(){
+  //   include('[data-include="header"]', 'components/header.html');
+  //   include('[data-include="footer"]', 'components/footer.html');
+  // });
+
+  // Manual usage: Call include() in your page script when needed
+  // Example: window.include('[data-include="header"]', 'components/header.html');
 })();
 
