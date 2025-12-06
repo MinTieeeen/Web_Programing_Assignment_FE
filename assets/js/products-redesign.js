@@ -405,3 +405,251 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 });
+
+// ==========================================
+// MOCK DATA - Dữ liệu giả để test frontend
+// ==========================================
+// document.addEventListener('DOMContentLoaded', async () => {
+//     const carouselInner = document.getElementById('featured-carousel-inner');
+//     const shelvesContainer = document.getElementById('game-shelves-container');
+//     const searchInput = document.getElementById('global-search');
+
+//     let allGames = [];
+//     let spotlightIndex = 0;
+
+//     // ---------------------------
+//     // MOCK DATA — KHÔNG CALL API
+//     // ---------------------------
+//     const mockGames = [
+//         {
+//             id: 1,
+//             name: "Elden Ring",
+//             price: 900000,
+//             image: "https://images.unsplash.com/photo-1607853554439-0069ec0f29b6?w=400&h=500&fit=crop",
+//             category: "RPG",
+//             tags: ["Open World", "Souls-like"],
+//             description: "Một thế giới mở rộng lớn đầy bí ẩn và nguy hiểm.",
+//             rating: 4.9
+//         },
+//         {
+//             id: 2,
+//             name: "Valorant",
+//             price: 0,
+//             image: "../assets/mock/valorant.jpg",
+//             category: "FPS",
+//             tags: ["Shooter", "Online"],
+//             description: "Game bắn súng chiến thuật 5v5 với kỹ năng độc đáo.",
+//             rating: 4.5
+//         },
+//         {
+//             id: 3,
+//             name: "Hades",
+//             price: 300000,
+//             image: "../assets/mock/hades.jpg",
+//             category: "Indie",
+//             tags: ["Rogue-like", "Action"],
+//             description: "Vượt ngục địa ngục đầy phong cách với lối chơi nhanh.",
+//             rating: 4.8
+//         },
+//         {
+//             id: 4,
+//             name: "FIFA 24",
+//             price: 1200000,
+//             image: "../assets/mock/fifa.jpg",
+//             category: "Sports",
+//             tags: ["Football", "Simulation"],
+//             description: "Game bóng đá mô phỏng chân thực nhất hiện nay.",
+//             rating: 4.2
+//         },
+//         {
+//             id: 5,
+//             name: "Stardew Valley",
+//             price: 180000,
+//             image: "../assets/mock/stardew.jpg",
+//             category: "Simulation",
+//             tags: ["Farming", "Relax"],
+//             description: "Tựa game nông trại nhẹ nhàng và gây nghiện.",
+//             rating: 4.9
+//         },
+//         {
+//             id: 6,
+//             name: "Resident Evil Village",
+//             price: 800000,
+//             image: "../assets/mock/re8.jpg",
+//             category: "Horror",
+//             tags: ["Survival", "Action"],
+//             description: "Trải nghiệm sinh tồn kinh dị trong ngôi làng bí ẩn.",
+//             rating: 4.3
+//         },
+//         {
+//             id: 7,
+//             name: "Elden Ring",
+//             price: 900000,
+//             image: "https://images.unsplash.com/photo-1607853554439-0069ec0f29b6?w=400&h=500&fit=crop",
+//             category: "RPG",
+//             tags: ["Open World", "Souls-like"],
+//             description: "Một thế giới mở rộng lớn đầy bí ẩn và nguy hiểm.",
+//             rating: 4.9
+//         },
+//     ];
+
+//     // Gán mock vào allGames
+//     allGames = mockGames;
+
+//     // ---------------------------
+//     // BẮT ĐẦU VỄN GIỮ LOGIC CŨ
+//     // ---------------------------
+
+//     initPage();
+
+//     function initPage() {
+//         renderFeaturedCarousel();
+//         renderShelves();
+//         setupSearch();
+//     }
+
+//     function normalizeGameData(game) {
+//         return {
+//             id: game.id,
+//             name: game.name,
+//             price: Number(game.price),
+//             image: game.image,
+//             category: game.category,
+//             tags: game.tags,
+//             description: game.description,
+//             rating: game.rating
+//         };
+//     }
+
+//     // ---------------------------
+//     // FEATURED CAROUSEL (HERO)
+//     // ---------------------------
+
+//     function renderFeaturedCarousel() {
+//         const heroContainer = document.getElementById('hero-carousel');
+//         if (!heroContainer) return;
+
+//         const featuredGames = [...allGames].slice(0, 5);
+
+//         const slidesHtml = featuredGames.map((game, index) => `
+//             <div class="carousel-item ${index === 0 ? 'active' : ''}">
+//                 <div class="featured-item-content">
+//                     <div class="featured-img-col">
+//                         <img src="${game.image}" class="featured-main-img" />
+//                     </div>
+//                     <div class="featured-info-col">
+//                         <h2 class="featured-game-title">${game.name}</h2>
+//                         <div class="featured-game-meta">
+//                             ${game.tags.map(tag => `<span class="featured-tag">${tag}</span>`).join('')}
+//                         </div>
+//                         <p class="featured-desc">${game.description}</p>
+//                         <span class="featured-price">
+//                             ${game.price === 0 ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(game.price) + 'đ'}
+//                         </span>
+//                         <a href="detail.html?id=${game.id}" class="btn-featured-buy">
+//                             <i class="bi bi-cart-plus"></i> Xem chi tiết
+//                         </a>
+//                     </div>
+//                 </div>
+//             </div>
+//         `).join('');
+
+//         heroContainer.innerHTML = `
+//             <div class="container">
+//                 <h2 class="section-title">Nổi bật & Đề xuất</h2>
+//                 <div id="heroCarouselFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+//                     <div class="carousel-inner">${slidesHtml}</div>
+//                     <button class="carousel-control-prev" type="button" data-bs-target="#heroCarouselFade" data-bs-slide="prev">
+//                         <i class="bi bi-chevron-left"></i>
+//                     </button>
+//                     <button class="carousel-control-next" type="button" data-bs-target="#heroCarouselFade" data-bs-slide="next">
+//                         <i class="bi bi-chevron-right"></i>
+//                     </button>
+//                 </div>
+//             </div>
+//         `;
+//     }
+
+//     // ---------------------------
+//     // SHELVES
+//     // ---------------------------
+
+//     function renderShelves() {
+//         shelvesContainer.innerHTML = '';
+
+//         const categories = [...new Set(allGames.map(g => g.category))];
+
+//         categories.forEach(cat => {
+//             const games = allGames.filter(g => g.category === cat);
+//             renderShelf(cat, games);
+//         });
+//     }
+
+//     function renderShelf(title, games) {
+//         const shelfSection = document.createElement('section');
+//         shelfSection.className = 'game-shelf mb-5 container';
+
+//         shelfSection.innerHTML = `
+//             <div class="shelf-header">
+//                 <h3 class="shelf-title">${title}</h3>
+//             </div>
+//             <div class="shelf-scroll-container">
+//                 <div class="shelf-scroll-track" style="display:flex; gap:20px;">
+//                     ${games.map(g => createShelfCard(g)).join('')}
+//                 </div>
+//             </div>
+//         `;
+
+//         shelvesContainer.appendChild(shelfSection);
+//     }
+
+//     function createShelfCard(game) {
+//         return `
+//             <div class="game-card" style="width: 220px;">
+//                 <div class="game-img-wrapper">
+//                     <a href="detail.html?id=${game.id}">
+//                         <img src="${game.image}" class="game-img" />
+//                     </a>
+//                 </div>
+//                 <div class="game-body">
+//                     <h3 class="game-title">${game.name}</h3>
+//                     <div class="game-price-row">
+//                         <span class="game-price">
+//                             ${game.price === 0 ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(game.price) + 'đ'}
+//                         </span>
+//                         <a href="detail.html?id=${game.id}" class="btn-buy-card">Mua</a>
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
+//     }
+
+//     // ---------------------------
+//     // SEARCH
+//     // ---------------------------
+
+//     function setupSearch() {
+//         searchInput.addEventListener('input', (e) => {
+//             const term = e.target.value.toLowerCase();
+
+//             if (term.length < 2) {
+//                 renderShelves();
+//                 return;
+//             }
+
+//             const filtered = allGames.filter(g => g.name.toLowerCase().includes(term));
+//             renderSearchResults(filtered, `Kết quả tìm kiếm: "${term}"`);
+//         });
+//     }
+
+//     function renderSearchResults(games, title) {
+//         shelvesContainer.innerHTML = `
+//             <section class="container mb-5">
+//                 <h3 class="shelf-title mb-4">${title} <span class="text-muted">(${games.length})</span></h3>
+//                 <div class="games-grid">
+//                     ${games.map(g => createShelfCard(g)).join('')}
+//                 </div>
+//             </section>
+//         `;
+//     }
+// });

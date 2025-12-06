@@ -1,135 +1,259 @@
-/* NextPlay Footer Styles */
+/* ==== FOOTER BASE ==== */
 .np-footer {
-    background: rgba(15, 31, 43, 0.8); /* Slightly darker/more opaque */
-    backdrop-filter: blur(20px);
-    color: #cdd9e5;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    position: relative;
-    z-index: 10;
-    margin-top: 80px; /* Added spacing from content above */
-    padding: 60px 0 40px; /* Increased padding */
+    width: 100%;
+    background: #0f0f12;
+    /* tone tối hiện đại */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 60px 0 30px;
+    color: #ccc;
+    font-family: 'Inter', sans-serif;
 }
 
 .npf-container {
-    max-width: 1200px;
+    width: 90%;
+    max-width: 1250px;
+    margin: auto;
+}
+
+/* Footer Styles - NextPlay Homepage Style */
+
+.np-footer {
+    width: 100%;
+    background: rgba(8, 0, 32, 0.7);
+    border-top: 1px solid rgba(114, 161, 222, 0.3);
+    padding: 60px 0 30px;
+    margin-top: 100px;
+    backdrop-filter: blur(10px);
+}
+
+.npf-container {
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 40px;
 }
 
 .npf-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 60px; /* Increased gap */
-    align-items: flex-start;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 40px;
 }
 
+/* Brand Section */
 .npf-brand {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
+    gap: 15px;
 }
 
 .npf-logo {
-    width: 80px; /* Increased logo size */
-    height: auto;
-    display: block;
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(114, 161, 222, 0.5));
+}
+
+.npf-brand-text {
+    display: flex;
+    flex-direction: column;
 }
 
 .npf-name {
-    color: #1990ff;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    font-size: 1.5rem; /* Increased font size */
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(114, 161, 222, 0.3);
 }
 
 .npf-tag {
-    font-size: 14px; /* Increased font size */
-    color: #8aa3b7;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Footer Columns */
+.npf-col {
+    display: flex;
+    flex-direction: column;
 }
 
 .npf-title {
-    color: #1990ff;
-    margin: 0 0 20px 0; /* Increased margin */
-    font-weight: 700;
-    font-size: 1.1rem; /* Increased font size */
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 20px 0;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .npf-col ul {
     list-style: none;
-    margin: 0;
     padding: 0;
+    margin: 0;
 }
 
-.npf-col li {
-    margin: 12px 0; /* Increased spacing */
+.npf-col ul li {
+    margin-bottom: 12px;
 }
 
 .npf-col a {
-    color: #cdd9e5;
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
-    font-size: 1rem; /* Increased font size */
-    transition: all 0.2s;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-block;
 }
 
 .npf-col a:hover {
-    color: #00f2ff; /* Neon hover */
-    padding-left: 5px; /* Slide effect */
+    color: #72a1de;
+    transform: translateX(5px);
+    text-shadow: 0 0 10px rgba(114, 161, 222, 0.5);
 }
 
+.npf-col p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin: 0;
+}
+
+.npf-col p a {
+    color: #72a1de;
+}
+
+.npf-col p a:hover {
+    text-decoration: underline;
+}
+
+/* Social Icons */
 .npf-social {
     display: flex;
-    gap: 16px;
+    gap: 12px;
 }
 
 .npf-icon {
-    display: inline-flex;
+    width: 42px;
+    height: 42px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px; /* Increased icon size */
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    color: #aebccd;
-    text-decoration: none;
-    transition: all 0.3s;
-    font-size: 1.2rem;
+    background: rgba(114, 161, 222, 0.1);
+    border: 1px solid rgba(114, 161, 222, 0.3);
+    border-radius: 10px;
+    color: #72a1de;
+    transition: all 0.3s ease;
 }
 
 .npf-icon:hover {
-    background: #1990ff;
-    color: #ffffff;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(25, 144, 255, 0.3);
+    background: rgba(114, 161, 222, 0.2);
+    border-color: #72a1de;
+    box-shadow: 0 0 20px rgba(114, 161, 222, 0.5);
+    transform: translateY(-5px);
 }
 
+.npf-icon svg {
+    transition: transform 0.3s ease;
+}
+
+.npf-icon:hover svg {
+    transform: scale(1.1);
+}
+
+/* Bottom Section */
 .npf-bottom {
-    margin-top: 60px; /* Increased margin */
     padding-top: 30px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(114, 161, 222, 0.2);
     text-align: center;
-    color: #8aa3b7;
-    font-size: 15px;
 }
 
-@media (max-width: 992px) {
+.npf-bottom p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Responsive */
+@media screen and (max-width: 992px) {
     .npf-grid {
         grid-template-columns: 1fr 1fr;
         gap: 40px;
     }
+
+    .npf-brand {
+        grid-column: span 2;
+    }
 }
 
-@media (max-width: 600px) {
+@media screen and (max-width: 768px) {
+    .np-footer {
+        padding: 40px 0 20px;
+        margin-top: 60px;
+    }
+
+    .npf-container {
+        padding: 0 20px;
+    }
+
     .npf-grid {
         grid-template-columns: 1fr;
+        gap: 30px;
     }
+
     .npf-brand {
+        grid-column: span 1;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .npf-brand-text {
+        align-items: center;
+    }
+
+    .npf-col {
+        align-items: center;
+        text-align: center;
+    }
+
+    .npf-social {
         justify-content: center;
     }
-    .npf-bottom {
-        text-align: center;
+
+    .npf-col a:hover {
+        transform: translateX(0);
+        transform: scale(1.05);
     }
 }
 
+@media screen and (max-width: 480px) {
+    .npf-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .npf-name {
+        font-size: 22px;
+    }
+
+    .npf-tag {
+        font-size: 12px;
+    }
+
+    .npf-title {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .npf-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .npf-col ul li {
+        margin-bottom: 10px;
+    }
+
+    .npf-col a,
+    .npf-col p {
+        font-size: 13px;
+    }
+}

@@ -1,5 +1,9 @@
 /* Product Discovery Styles */
 
+.main-wrapper {
+    margin-top: 10px;
+}
+
 .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -8,37 +12,34 @@
 }
 
 .game-card {
-    background: rgba(26, 35, 50, 0.6);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    position: relative;
+    width: 100%;
+    height: 380px;
+    overflow: hidden;
+    border: 1px solid rgba(114, 161, 222, 0.3);
+    background: linear-gradient(135deg, rgba(8, 0, 32, 0.9) 0%, rgba(20, 10, 50, 0.8) 100%);
+    border-radius: 20px;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+    cursor: pointer;
 }
 
 .game-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
-                0 0 20px rgba(18, 115, 234, 0.2);
-    border-color: rgba(18, 115, 234, 0.3);
+    transform: translateY(-12px);
+    box-shadow: 0 20px 60px rgba(114, 161, 222, 0.4), 0 0 40px rgba(114, 161, 222, 0.2);
+    border-color: rgba(114, 161, 222, 0.8);
     z-index: 2;
 }
 
 .game-img-wrapper {
     position: relative;
-    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    width: 100%;
+    height: 70%;
     overflow: hidden;
 }
 
 .game-img {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -65,11 +66,15 @@
 }
 
 .game-body {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     padding: 20px;
-    flex: 1;
+    background: linear-gradient(to top, rgba(8, 0, 32, 0.98) 0%, rgba(8, 0, 32, 0.85) 50%, transparent 100%);
+    z-index: 2;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
 }
 
 .game-tags {
@@ -80,25 +85,27 @@
 }
 
 .game-tag {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     padding: 4px 10px;
-    border-radius: 99px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #8aa3b7;
+    border-radius: 6px;
+    background: rgba(114, 161, 222, 0.2);
+    color: rgba(114, 161, 222, 0.9);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 600;
+    border: 1px solid rgba(114, 161, 222, 0.3);
+    transition: all 0.2s ease;
 }
 
 .game-title {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    color: #fff;
-    margin-bottom: 8px;
-    line-height: 1.4;
+    color: white;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -108,50 +115,48 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-top: 16px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 0;
+    border-top: none;
 }
 
 .game-price {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    color: #00ff88;
-    text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .game-price.free {
-    color: #1273ea;
-    text-shadow: 0 0 10px rgba(18, 115, 234, 0.3);
+    color: rgba(114, 161, 222, 1);
+    text-shadow: 0 0 8px rgba(114, 161, 222, 0.3);
 }
 
 .btn-buy-card {
-    background: #fff;
-    color: #0f1f2b;
-    border: none;
+    background-color: rgba(34, 0, 73, 0.24);
+    color: white;
+    border: 1px solid rgba(114, 161, 222, 0.51);
     padding: 8px 16px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 0.9rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: 0.3s;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    box-shadow: 0 0 5px rgba(114, 161, 222, 0.51);
 }
 
 .btn-buy-card:hover {
-    background: #1273ea;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 15px rgba(114, 161, 222, 0.51);
 }
 
 /* Sidebar Filter Styles */
 .filter-card {
     background: rgba(26, 35, 50, 0.4);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(114, 161, 222, 0.2);
     border-radius: 16px;
     padding: 24px;
     position: sticky;
@@ -172,7 +177,7 @@
 }
 
 .filter-label {
-    color: #8aa3b7;
+    color: rgba(114, 161, 222, 0.8);
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -185,7 +190,7 @@
     align-items: center;
     margin-bottom: 10px;
     cursor: pointer;
-    color: #cdd9e5;
+    color: rgba(205, 217, 229, 0.8);
     transition: color 0.2s;
 }
 
@@ -195,7 +200,7 @@
 
 .custom-checkbox input {
     margin-right: 10px;
-    accent-color: #1273ea;
+    accent-color: rgba(114, 161, 222, 0.9);
     width: 16px;
     height: 16px;
 }
@@ -234,7 +239,7 @@
     font-weight: 700;
     color: #fff;
     text-transform: uppercase;
-    border-left: 4px solid #00ccff;
+    border-left: 4px solid rgba(114, 161, 222, 0.8);
     padding-left: 15px;
     margin-bottom: 25px;
     display: flex;
@@ -243,12 +248,12 @@
 
 .featured-item-content {
     display: flex;
-    background: #161b22;
+    background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
     border-radius: 12px;
     overflow: hidden;
-    height: 400px; /* Reduced height to prevent stretching */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.05);
+    height: 400px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.6), 0 0 30px rgba(114, 161, 222, 0.2);
+    border: 1px solid rgba(114, 161, 222, 0.2);
 }
 
 .featured-img-col {
@@ -282,7 +287,7 @@
 
 .featured-game-title {
     font-size: 2.5rem;
-    font-weight: 800;
+    font-weight: 700;
     color: #fff;
     margin-bottom: 15px;
     line-height: 1.2;
@@ -296,11 +301,11 @@
 }
 
 .featured-tag {
-    background: rgba(255,255,255,0.1);
+    background: rgba(114, 161, 222, 0.2);
     padding: 5px 12px;
     border-radius: 4px;
     font-size: 0.85rem;
-    color: #ccc;
+    color: rgba(114, 161, 222, 0.9);
     font-weight: 600;
 }
 
@@ -319,7 +324,7 @@
 .featured-price {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #00ff88; /* Green price */
+    color: rgba(114, 161, 222, 0.95);
     margin-bottom: 20px;
     display: block;
 }
@@ -331,19 +336,19 @@
     gap: 10px;
     width: 100%;
     padding: 14px;
-    background: #1273ea;
-    color: #fff;
+    background-color: rgba(34, 0, 73, 0.24);
+    color: white;
     font-weight: 600;
-    border-radius: 8px;
+    border-radius: 10px;
     text-decoration: none;
-    transition: all 0.3s ease;
-    font-size: 1.1rem;
+    transition: 0.3s;
+    font-size: 1rem;
+    border: 1px solid rgba(114, 161, 222, 0.51);
+    box-shadow: 0 0 5px rgba(114, 161, 222, 0.51);
 }
 
 .btn-featured-buy:hover {
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(18, 115, 234, 0.3);
+    box-shadow: 0 0 15px rgba(114, 161, 222, 0.51);
 }
 
 /* Carousel Controls (Hero) */
@@ -447,9 +452,15 @@
     position: relative;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 30px rgba(114, 161, 222, 0.15);
+    border: 1px solid rgba(114, 161, 222, 0.25);
     cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.bento-main:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px rgba(114, 161, 222, 0.25);
 }
 
 .bento-main-img {
@@ -492,10 +503,10 @@
 
 .bento-tag {
     padding: 4px 10px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(114, 161, 222, 0.15);
     border-radius: 4px;
     font-size: 0.85rem;
-    color: #ccc;
+    color: rgba(114, 161, 222, 0.8);
     backdrop-filter: blur(5px);
 }
 
@@ -518,21 +529,24 @@
 .bento-price {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--accent-color);
+    color: rgba(114, 161, 222, 0.95);
 }
 
 .btn-bento-action {
     padding: 10px 25px;
-    background: #fff;
-    color: #000;
+    background: transparent;
+    color: rgba(114, 161, 222, 0.8);
     font-weight: 700;
     border-radius: 30px;
     text-decoration: none;
     transition: all 0.3s ease;
+    border: 1px solid rgba(114, 161, 222, 0.5);
 }
 
 .btn-bento-action:hover {
-    background: var(--accent-color);
+    background: rgba(114, 161, 222, 0.15);
+    color: rgba(114, 161, 222, 1);
+    border-color: rgba(114, 161, 222, 0.8);
     transform: translateY(-3px);
 }
 
@@ -548,8 +562,15 @@
     position: relative;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(114, 161, 222, 0.25);
     cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.bento-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 20px rgba(114, 161, 222, 0.2);
+    border-color: rgba(114, 161, 222, 0.5);
 }
 
 .bento-item-img {
@@ -584,7 +605,7 @@
 
 .bento-item-price {
     font-size: 0.9rem;
-    color: var(--accent-color);
+    color: rgba(114, 161, 222, 0.95);
     font-weight: 600;
 }
 
@@ -640,13 +661,13 @@
     transform: translateY(-50%);
     width: 5px;
     height: 24px;
-    background: var(--accent-color); /* Blue accent */
+    background: rgba(114, 161, 222, 0.8);
     border-radius: 2px;
-    box-shadow: 0 0 10px var(--accent-color);
+    box-shadow: 0 0 10px rgba(114, 161, 222, 0.5);
 }
 
 .view-more-link {
-    color: rgba(255,255,255,0.6);
+    color: rgba(114, 161, 222, 0.7);
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 600;
@@ -656,12 +677,12 @@
     gap: 8px;
     padding: 8px 16px;
     border-radius: 20px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(114, 161, 222, 0.1);
 }
 
 .view-more-link:hover {
-    color: #fff;
-    background: var(--accent-color);
+    color: rgba(114, 161, 222, 1);
+    background: rgba(114, 161, 222, 0.2);
     transform: translateX(5px);
 }
 
@@ -720,13 +741,13 @@
 }
 
 .search-input:focus {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--accent-color);
-    box-shadow: 0 0 15px rgba(0, 204, 255, 0.2);
+    background: rgba(114, 161, 222, 0.1);
+    border-color: rgba(114, 161, 222, 0.8);
+    box-shadow: 0 0 15px rgba(114, 161, 222, 0.2);
 }
 
 .search-input:focus + .search-icon {
-    color: var(--accent-color);
+    color: rgba(114, 161, 222, 0.8);
 }
 
 .filter-group {
@@ -735,39 +756,40 @@
 }
 
 .filter-pill {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.7);
+    background: rgba(114, 161, 222, 0.08);
+    border: 1.5px solid rgba(114, 161, 222, 0.3);
+    color: rgba(114, 161, 222, 0.8);
     padding: 8px 20px;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
 }
 
 .filter-pill:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border-color: #fff;
+    background: rgba(114, 161, 222, 0.15);
+    color: rgba(114, 161, 222, 0.95);
+    border-color: rgba(114, 161, 222, 0.7);
+    transform: translateY(-2px);
 }
 
 .filter-pill.active {
-    background: var(--accent-color);
-    color: #fff;
-    border-color: var(--accent-color);
-    box-shadow: 0 4px 15px rgba(0, 204, 255, 0.4);
+    background: linear-gradient(135deg, rgba(114, 161, 222, 0.25), rgba(114, 161, 222, 0.15));
+    color: rgba(114, 161, 222, 1);
+    border-color: rgba(114, 161, 222, 0.8);
+    box-shadow: 0 8px 20px rgba(114, 161, 222, 0.25);
 }
 
 /* --- Category Panel --- */
 .category-panel {
     position: absolute;
-    top: 100%; /* Below the search bar */
+    top: 100%;
     left: 0;
     width: 100%;
-    background: rgba(22, 27, 34, 0.95);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(22, 27, 34, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(114, 161, 222, 0.25);
     border-radius: 16px;
     padding: 20px;
     margin-top: 10px;
@@ -779,7 +801,7 @@
     transform: translateY(-10px);
     transition: all 0.3s ease;
     z-index: 20;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.5), 0 0 20px rgba(114, 161, 222, 0.15);
 }
 
 .category-panel.active {
@@ -789,27 +811,29 @@
 }
 
 .category-tag-item {
-    background: rgba(255, 255, 255, 0.05);
-    color: #cdd9e5;
+    background: rgba(114, 161, 222, 0.08);
+    color: rgba(114, 161, 222, 0.8);
     padding: 10px 15px;
     border-radius: 8px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
     font-size: 0.9rem;
-    border: 1px solid transparent;
+    border: 1px solid rgba(114, 161, 222, 0.2);
 }
 
 .category-tag-item:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    transform: translateY(-2px);
+    background: rgba(114, 161, 222, 0.18);
+    color: rgba(114, 161, 222, 0.98);
+    transform: translateY(-3px);
+    border-color: rgba(114, 161, 222, 0.4);
 }
 
 .category-tag-item.active {
-    background: var(--accent-color);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(0, 204, 255, 0.3);
+    background: linear-gradient(135deg, rgba(114, 161, 222, 0.3), rgba(114, 161, 222, 0.15));
+    color: rgba(114, 161, 222, 1);
+    box-shadow: 0 8px 20px rgba(114, 161, 222, 0.3);
+    border-color: rgba(114, 161, 222, 0.6);
 }
 
 @media (max-width: 992px) {

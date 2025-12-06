@@ -2,213 +2,288 @@
 <html lang="vi">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NextPlay - Nền tảng game trực tuyến hàng đầu</title>
-  <meta name="description"
-    content="NextPlay là nền tảng phân phối game bản quyền uy tín. Khám phá hàng ngàn tựa game hấp dẫn, từ hành động, nhập vai đến chiến thuật. Tham gia cộng đồng game thủ ngay hôm nay!">
-  <meta name="keywords"
-    content="game bản quyền, mua game, game pc, game steam, nextplay, game online, cộng đồng game thủ">
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://nextplay.com/">
-  <meta property="og:title" content="NextPlay - Nền tảng game trực tuyến hàng đầu">
-  <meta property="og:description" content="Khám phá và trải nghiệm hàng ngàn tựa game đỉnh cao tại NextPlay.">
-  <meta property="og:image" content="https://nextplay.com/assets/images/logo.png">
+    <base href="/Web_Programing_Assignment_FE/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextPlay - Nền tảng game trực tuyến hàng đầu</title>
+    <meta name="description"
+        content="NextPlay là nền tảng phân phối game bản quyền uy tín. Khám phá hàng ngàn tựa game hấp dẫn, từ hành động, nhập vai đến chiến thuật. Tham gia cộng đồng game thủ ngay hôm nay!">
+    <meta name="keywords"
+        content="game bản quyền, mua game, game pc, game steam, nextplay, game online, cộng đồng game thủ">
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://nextplay.com/">
-  <meta property="twitter:title" content="NextPlay - Nền tảng game trực tuyến hàng đầu">
-  <meta property="twitter:description" content="Khám phá và trải nghiệm hàng ngàn tựa game đỉnh cao tại NextPlay.">
-  <meta property="twitter:image" content="https://nextplay.com/assets/images/logo.png">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nextplay.com/">
+    <meta property="og:title" content="NextPlay - Nền tảng game trực tuyến hàng đầu">
+    <meta property="og:description" content="Khám phá và trải nghiệm hàng ngàn tựa game đỉnh cao tại NextPlay.">
+    <meta property="og:image" content="https://nextplay.com/assets/images/logo.png">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/header.css">
-  <link rel="stylesheet" href="assets/css/footer.css">
-  <link rel="stylesheet" href="assets/css/toast.css">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://nextplay.com/">
+    <meta property="twitter:title" content="NextPlay - Nền tảng game trực tuyến hàng đầu">
+    <meta property="twitter:description" content="Khám phá và trải nghiệm hàng ngàn tựa game đỉnh cao tại NextPlay.">
+    <meta property="twitter:image" content="https://nextplay.com/assets/images/logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/homepage.css">
+    <link rel="stylesheet" href="assets/css/header.css">
+    <link rel="stylesheet" href="assets/css/footer.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
 
-<body>
-  <!-- Header component -->
-  <div data-include="header"></div>
+<body class="tq-body">
+    <div class="tq-home-container">
+        <video class="tq-bg-video" autoplay loop muted playsinline src="assets/videos/galaxy.mp4"></video>
 
-  <!-- Phần giới thiệu -->
-  <section class="hero">
-    <div class="hero-container">
-      <div class="hero-content">
-        <div class="hero-logo">
-          <img src="assets/images/logo.png" alt="NextPlay Logo" class="hero-logo-img">
-          <span class="np-brand-text">NextPlay</span>
+        <div data-include="header"></div>
+
+        <div class="tq-sidebar">
+            <div class="tq-close-icon">
+                <i class='bx bx-x'></i>
+            </div>
+            <ul>
+                <li><a href="/index.html">Trang chủ</a></li>
+                <li><a href="/products/index.html">Khám phá</a></li>
+                <li><a href="/news/index.html">Tin tức</a></li>
+                <li><a href="/about/index.html">Về chúng tôi</a></li>
+            </ul>
         </div>
-        <h1 class="hero-title">Nơi hội tụ và trải nghiệm gaming được nâng tầm</h1>
-        <p class="hero-description">Từ việc làm chủ các cơ chế gameplay nâng cao đến việc rèn luyện phản xạ và khả năng
-          ra quyết định, NextPlay mang đến những hiểu biết và chiến lược vô giá cho game thủ ở mọi cấp độ.</p>
-        <div class="hero-buttons">
-          <a href="products/index.html" class="hero-btn hero-btn-primary">Khám phá ngay</a>
-          <a href="about/index.html" class="hero-btn hero-btn-secondary">Tìm hiểu thêm</a>
+
+        <div class="tq-blackhole-box" data-aos="fade-down" data-aos-duration="2000">
+            <video autoplay loop muted playsinline src="assets/videos/blackhole.mp4"></video>
         </div>
-      </div>
-      <div class="hero-image">
-        <img src="assets/images/games-dota2 1.png" class="hero-char-main" alt="Dota 2 Character">
-      </div>
+
+        <section class="tq-hero-section" id="home">
+            <div class="tq-hero-content tq-autoBlur" data-aos="fade-right" data-aos-duration="1000">
+                <div class="tq-hero-badge">
+                    <i class='bx bxl-sketch'></i>
+                    Manifest
+                </div>
+
+                <h1 data-aos="fade-right" data-aos-duration="3000">
+                    Nơi trải nghiệm <span class="tq-gradient">gaming</span> được <span class="tq-gradient">nâng
+                        tầm</span>
+                </h1>
+
+                <p>Từ việc làm chủ các cơ chế gameplay nâng cao đến việc rèn luyện phản xạ và khả năng ra quyết định,
+                    NextPlay mang đến những hiểu biết và chiến lược vô giá cho game thủ ở mọi cấp độ.</p>
+
+                <button onclick="document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });">
+                    Đăng nhập
+                </button>
+            </div>
+
+            <div class="tq-skills-video-box">
+                <video class="tq-skills-video tq-autoBlur" autoplay loop muted playsinline
+                    src="assets/videos/hero-video.mp4"></video>
+            </div>
+
+            <div class="tq-scroll-down"
+                onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' });"></div>
+        </section>
+
+        <section class="tq-featured-section" id="about">
+            <h1 class="tq-section-title tq-autoDisplay">Game nổi bật</h1>
+            <div class="tq-featured-grid">
+                <div class="tq-game-card">
+                    <img src="assets/images/dota2_background.jpg" class="tq-card-img" alt="Dota 2 - MOBA Strategy Game"
+                        loading="lazy">
+                    <div class="tq-card-body">
+                        <h6 class="tq-card-title">Dota 2</h6>
+                        <p class="tq-card-text">MOBA Strategy</p>
+                    </div>
+                </div>
+                <div class="tq-game-card">
+                    <img src="assets/images/csgo.jpg" class="tq-card-img" alt="CS:GO - FPS Tactical Shooter"
+                        loading="lazy">
+                    <div class="tq-card-body">
+                        <h6 class="tq-card-title">CS:GO</h6>
+                        <p class="tq-card-text">FPS Tactical</p>
+                    </div>
+                </div>
+                <div class="tq-game-card">
+                    <img src="assets/images/valorant_background.jpg" class="tq-card-img"
+                        alt="Valorant - FPS Competitive" loading="lazy">
+                    <div class="tq-card-body">
+                        <h6 class="tq-card-title">Valorant</h6>
+                        <p class="tq-card-text">FPS Competitive</p>
+                    </div>
+                </div>
+                <div class="tq-game-card">
+                    <img src="assets/images/lol.jpg" class="tq-card-img" alt="League of Legends - MOBA Action"
+                        loading="lazy">
+                    <div class="tq-card-body">
+                        <h6 class="tq-card-title">League of Legends</h6>
+                        <p class="tq-card-text">MOBA Action</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tq-stats-section" data-aos="fade-up">
+            <div class="tq-stats-grid">
+                <div class="tq-stat-item">
+                    <h3 class="tq-gradient">100+</h3>
+                    <p>Game đa dạng</p>
+                </div>
+                <div class="tq-stat-item">
+                    <h3 class="tq-gradient">50K+</h3>
+                    <p>Người chơi hoạt động</p>
+                </div>
+                <div class="tq-stat-item">
+                    <h3 class="tq-gradient">24/7</h3>
+                    <p>Hỗ trợ kỹ thuật trực tuyến</p>
+                </div>
+                <div class="tq-stat-item">
+                    <h3 class="tq-gradient">100%</h3>
+                    <p>Miễn phí tham gia</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="tq-howto-section">
+            <h1 class="tq-section-title tq-autoDisplay">Cách sử dụng</h1>
+
+            <div class="tq-project-card">
+                <div class="tq-project-vidbox tq-autoBlur">
+                    <video loop id="projectVideo1" src="videos/project1.mp4"></video>
+                    <div class="tq-hover-sign"></div>
+                </div>
+                <div class="tq-project-info tq-fadein-left">
+                    <h1><span class="tq-gradient-small">Bước 1</span> Bắt đầu hành trình của bạn</h1>
+                    <p>Bạn chỉ cần vài giây để tạo tài khoản. Nhập email, đặt mật khẩu, chọn avatar và thế là xong —
+                        NextPlay sẽ tự thiết lập hồ sơ người chơi cho bạn.</p>
+                    <a href="https://wda2025.vercel.app/" target="_blank">
+                        <button><i class='bx bx-link-external'></i> Website</button>
+                    </a>
+                </div>
+            </div>
+
+            <div class="tq-project-card">
+                <div class="tq-project-vidbox tq-autoBlur">
+                    <video loop id="projectVideo2" src="videos/project2.mp4"></video>
+                </div>
+                <div class="tq-project-info tq-fadein-left">
+                    <h1><span class="tq-gradient-small">Bước 2</span> Khám phá thế giới game</h1>
+                    <p>Người chơi sẽ được chào đón bằng một kho game được sắp xếp thông minh theo sở thích, thể loại và
+                        xu hướng.</p>
+                    <button><i class='bx bx-link-external'></i> Website</button>
+                </div>
+            </div>
+
+            <div class="tq-project-card">
+                <div class="tq-project-vidbox tq-autoBlur">
+                    <video loop id="projectVideo3" src="videos/project2.mp4"></video>
+                </div>
+                <div class="tq-project-info tq-fadein-left">
+                    <h1><span class="tq-gradient-small">Bước 3</span> Tận hưởng trải nghiệm</h1>
+                    <p>Người chơi sẽ được chào đón bằng một kho game được sắp xếp thông minh theo sở thích, thể loại và
+                        xu hướng.</p>
+                    <button><i class='bx bx-link-external'></i> Website</button>
+                </div>
+            </div>
+
+            <div class="tq-project-card">
+                <div class="tq-project-vidbox tq-autoBlur">
+                    <video loop id="projectVideo4" src="videos/project2.mp4"></video>
+                </div>
+                <div class="tq-project-info tq-fadein-left">
+                    <h1><span class="tq-gradient-small">Bước 4</span> Kết nối cộng đồng</h1>
+                    <p>Người chơi sẽ được chào đón bằng một kho game được sắp xếp thông minh theo sở thích, thể loại và
+                        xu hướng.</p>
+                    <button><i class='bx bx-link-external'></i> Website</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="tq-services-section" id="skills">
+            <h1 class="tq-section-title tq-autoDisplay">Dịch vụ</h1>
+
+            <div class="tq-service-box tq-autoDisplay">
+                <div class="tq-col tq-designer">
+                    <h1 class="tq-gradient">Dành cho người chơi <i class='bx bx-laptop'></i></h1>
+                    <p>
+                        Khám phá kho game đa dạng, mua game dễ dàng và quản lý tất cả trong thư viện cá nhân.
+                        Người chơi có thể đánh giá, theo dõi game yêu thích và nhận gợi ý dựa trên sở thích.
+                    </p>
+                </div>
+
+                <div class="tq-col tq-center-col">
+                    <img class="tq-skills-image" src="assets/images/service.png" alt="">
+
+                    <div class="tq-slider" style="--width: 100px; --height: 100px; --quantity: 7;">
+                        <div class="tq-list">
+                            <div class="tq-item" style="--position: 1"><img src="assets/images/1.jpg"></div>
+                            <div class="tq-item" style="--position: 2"><img src="assets/images/2.png"></div>
+                            <div class="tq-item" style="--position: 3"><img src="assets/images/3.jpg"></div>
+                            <div class="tq-item" style="--position: 4"><img src="assets/images/4.jpg"></div>
+                            <div class="tq-item" style="--position: 5"><img src="assets/images/5.png"></div>
+                            <div class="tq-item" style="--position: 6"><img src="assets/images/6.png"></div>
+                            <div class="tq-item" style="--position: 7"><img src="assets/images/7.png"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tq-col tq-coder">
+                    <h1 class="tq-gradient">Dành cho nhà phát hành <i class='bx bx-code-block'></i></h1>
+                    <p>
+                        Cung cấp nền tảng đăng tải game, quản lý doanh thu, theo dõi phản hồi và quảng bá game trực tiếp
+                        đến cộng đồng. Hỗ trợ công cụ quản lý bài viết, tin tức và sự kiện.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section data-include="footer"></section>
     </div>
-  </section>
-
-  <!-- Game nổi bật -->
-  <section class="featured">
-    <div class="container">
-      <h2>Game nổi bật</h2>
-      <div class="featured-grid">
-        <div class="card">
-          <img src="assets/images/dota2_background.jpg" class="card-img-top" alt="Dota 2 - MOBA Strategy Game"
-            loading="lazy">
-          <div class="card-body">
-            <h6 class="card-title">Dota 2</h6>
-            <p class="card-text">MOBA Strategy</p>
-          </div>
-        </div>
-        <div class="card">
-          <img src="assets/images/csgo.jpg" class="card-img-top" alt="CS:GO - FPS Tactical Shooter" loading="lazy">
-          <div class="card-body">
-            <h6 class="card-title">CS:GO</h6>
-            <p class="card-text">FPS Tactical</p>
-          </div>
-        </div>
-        <div class="card">
-          <img src="assets/images/valorant_background.jpg" class="card-img-top" alt="Valorant - FPS Competitive"
-            loading="lazy">
-          <div class="card-body">
-            <h6 class="card-title">Valorant</h6>
-            <p class="card-text">FPS Competitive</p>
-          </div>
-        </div>
-        <div class="card">
-          <img src="assets/images/lol.jpg" class="card-img-top" alt="League of Legends - MOBA Action" loading="lazy">
-          <div class="card-body">
-            <h6 class="card-title">League of Legends</h6>
-            <p class="card-text">MOBA Action</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Thông tin thống kê -->
-  <section class="stats">
-    <div class="container">
-      <div class="stats-grid">
-        <div class="stat-item">
-          <h3>100+</h3>
-          <p>Game đa dạng</p>
-        </div>
-        <div class="stat-item">
-          <h3>50K+</h3>
-          <p>Người chơi hoạt động</p>
-        </div>
-        <div class="stat-item">
-          <h3>24/7</h3>
-          <p>Hỗ trợ kỹ thuật trực tuyến</p>
-        </div>
-        <div class="stat-item">
-          <h3>100%</h3>
-          <p>Miễn phí tham gia</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Dịch vụ -->
-  <section class="services">
-    <div class="services-container">
-      <div class="services-content">
-        <h2 class="services-title">Dịch vụ</h2>
-        <ul class="services-list">
-          <li class="services-item">
-            <span class="services-icon">★</span>
-            <span>Khám phá và trải nghiệm hàng trăm game đa dạng từ mọi thể loại</span>
-          </li>
-          <li class="services-item">
-            <span class="services-icon">★</span>
-            <span>Tham gia cộng đồng game thủ sôi động và chia sẻ kinh nghiệm</span>
-          </li>
-          <li class="services-item">
-            <span class="services-icon">★</span>
-            <span>Học hỏi các kỹ thuật và chiến lược từ những game thủ chuyên nghiệp</span>
-          </li>
-          <li class="services-item">
-            <span class="services-icon">★</span>
-            <span>Theo dõi tin tức game mới nhất và cập nhật từ các nhà phát triển</span>
-          </li>
-          <li class="services-item">
-            <span class="services-icon">★</span>
-            <span>Tham gia các sự kiện và giải đấu gaming độc quyền</span>
-          </li>
-        </ul>
-      </div>
-      <div class="services-image">
-        <img src="assets/images/games-csgo 1.png" class="services-char" alt="Gaming Character" loading="lazy">
-        <div class="services-particles">
-          <span class="particle">✦</span>
-          <span class="particle">✦</span>
-          <span class="particle">✦</span>
-          <span class="particle">✦</span>
-          <span class="particle">✦</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Về chúng tôi -->
-  <section class="about">
-    <div class="about-container">
-      <!-- <div class="about-indicators">
-        <span class="indicator"></span>
-        <span class="indicator"></span>
-        <span class="indicator active"></span>
-        <span class="indicator"></span>
-      </div> -->
-      <h2 class="about-title">VỀ CHÚNG TÔI</h2>
-      <div class="about-content">
-        <div class="about-image">
-          <img src="assets/images/assasin.png" class="about-char" alt="Gaming Character" loading="lazy">
-        </div>
-        <div class="about-text">
-          <p>NextPlay là nền tảng gaming hàng đầu, nơi kết nối cộng đồng game thủ và mang đến những trải nghiệm tuyệt
-            vời nhất. Chúng tôi cam kết cung cấp một không gian nơi mọi người có thể khám phá, học hỏi và phát triển kỹ
-            năng gaming của mình.</p>
-          <p>Với sứ mệnh tạo ra một cộng đồng gaming tích cực và hỗ trợ, NextPlay không chỉ là nơi để chơi game mà còn
-            là nơi để kết nối, chia sẻ và phát triển cùng nhau. Chúng tôi tin rằng gaming là một nghệ thuật và mọi game
-            thủ đều có thể trở thành nghệ sĩ trong lĩnh vực của mình.</p>
-          <p>Hãy tham gia cùng chúng tôi và khám phá thế giới gaming vô tận tại NextPlay!</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer component -->
-  <div data-include="footer"></div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="env.js?v=2"></script>
-  <script src="assets/js/include-components.js"></script>
-  <script src="assets/js/auth.js"></script>
-  <script src="assets/js/toast.js"></script>
-  <script src="assets/js/cart.js"></script>
-  <script>
-    // Check and update header login status when page loads
-    window.addEventListener('load', function () {
-      // Wait a bit for header to load and then update status
-      setTimeout(function () {
-        if (window.updateHeaderLoginStatus) {
-          window.updateHeaderLoginStatus();
+    <script src="env.js?v=2"></script>
+    <script src="assets/js/include-components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/toast.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script>
+        // Check and update header login status when page loads
+        window.addEventListener('load', function () {
+            // Wait a bit for header to load and then update status
+            setTimeout(function () {
+                if (window.updateHeaderLoginStatus) {
+                    window.updateHeaderLoginStatus();
+                }
+            }, 200);
+        });
+    </script>
+    <script src="app.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        function loadComponents() {
+            const includes = document.querySelectorAll('[data-include]');
+            let loadedCount = 0;
+
+            includes.forEach(element => {
+                const componentName = element.getAttribute('data-include');
+                fetch(`components/${componentName}.html`)
+                    .then(response => response.text())
+                    .then(html => {
+                        element.innerHTML = html;
+                        loadedCount++;
+                        if (loadedCount === includes.length) {
+                            AOS.init();
+                        }
+                    })
+                    .catch(error => console.error(`Error loading component: ${componentName}`, error));
+            });
+
+            if (includes.length === 0) {
+                AOS.init();
+            }
         }
-      }, 200);
-    });
-  </script>
+
+        document.addEventListener('DOMContentLoaded', loadComponents);
+    </script>
 </body>
 
 </html>
