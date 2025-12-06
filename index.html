@@ -3,7 +3,7 @@
 
 <head>
 
-    <base href="/Web_Programing_Assignment_FE/">
+    <!-- <base href="/Web_Programing_Assignment_FE/"> -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextPlay - Nền tảng game trực tuyến hàng đầu</title>
@@ -17,7 +17,7 @@
     <meta property="og:url" content="https://nextplay.com/">
     <meta property="og:title" content="NextPlay - Nền tảng game trực tuyến hàng đầu">
     <meta property="og:description" content="Khám phá và trải nghiệm hàng ngàn tựa game đỉnh cao tại NextPlay.">
-    <meta property="og:image" content="https://nextplay.com/assets/images/logo.png">
+    <meta property="og:image" content="assets/images/logo.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -45,10 +45,10 @@
                 <i class='bx bx-x'></i>
             </div>
             <ul>
-                <li><a href="/index.html">Trang chủ</a></li>
-                <li><a href="/products/index.html">Khám phá</a></li>
-                <li><a href="/news/index.html">Tin tức</a></li>
-                <li><a href="/about/index.html">Về chúng tôi</a></li>
+                <li><a href="index.html">Trang chủ</a></li>
+                <li><a href="products/index.html">Khám phá</a></li>
+                <li><a href="news/index.html">Tin tức</a></li>
+                <li><a href="about/index.html">Về chúng tôi</a></li>
             </ul>
         </div>
 
@@ -149,7 +149,7 @@
 
             <div class="tq-project-card">
                 <div class="tq-project-vidbox tq-autoBlur">
-                    <video loop id="projectVideo1" src="videos/project1.mp4"></video>
+                    <video loop id="projectVideo1" src="assets/videos/project1.mp4"></video>
                     <div class="tq-hover-sign"></div>
                 </div>
                 <div class="tq-project-info tq-fadein-left">
@@ -164,7 +164,7 @@
 
             <div class="tq-project-card">
                 <div class="tq-project-vidbox tq-autoBlur">
-                    <video loop id="projectVideo2" src="videos/project2.mp4"></video>
+                    <video loop id="projectVideo2" src="assets/videos/project2.mp4"></video>
                 </div>
                 <div class="tq-project-info tq-fadein-left">
                     <h1><span class="tq-gradient-small">Bước 2</span> Khám phá thế giới game</h1>
@@ -176,7 +176,7 @@
 
             <div class="tq-project-card">
                 <div class="tq-project-vidbox tq-autoBlur">
-                    <video loop id="projectVideo3" src="videos/project2.mp4"></video>
+                    <video loop id="projectVideo3" src="assets/videos/project2.mp4"></video>
                 </div>
                 <div class="tq-project-info tq-fadein-left">
                     <h1><span class="tq-gradient-small">Bước 3</span> Tận hưởng trải nghiệm</h1>
@@ -188,7 +188,7 @@
 
             <div class="tq-project-card">
                 <div class="tq-project-vidbox tq-autoBlur">
-                    <video loop id="projectVideo4" src="videos/project2.mp4"></video>
+                    <video loop id="projectVideo4" src="assets/videos/project2.mp4"></video>
                 </div>
                 <div class="tq-project-info tq-fadein-left">
                     <h1><span class="tq-gradient-small">Bước 4</span> Kết nối cộng đồng</h1>
@@ -241,7 +241,7 @@
     </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="env.js?v=2"></script>
-    <script src="assets/js/include-components.js"></script>
+    <script src="assets/js/include-components.js?v=3"></script>
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/toast.js"></script>
     <script src="assets/js/cart.js"></script>
@@ -258,32 +258,7 @@
     </script>
     <script src="app.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-        function loadComponents() {
-            const includes = document.querySelectorAll('[data-include]');
-            let loadedCount = 0;
-
-            includes.forEach(element => {
-                const componentName = element.getAttribute('data-include');
-                fetch(`components/${componentName}.html`)
-                    .then(response => response.text())
-                    .then(html => {
-                        element.innerHTML = html;
-                        loadedCount++;
-                        if (loadedCount === includes.length) {
-                            AOS.init();
-                        }
-                    })
-                    .catch(error => console.error(`Error loading component: ${componentName}`, error));
-            });
-
-            if (includes.length === 0) {
-                AOS.init();
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', loadComponents);
-    </script>
+    <!-- Removed duplicate loadComponents script -->
 </body>
 
 </html>

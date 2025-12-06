@@ -160,6 +160,23 @@
             console.error('Error loading reviews:', e);
         }
 
+        // Check Ownership
+        let isOwned = false;
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            try {
+                const libRes = await fetch(`${window.ENV.API_URL}/library`, {
+                    credentials: 'include'
+                });
+                const libData = await libRes.json();
+                if (libData.status === 'success' && Array.isArray(libData.data)) {
+                    isOwned = libData.data.some(g => g.id === game.id);
+                }
+            } catch (e) {
+                console.error('Error checking ownership:', e);
+            }
+        }
+
         // Calculate average rating from real reviews if available
         let displayRating = game.rating;
         let displayReviewCount = game.reviews;
@@ -220,16 +237,22 @@
                             </div>
                             
                             <div class="game-actions">
-                                <button onclick="addToCartAndCheckout(${game.id})" class="btn-buy-large border-0 cursor-pointer">
-                                    Mua ngay
-                                </button>
-                                <button onclick="addToCartOnly(${game.id})" class="btn-wishlist" title="Thêm vào giỏ hàng">
-                                    Thêm vào giỏ hàng
-                                </button>
+                                ${isOwned ? `
+                                    <button class="btn-buy-large border-0 cursor-not-allowed" style="background: #2d3748; color: #a0aec0;" disabled>
+                                        Đã sở hữu
+                                    </button>
+                                ` : `
+                                    <button onclick="addToCartAndCheckout(${game.id})" class="btn-buy-large border-0 cursor-pointer">
+                                        Mua ngay
+                                    </button>
+                                    <button onclick="addToCartOnly(${game.id})" class="btn-wishlist" title="Thêm vào giỏ hàng">
+                                        Thêm vào giỏ hàng
+                                    </button>
+                                `}
                                 <button class="btn-wishlist">
                                     ♥
                                 </button>
-                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -331,7 +354,7 @@
         `;
         
         renderReviewsList(reviews);
-        checkAuthForReviews();
+        checkAuthForReviews(isOwned);
         setRating(5); // Default rating
     }
 
@@ -382,7 +405,7 @@
         `}).join('');
     }
 
-    function checkAuthForReviews() {
+    function checkAuthForReviews(isOwned) {
         const userStr = localStorage.getItem('user');
         const formContainer = document.getElementById('review-form-container');
         const loginPrompt = document.getElementById('login-prompt');
@@ -390,10 +413,17 @@
         
         if (userStr) {
             const user = JSON.parse(userStr);
-            if(formContainer) formContainer.classList.remove('d-none');
-            if(loginPrompt) loginPrompt.classList.add('d-none');
-            if(avatarImg) avatarImg.src = window.ENV.getAvatarUrl(user.avatar);
+            if (isOwned) {
+                if(formContainer) formContainer.classList.remove('d-none');
+                if(loginPrompt) loginPrompt.classList.add('d-none');
+                if(avatarImg) avatarImg.src = window.ENV.getAvatarUrl(user.avatar);
+            } else {
+                // Logged in but doesn't own game -> Hide everything
+                if(formContainer) formContainer.classList.add('d-none');
+                if(loginPrompt) loginPrompt.classList.add('d-none');
+            }
         } else {
+            // Not logged in -> Show login prompt
             if(formContainer) formContainer.classList.add('d-none');
             if(loginPrompt) loginPrompt.classList.remove('d-none');
         }

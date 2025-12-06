@@ -14,10 +14,10 @@
 
     const ENV = {
         // Backend API URL - CHANGE THIS TO MATCH YOUR BACKEND
-        API_URL: 'http://localhost/BTL_LTW/BTL_LTW_BE/index.php',
+        API_URL: 'http://localhost/BE/NextPlay/index.php',
         
         // Alternative API URL (for older endpoints)
-        API_URL_ALT: 'http://localhost/BTL_LTW/BTL_LTW_BE',
+        API_URL_ALT: 'http://localhost/BE',
         
         // Frontend base URL
         FRONTEND_URL: 'http://localhost:3000',

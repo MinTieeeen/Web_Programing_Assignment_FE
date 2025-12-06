@@ -281,7 +281,7 @@ html {
     transform: scale(1.1);
 }
 
-.tq-game-card-body {
+.tq-card-body {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -291,14 +291,14 @@ html {
     z-index: 2;
 }
 
-.tq-game-card-title {
+.tq-card-title {
     font-size: 22px;
     font-weight: 700;
     color: white;
     margin: 0 0 8px 0;
 }
 
-.tq-game-card-text {
+.tq-card-text {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
     margin: 0;
