@@ -4,8 +4,8 @@
   // So we need to go up 2 levels to get to the root (public/)
   var scripts = document.getElementsByTagName('script');
   var scriptPath = scripts[scripts.length - 1].src;
-  // If loaded asynchronously, this might be wrong, but usually it's fine for this setup.
-  // Better way: look for the script by name
+  
+  // If loaded asynchronously, look for the script by name
   for(var i=0; i<scripts.length; i++) {
     if(scripts[i].src && scripts[i].src.indexOf('include-components.js') !== -1) {
       scriptPath = scripts[i].src;
@@ -16,7 +16,19 @@
   // scriptPath is like http://localhost/.../assets/js/include-components.js
   // We want http://localhost/.../
   var rootPath = scriptPath.replace(/\/assets\/js\/include-components\.js.*/, '/');
+  
+  // Fallback if regex fails (e.g. strange hosting setup)
+  if (rootPath === scriptPath || rootPath.indexOf('/assets/') > -1) {
+     var assetIdx = scriptPath.indexOf('/assets/');
+     if (assetIdx !== -1) {
+         rootPath = scriptPath.substring(0, assetIdx + 1);
+     } else {
+         rootPath = '/';
+     }
+  }
+
   window.APP_ROOT = rootPath;
+  console.log('[DEBUG] Root Path identified as:', rootPath);
 
   function include(selector, url){
     var el = document.querySelector(selector);
@@ -25,19 +37,19 @@
     // Remove leading slash if present to append to rootPath
     var relativeUrl = url.startsWith('/') ? url.substring(1) : url;
     var fullUrl = rootPath + relativeUrl;
+    
+    // console.log('[DEBUG] Fetching component:', fullUrl);
 
     fetch(fullUrl).then(function(r){
       if(!r.ok) throw new Error('Network response was not ok: ' + r.statusText);
       return r.text();
     }).then(function(html){
-      console.log('Included component:', selector);
+      // console.log('Included component:', selector);
+      
       // Fix relative links in the loaded HTML
-      // This is a simple regex fix for common attributes
-      // It replaces href="/" with href="rootPath"
-      // But we need to be careful not to break external links
-      // For now, let's just load the HTML. 
-      // The links in header.html are like /index.html, which are absolute to domain root.
-      // We need to fix them to be relative to rootPath.
+      // It replaces href="/" with href="rootPath" and src="/" with src="rootPath"
+      // This allows writing components with absolute paths like href="/products/" 
+      // which then get remapped to http://localhost/project/products/
       
       var fixedHtml = html.replace(/href="\//g, 'href="' + rootPath)
                           .replace(/src="\//g, 'src="' + rootPath);
@@ -62,6 +74,23 @@
       if(selector === '[data-include="header"]' && window.updateHeaderLoginStatus) {
         window.updateHeaderLoginStatus();
       }
+      
+      // Initialize/Refresh AOS animations if available
+      if (window.AOS) {
+          // If already initialized, refresh to find new elements
+          // If not, init() will work.
+          // AOS.refresh() might be safer if already running, but init() is usually idempotent-ish or safe to re-call for new content if configured right.
+          // Using setTimeout to ensure DOM render
+          setTimeout(function() { 
+              AOS.init({
+                  once: true,
+                  offset: 0,
+                  duration: 1000,
+              });
+              // Force refresh for dynamic content
+              AOS.refresh(); 
+          }, 100);
+      }
     }).catch(function(e){ console.error('Include error for ' + selector + ':', e); });
   }
 
@@ -75,9 +104,14 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
+  function init() {
     include('[data-include="header"]', 'components/header.html');
     include('[data-include="footer"]', 'components/footer.html');
-  });
-})();
+  }
 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
