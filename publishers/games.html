@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/publisher.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -65,13 +64,18 @@
                             <th>Game Name</th>
                             <th>Category</th>
                             <th>Price</th>
-                            <th>Sales</th>
-                            <th>Status</th>
+                            <th>Rating</th>
+                            <th>Reviews</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="games-table-body">
-                        <!-- Games will be injected here -->
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+                                <div style="margin-top: 10px;">Loading games...</div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -85,41 +89,46 @@
                 <h3 class="modal-title" id="modalTitle">Upload New Game</h3>
                 <button class="close-modal" onclick="closeGameModal()">&times;</button>
             </div>
-            <form id="gameForm" onsubmit="event.preventDefault(); closeGameModal(); alert('Game Saved (Mock)');">
+            <form id="gameForm" onsubmit="handleGameSubmit(event)">
+                <input type="hidden" id="gameId" name="gameId">
                 <div class="form-group">
                     <label class="form-label">Game Name</label>
-                    <input type="text" name="name" class="form-control" placeholder="Enter game name" required>
+                    <input type="text" name="name" id="gameName" class="form-control" placeholder="Enter game name"
+                        required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description</label>
-                    <textarea name="description" class="form-control" rows="3"
-                        placeholder="Game description"></textarea>
+                    <textarea name="description" id="gameDescription" class="form-control" rows="3"
+                        placeholder="Game description" required></textarea>
                 </div>
                 <div class="form-group">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div>
                             <label class="form-label">Price ($)</label>
-                            <input type="number" name="price" class="form-control" placeholder="0.00" step="0.01"
-                                required>
+                            <input type="number" name="price" id="gamePrice" class="form-control" placeholder="0.00"
+                                step="0.01" required>
                         </div>
                         <div>
                             <label class="form-label">Version</label>
-                            <input type="text" name="version" class="form-control" placeholder="1.0">
+                            <input type="text" name="version" id="gameVersion" class="form-control" placeholder="1.0"
+                                required>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Category</label>
-                    <select class="form-control">
-                        <option>Action</option>
-                        <option>Adventure</option>
-                        <option>RPG</option>
-                        <option>Strategy</option>
-                    </select>
+                    <input type="text" name="category" id="gameCategory" class="form-control"
+                        placeholder="e.g., Action, Adventure, RPG" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Thumbnail</label>
-                    <input type="file" class="form-control">
+                    <label class="form-label">Developer</label>
+                    <input type="text" name="developer" id="gameDeveloper" class="form-control"
+                        placeholder="Developer name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Thumbnail URL</label>
+                    <input type="url" name="thumbnail" id="gameThumbnail" class="form-control"
+                        placeholder="https://example.com/image.jpg">
                 </div>
                 <div style="text-align: right;">
                     <button type="button" class="btn btn-danger" onclick="closeGameModal()"
@@ -130,7 +139,255 @@
         </div>
     </div>
 
-    <script src="../assets/js/publisher.js"></script>
+    <style>
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: var(--glass-border);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--text-light);
+        }
+
+        .modal-content form {
+            padding: 20px;
+        }
+    </style>
+
+    <script>
+        const API_URL = window.ENV.API_URL;
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        let gamesData = [];
+
+        async function fetchGames() {
+            try {
+                const response = await fetch(`${API_URL}/games?publisher_id=${user.uid}`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+
+                if (data.status === 'success' && data.data) {
+                    gamesData = data.data;
+                    renderGames();
+                } else {
+                    showError('No games found');
+                }
+            } catch (error) {
+                console.error('Error fetching games:', error);
+                showError('Failed to load games');
+            }
+        }
+
+        function renderGames() {
+            const tableBody = document.getElementById('games-table-body');
+
+            if (gamesData.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                            <i class="fas fa-box-open" style="font-size: 48px; opacity: 0.3; margin-bottom: 10px;"></i>
+                            <div>No games found. Upload your first game!</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = gamesData.map(game => `
+                <tr>
+                    <td><img src="${game.thumbnail || 'https://via.placeholder.com/50'}" alt="${game.name}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;"></td>
+                    <td>
+                        <div style="font-weight: 600;">${game.name}</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">v${game.version || '1.0'}</div>
+                    </td>
+                    <td>${game.category || 'N/A'}</td>
+                    <td style="font-weight: 600;">$${parseFloat(game.price || 0).toFixed(2)}</td>
+                    <td>
+                        <div style="color: var(--warning);">
+                            <i class="fas fa-star"></i> ${parseFloat(game.rating || 0).toFixed(1)}
+                        </div>
+                    </td>
+                    <td>${game.reviews || 0} reviews</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editGame(${game.Gid})" style="margin-right: 5px;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteGame(${game.Gid})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showError(message) {
+            const tableBody = document.getElementById('games-table-body');
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 40px; color: var(--danger);">
+                        <i class="fas fa-exclamation-circle" style="font-size: 48px; margin-bottom: 10px;"></i>
+                        <div>${message}</div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        function openGameModal(gameId = null) {
+            const modal = document.getElementById('gameModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const form = document.getElementById('gameForm');
+
+            if (gameId) {
+                const game = gamesData.find(g => g.Gid === gameId);
+                if (game) {
+                    modalTitle.textContent = 'Edit Game';
+                    document.getElementById('gameId').value = game.Gid;
+                    document.getElementById('gameName').value = game.name;
+                    document.getElementById('gameDescription').value = game.description || '';
+                    document.getElementById('gamePrice').value = game.price;
+                    document.getElementById('gameVersion').value = game.version || '1.0';
+                    document.getElementById('gameCategory').value = game.category || '';
+                    document.getElementById('gameDeveloper').value = game.developer || '';
+                    document.getElementById('gameThumbnail').value = game.thumbnail || '';
+                }
+            } else {
+                modalTitle.textContent = 'Upload New Game';
+                form.reset();
+                document.getElementById('gameId').value = '';
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeGameModal() {
+            document.getElementById('gameModal').style.display = 'none';
+        }
+
+        function editGame(gameId) {
+            openGameModal(gameId);
+        }
+
+        async function deleteGame(gameId) {
+            if (!confirm('Are you sure you want to delete this game?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/games/${gameId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    alert('Game deleted successfully!');
+                    fetchGames();
+                } else {
+                    alert('Failed to delete game: ' + (data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error deleting game:', error);
+                alert('Failed to delete game');
+            }
+        }
+
+        async function handleGameSubmit(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const gameId = document.getElementById('gameId').value;
+            const formData = {
+                name: form.name.value,
+                description: form.description.value,
+                price: parseFloat(form.price.value),
+                version: form.version.value,
+                category: form.category.value,
+                developer: form.developer.value,
+                thumbnail: form.thumbnail.value,
+                publisher: user.uname,
+                publisherid: user.uid
+            };
+
+            try {
+                const url = gameId ? `${API_URL}/games/${gameId}` : `${API_URL}/games`;
+                const method = gameId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    alert(gameId ? 'Game updated successfully!' : 'Game created successfully!');
+                    closeGameModal();
+                    fetchGames();
+                } else {
+                    alert('Failed to save game: ' + (data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error saving game:', error);
+                alert('Failed to save game');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('gameModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeGameModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', fetchGames);
+    </script>
 </body>
 
 </html>

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +8,7 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
+  <link rel="stylesheet" href="../assets/css/toast.css">
   <link rel="stylesheet" href="../assets/css/register.css">
   <style>
     /* Override register.css with glassmorphism style matching register-publisher */
@@ -203,35 +203,34 @@
     <section class="register-card">
       <h1 class="register-title">Đăng ký tài khoản NextPlay</h1>
       <form class="register-form" id="register-form" novalidate>
-
         <div class="alert alert-danger d-none" id="register-error"></div>
 
         <div class="form-row">
           <div class="form-field">
             <label for="lastName" class="form-label">Họ</label>
-            <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Nhập họ" required>
+            <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Nhập họ" autocomplete="family-name" required>
           </div>
           <div class="form-field">
             <label for="firstName" class="form-label">Tên</label>
-            <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Nhập tên" required>
+            <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Nhập tên" autocomplete="given-name" required>
           </div>
         </div>
 
         <div class="form-field">
           <label for="email" class="form-label">Email</label>
-          <input type="email" id="email" name="email" class="form-control" placeholder="name@example.com" required>
+          <input type="email" id="email" name="email" class="form-control" placeholder="name@example.com" autocomplete="email" required>
         </div>
 
         <div class="form-field">
           <label for="username" class="form-label">Tên người dùng</label>
-          <input type="text" id="username" name="username" class="form-control" placeholder="Nhập tên người dùng"
+          <input type="text" id="username" name="username" class="form-control" placeholder="Nhập tên người dùng" autocomplete="username"
             required>
         </div>
 
         <div class="form-field">
           <label for="password" class="form-label">Mật khẩu</label>
           <div class="password-wrapper">
-            <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu"
+            <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu" autocomplete="new-password"
               required minlength="6">
             <svg class="toggle-password-svg" data-target="password" xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -250,7 +249,7 @@
           <label for="confirm_password" class="form-label">Xác nhận mật khẩu</label>
           <div class="password-wrapper">
             <input type="password" id="confirm_password" name="confirm_password" class="form-control"
-              placeholder="Nhập lại mật khẩu" required>
+              placeholder="Nhập lại mật khẩu" autocomplete="new-password" required>
             <svg class="toggle-password-svg" data-target="confirm_password" xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
@@ -293,43 +292,85 @@
   <script src="../env.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/toast.js"></script>
   <script>
     document.getElementById('register-form').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const errorDiv = document.getElementById('register-error');
-      errorDiv.classList.add('d-none');
-      errorDiv.textContent = '';
-
+      // Get values
+      const lastName = document.getElementById('lastName').value.trim();
+      const firstName = document.getElementById('firstName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirm_password').value;
+      const birthdate = document.getElementById('birthdate').value;
 
+      // Validate each field
+      if (!lastName) {
+        Toast.warning('Vui lòng nhập Họ');
+        document.getElementById('lastName').focus();
+        return;
+      }
+      if (!firstName) {
+        Toast.warning('Vui lòng nhập Tên');
+        document.getElementById('firstName').focus();
+        return;
+      }
+      if (!email) {
+        Toast.warning('Vui lòng nhập Email');
+        document.getElementById('email').focus();
+        return;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        Toast.warning('Email không hợp lệ');
+        document.getElementById('email').focus();
+        return;
+      }
+      if (!username) {
+        Toast.warning('Vui lòng nhập Tên đăng nhập');
+        document.getElementById('username').focus();
+        return;
+      }
+      if (!password) {
+        Toast.warning('Vui lòng nhập Mật khẩu');
+        document.getElementById('password').focus();
+        return;
+      }
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+      if (!passwordRegex.test(password)) {
+         Toast.warning('Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt');
+         document.getElementById('password').focus();
+         return;
+      }
+      if (!confirmPassword) {
+        Toast.warning('Vui lòng nhập lại mật khẩu');
+        document.getElementById('confirm_password').focus();
+        return;
+      }
       if (password !== confirmPassword) {
-        errorDiv.textContent = 'Mật khẩu xác nhận không khớp';
-        errorDiv.classList.remove('d-none');
+        Toast.warning('Mật khẩu xác nhận không khớp');
+        document.getElementById('confirm_password').focus();
+        return;
+      }
+      if (!birthdate) {
+        Toast.warning('Vui lòng chọn Ngày sinh');
+        document.getElementById('birthdate').focus();
         return;
       }
 
       const formData = {
-        lname: document.getElementById('lastName').value,
-        fname: document.getElementById('firstName').value,
-        email: document.getElementById('email').value,
-        uname: document.getElementById('username').value,
+        lname: lastName,
+        fname: firstName,
+        email: email,
+        uname: username,
         password: password,
-        DOB: document.getElementById('birthdate').value
+        DOB: birthdate
       };
 
       try {
-<<<<<<< HEAD
-        const apiUrl = 'http://localhost/BE/NextPlay/index.php';
+        const apiUrl = window.ENV.API_URL;
         const response = await fetch(`${apiUrl}/users/register`, {
-=======
-        // Ensure ENV is loaded
-        if (!window.ENV || !window.ENV.API_URL) {
-            throw new Error('ENV not loaded! Make sure env.js is included.');
-        }
-        const API_URL = window.ENV.API_URL;
-        const response = await fetch(`${API_URL}/users/register`, {
->>>>>>> c45c01909a526a887f9fedb6a309ccaf78602a96
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -341,16 +382,16 @@
         const data = await response.json();
 
         if (data.status === 'success') {
-          alert('Đăng ký thành công! Vui lòng đăng nhập.');
-          window.location.href = 'login.html';
+          Toast.success('Đăng ký thành công! Vui lòng đăng nhập.');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1500);
         } else {
-          errorDiv.textContent = data.message || 'Đăng ký thất bại';
-          errorDiv.classList.remove('d-none');
+          Toast.error(data.message || 'Đăng ký thất bại');
         }
       } catch (err) {
         console.error(err);
-        errorDiv.textContent = 'Có lỗi xảy ra. Vui lòng thử lại.';
-        errorDiv.classList.remove('d-none');
+        Toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
       }
     });
 

@@ -532,3 +532,25 @@
     color: var(--accent-color);
     border-bottom: 2px solid var(--accent-color);
 }
+
+/* Avatar Loading Overlay */
+.avatar-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    backdrop-filter: blur(2px);
+}
+
+.avatar-loading .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.25em;
+}

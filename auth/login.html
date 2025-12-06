@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +9,7 @@
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
   <link rel="stylesheet" href="../assets/css/register.css">
+  <link rel="stylesheet" href="../assets/css/toast.css">
   <style>
     .password-wrapper {
       position: relative;
@@ -41,7 +41,6 @@
     <section class="register-card">
       <h1 class="register-title">Đăng nhập NextPlay</h1>
       <form class="register-form" id="login-form" novalidate>
-
         <div class="alert alert-danger d-none" id="login-error"></div>
 
         <div class="form-field">
@@ -73,7 +72,6 @@
 
         <div class="mt-3 text-center">
           <a href="../auth/register.html" class="text-white">Chưa có tài khoản? Đăng ký ngay</a>
-          
         </div>
       </form>
     </section>
@@ -85,53 +83,28 @@
   <script src="../env.js"></script>
   <script src="../assets/js/include-components.js"></script>
   <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/toast.js"></script>
   <script>
-    // Ensure ENV is loaded
-    if (!window.ENV || !window.ENV.API_URL) {
-        document.body.innerHTML = '<div class="alert alert-danger m-5"><h4>Configuration Error</h4><p>ENV not loaded! Make sure env.js is included and API_URL is configured.</p></div>';
-        throw new Error('[auth/login.html] ENV not loaded!');
-    }
-    const API_URL = window.ENV.API_URL;
-
-// Check if user is admin by querying backend Admin table
-async function checkIfUserIsAdmin(uid) {
-  try {
-    const response = await fetch(`${API_URL}/admin/check/${uid}`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      return data.status === 'success' && data.isAdmin;
-    }
-    return false;
-  } catch (error) {
-    console.error('Admin check error:', error);
-    return false;
-  }
-}
-
-    document.getElementById('login-form').addEventListener('submit', async function(e) {
+    document.getElementById('login-form').addEventListener('submit', async function (e) {
       e.preventDefault();
       const errorDiv = document.getElementById('login-error');
-      errorDiv.classList.add('d-none');
-      errorDiv.textContent = '';
+      if(errorDiv) errorDiv.classList.add('d-none');
 
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
 
       if (!username || !password) {
-        errorDiv.textContent = 'Vui lòng nhập đầy đủ thông tin';
-        errorDiv.classList.remove('d-none');
+        if (typeof Toast !== 'undefined') {
+            Toast.warning('Vui lòng nhập đầy đủ thông tin');
+        } else {
+            alert('Vui lòng nhập đầy đủ thông tin');
+        }
         return;
       }
 
       try {
-        const response = await fetch(`${API_URL}/users/signin`, {
+        const apiUrl = window.ENV.API_URL;
+        const response = await fetch(`${apiUrl}/users/signin`, {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -145,9 +118,40 @@ async function checkIfUserIsAdmin(uid) {
 
         // Check if response is ok and content type is JSON
         if (!response.ok) {
-          const responseText = await response.text();
-          console.error('HTTP Error:', response.status, responseText);
-          throw new Error(`Server error: ${response.status}`);
+          let errorMessage = `Lỗi máy chủ: ${response.status}`;
+          try {
+             const errorData = await response.json();
+             if (errorData.message) {
+                 // Translate common error messages
+                 if (errorData.message === 'Invalid username or password') {
+                     errorMessage = 'Tên đăng nhập hoặc mật khẩu không chính xác';
+                 } else if (errorData.message === 'Username and password are required') {
+                     errorMessage = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu';
+                 } else if (errorData.message.includes('Remaining attempts')) {
+                     const match = errorData.message.match(/Remaining attempts: (\d+)/);
+                     if (match) {
+                         errorMessage = `Tên đăng nhập hoặc mật khẩu không chính xác. Bạn còn ${match[1]} lần thử.`;
+                     } else {
+                         errorMessage = 'Tên đăng nhập hoặc mật khẩu không chính xác';
+                     }
+                 } else if (errorData.message.includes('Account is now locked')) {
+                     errorMessage = 'Tài khoản đã bị khóa do đăng nhập sai quá nhiều lần. Vui lòng thử lại sau 15 phút.';
+                 } else if (errorData.message.includes('Account is locked')) {
+                     const match = errorData.message.match(/in (\d+) minutes/);
+                     if (match) {
+                        errorMessage = `Tài khoản đang bị khóa. Vui lòng thử lại sau ${match[1]} phút.`;
+                     } else {
+                        errorMessage = 'Tài khoản đang bị khóa. Vui lòng thử lại sau.';
+                     }
+                 } else {
+                     errorMessage = errorData.message;
+                 }
+             }
+          } catch (e) {
+             // If not JSON, use default message
+             console.error('Could not parse error response', e);
+          }
+          throw new Error(errorMessage);
         }
 
         // Check if response is JSON
@@ -155,12 +159,16 @@ async function checkIfUserIsAdmin(uid) {
         if (!contentType || !contentType.includes('application/json')) {
           const responseText = await response.text();
           console.error('Non-JSON response:', responseText);
-          throw new Error('Server returned non-JSON response');
+          throw new Error('Lỗi định dạng phản hồi từ máy chủ');
         }
 
         const data = await response.json();
 
         if (data.status === 'success') {
+          if (typeof Toast !== 'undefined') {
+            Toast.success('Đăng nhập thành công!');
+          }
+          
           // Check if user is admin by querying backend
           const isAdmin = await checkIfUserIsAdmin(data.user.uid);
           
@@ -190,38 +198,53 @@ async function checkIfUserIsAdmin(uid) {
           }
           
           // Redirect to home page
-          window.location.href = (window.APP_ROOT || '../') + 'index.html';
+          setTimeout(() => {
+             window.location.href = (window.APP_ROOT || '../') + 'index.html';
+          }, 1000);
         } else {
-          errorDiv.textContent = data.message || 'Đăng nhập thất bại';
-          errorDiv.classList.remove('d-none');
+          if (typeof Toast !== 'undefined') {
+            Toast.error(data.message || 'Đăng nhập thất bại');
+          } else {
+             alert(data.message || 'Đăng nhập thất bại');
+          }
         }
       } catch (error) {
         console.error('Login error:', error);
-        // Show detailed error message to user
-        let errorMessage = 'Có lỗi xảy ra khi đăng nhập: ';
-        if (error.message.includes('Server error')) {
-          errorMessage += 'Máy chủ trả về lỗi. Kiểm tra console để xem chi tiết.';
-        } else if (error.message.includes('non-JSON response')) {
-          errorMessage += 'Lỗi định dạng phản hồi từ máy chủ. Kiểm tra console để xem chi tiết.';
-        } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
-          errorMessage += 'Không thể kết nối với máy chủ. Đảm bảo XAMPP đang chạy.';
-        } else {
-          errorMessage += error.message;
+        
+        let displayMessage = error.message;
+        
+        // Handle specific network errors
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            displayMessage = 'Không thể kết nối với máy chủ. Vui lòng kiểm tra kết nối mạng hoặc thử lại sau.';
         }
-        errorDiv.textContent = errorMessage;
-        errorDiv.classList.remove('d-none');
+        
+        if (typeof Toast !== 'undefined') {
+            Toast.error(displayMessage);
+        } else {
+            alert(displayMessage);
+        }
       }
     });
 
-    // Check if user is already logged in
-    document.addEventListener('DOMContentLoaded', function() {
-      const userStr = localStorage.getItem('user');
-      if (userStr) {
-        // User is already logged in, redirect to home
-        window.location.href = (window.APP_ROOT || '../') + 'index.html';
-      }
+    // Password toggle functionality
+    document.querySelectorAll('.toggle-password-svg').forEach(toggle => {
+      toggle.addEventListener('click', function () {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        const eyeOpen = this.querySelectorAll('.eye-open');
+        const eyeClosed = this.querySelectorAll('.eye-closed');
+
+        if (input.type === 'password') {
+          input.type = 'text';
+          eyeOpen.forEach(el => el.style.display = 'none');
+          eyeClosed.forEach(el => el.style.display = 'block');
+        } else {
+          input.type = 'password';
+          eyeOpen.forEach(el => el.style.display = 'block');
+          eyeClosed.forEach(el => el.style.display = 'none');
+        }
+      });
     });
   </script>
 </body>
-
 </html>
