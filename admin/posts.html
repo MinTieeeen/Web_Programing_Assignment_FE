@@ -3,228 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categories Management - Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="../assets/css/admin-dashboard.css" rel="stylesheet">
+    <title>Categories - NextPlay Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>@import url('https://rsms.me/inter/inter.css');</style>
 </head>
-<body>
-    <!-- Sidebar Container -->
-    <div id="sidebarContainer">
-        <!-- Sidebar will be loaded here -->
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content" id="main-content">
-        <!-- Navbar Container -->
-        <div id="navbarContainer">
-            <!-- Navbar will be loaded here -->
-        </div>
-
-        <div class="container-fluid p-4">
-            <!-- Page Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Game Categories Management</h2>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-                    <i class="bi bi-plus-circle"></i> Add New Category
-                </button>
+<body class="layout-fluid">
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
+    <div class="page">
+        <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu"><span class="navbar-toggler-icon"></span></button>
+                <h1 class="navbar-brand navbar-brand-autodark"><a href="/admin/index.html"><i class="ti ti-device-gamepad-2 me-2"></i><span>NextPlay Admin</span></a></h1>
+                <div class="collapse navbar-collapse" id="sidebar-menu">
+                    <ul class="navbar-nav pt-lg-3">
+                        <li class="nav-item"><a class="nav-link" href="/admin/index.html"><span class="nav-link-icon"><i class="ti ti-home"></i></span><span class="nav-link-title">Dashboard</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/users.html"><span class="nav-link-icon"><i class="ti ti-users"></i></span><span class="nav-link-title">Users</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/admin-users.html"><span class="nav-link-icon"><i class="ti ti-shield-check"></i></span><span class="nav-link-title">Admins</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/products.html"><span class="nav-link-icon"><i class="ti ti-device-gamepad-2"></i></span><span class="nav-link-title">Games</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/orders.html"><span class="nav-link-icon"><i class="ti ti-shopping-cart"></i></span><span class="nav-link-title">Orders</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/comments.html"><span class="nav-link-icon"><i class="ti ti-message-circle"></i></span><span class="nav-link-title">Reviews</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/contacts.html"><span class="nav-link-icon"><i class="ti ti-building"></i></span><span class="nav-link-title">Publishers</span></a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/admin/posts.html"><span class="nav-link-icon"><i class="ti ti-category"></i></span><span class="nav-link-title">Categories</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/faqs.html"><span class="nav-link-icon"><i class="ti ti-help"></i></span><span class="nav-link-title">FAQs</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/news.html"><span class="nav-link-icon"><i class="ti ti-news"></i></span><span class="nav-link-title">News</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/feedback.html"><span class="nav-link-icon"><i class="ti ti-star"></i></span><span class="nav-link-title">Feedback</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/settings.html"><span class="nav-link-icon"><i class="ti ti-settings"></i></span><span class="nav-link-title">Settings</span></a></li>
+                        <li class="nav-item mt-auto"><a class="nav-link text-danger" href="#" onclick="logout()"><span class="nav-link-icon"><i class="ti ti-logout"></i></span><span class="nav-link-title">Logout</span></a></li>
+                    </ul>
+                </div>
             </div>
-
-            <!-- Stats Cards -->
-            <div class="row mb-4">
-                <div class="col-lg-3 col-md-6">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-tags fa-2x"></i>
-                                <div class="ms-3">
-                                    <div class="small">Total Categories</div>
-                                    <div class="h4" id="totalCategories">24</div>
-                                </div>
+        </aside>
+        <div class="page-wrapper">
+            <header class="navbar navbar-expand-md d-none d-lg-flex d-print-none">
+                <div class="container-xl">
+                    <div class="navbar-nav flex-row order-md-last">
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown">
+                                <span class="avatar avatar-sm bg-primary" id="userAvatar">A</span>
+                                <div class="d-none d-xl-block ps-2"><div id="userName">Admin</div><div class="mt-1 small text-muted">Administrator</div></div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <a href="/admin/settings.html" class="dropdown-item"><i class="ti ti-settings me-2"></i>Settings</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item text-danger" onclick="logout()"><i class="ti ti-logout me-2"></i>Logout</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card bg-success text-white">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-check-circle fa-2x"></i>
-                                <div class="ms-3">
-                                    <div class="small">Active Categories</div>
-                                    <div class="h4" id="activeCategories">22</div>
-                                </div>
-                            </div>
+            </header>
+            <div class="page-header d-print-none">
+                <div class="container-xl">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="page-pretitle">Management</div>
+                            <h2 class="page-title">Categories</h2>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card bg-info text-white">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-joystick fa-2x"></i>
-                                <div class="ms-3">
-                                    <div class="small">Games in Categories</div>
-                                    <div class="h4" id="gamesInCategories">1,234</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card bg-warning text-white">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-star fa-2x"></i>
-                                <div class="ms-3">
-                                    <div class="small">Top Category</div>
-                                    <div class="h4 small" id="topCategory">Action</div>
-                                </div>
-                            </div>
+                        <div class="col-auto ms-auto">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal"><i class="ti ti-plus me-2"></i>Add Category</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Categories Grid -->
-            <div class="row" id="categoriesGrid">
-                <!-- Categories will be loaded dynamically -->
-            </div>
-
-            <!-- Categories Table -->
-            <div class="card shadow mt-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Categories List</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <input type="text" class="form-control" id="searchCategory" placeholder="Search categories...">
+            <div class="page-body">
+                <div class="container-xl">
+                    <!-- Stats -->
+                    <div class="row row-deck row-cards mb-3">
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto"><span class="bg-primary text-white avatar"><i class="ti ti-category"></i></span></div>
+                                        <div class="col"><div class="font-weight-medium" id="totalCategories">0</div><div class="text-muted">Total Categories</div></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <select class="form-select" id="statusFilter">
-                                <option value="">All Status</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto"><span class="bg-green text-white avatar"><i class="ti ti-device-gamepad-2"></i></span></div>
+                                        <div class="col"><div class="font-weight-medium" id="totalGames">0</div><div class="text-muted">Total Games</div></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-outline-secondary" onclick="resetFilters()">
-                                <i class="bi bi-arrow-clockwise"></i> Reset Filters
-                            </button>
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto"><span class="bg-azure text-white avatar"><i class="ti ti-chart-bar"></i></span></div>
+                                        <div class="col"><div class="font-weight-medium" id="avgGames">0</div><div class="text-muted">Avg Games/Category</div></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="table-responsive">
-                        <table class="table table-striped" id="categoriesTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Games Count</th>
-                                    <th>Status</th>
-                                    <th>Created Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Dynamic content -->
-                            </tbody>
-                        </table>
+                    <!-- Categories Grid -->
+                    <div class="row row-cards" id="categoriesGrid">
+                        <div class="col-12 text-center text-muted py-5">Loading...</div>
                     </div>
                 </div>
             </div>
+            <footer class="footer footer-transparent d-print-none"><div class="container-xl"><div class="text-center">Copyright &copy; 2024 NextPlay.</div></div></footer>
         </div>
     </div>
 
     <!-- Add Category Modal -->
-    <div class="modal fade" id="addCategoryModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New Category</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addCategoryForm">
-                        <div class="mb-3">
-                            <label for="categoryName" class="form-label">Category Name</label>
-                            <input type="text" class="form-control" id="categoryName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="categoryDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="categoryDescription" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="categoryIcon" class="form-label">Icon Class (Bootstrap Icons)</label>
-                            <input type="text" class="form-control" id="categoryIcon" placeholder="bi-joystick">
-                        </div>
-                        <div class="mb-3">
-                            <label for="categoryColor" class="form-label">Color</label>
-                            <input type="color" class="form-control" id="categoryColor" value="#007bff">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="saveCategory()">Save Category</button>
-                </div>
+    <div class="modal modal-blur fade" id="addCategoryModal" tabindex="-1">
+        <div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Add Category</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <form id="addCategoryForm">
+                    <div class="mb-3"><label class="form-label">Name *</label><input type="text" class="form-control" name="name" required></div>
+                    <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="3"></textarea></div>
+                </form>
             </div>
-        </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addCategory()">Add Category</button>
+            </div>
+        </div></div>
     </div>
 
     <!-- Edit Category Modal -->
-    <div class="modal fade" id="editCategoryModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Category</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editCategoryForm">
-                        <input type="hidden" id="editCategoryId">
-                        <div class="mb-3">
-                            <label for="editCategoryName" class="form-label">Category Name</label>
-                            <input type="text" class="form-control" id="editCategoryName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editCategoryDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="editCategoryDescription" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editCategoryIcon" class="form-label">Icon Class (Bootstrap Icons)</label>
-                            <input type="text" class="form-control" id="editCategoryIcon" placeholder="bi-joystick">
-                        </div>
-                        <div class="mb-3">
-                            <label for="editCategoryColor" class="form-label">Color</label>
-                            <input type="color" class="form-control" id="editCategoryColor">
-                        </div>
-                        <div class="mb-3">
-                            <label for="editCategoryStatus" class="form-label">Status</label>
-                            <select class="form-select" id="editCategoryStatus">
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="updateCategory()">Update Category</button>
-                </div>
+    <div class="modal modal-blur fade" id="editCategoryModal" tabindex="-1">
+        <div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Edit Category</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <form id="editCategoryForm">
+                    <input type="hidden" name="catId" id="editCategoryId">
+                    <div class="mb-3"><label class="form-label">Name *</label><input type="text" class="form-control" name="name" id="editCategoryName" required></div>
+                    <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" name="description" id="editCategoryDescription" rows="3"></textarea></div>
+                </form>
             </div>
-        </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateCategory()">Save Changes</button>
+            </div>
+        </div></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- View Category Modal -->
+    <div class="modal modal-blur fade" id="viewCategoryModal" tabindex="-1">
+        <div class="modal-dialog modal-lg"><div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Category Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body" id="viewCategoryBody"></div>
+        </div></div>
+    </div>
+
     <script src="../env.js"></script>
-    <script src="../assets/js/admin/utils.js"></script>
-    <script src="../assets/js/admin/components.js"></script>
     <script>
-        // Initialize components
-        AdminComponents.init('posts');
+        const API_BASE_URL = window.ENV?.API_URL || '';
+        let categories = [], games = [];
+        const colors = ['bg-primary', 'bg-azure', 'bg-success', 'bg-warning', 'bg-danger', 'bg-purple', 'bg-pink', 'bg-teal', 'bg-indigo', 'bg-lime'];
+        
+        function logout() { 
+            fetch(`${API_BASE_URL}/users/logout`, { method: 'POST', credentials: 'include' })
+            .finally(() => window.location.href = '/admin/login.html'); 
+        }
+
+        async function loadData() {
+            try {
+                const [catRes, gamesRes] = await Promise.all([
+                    fetch(`${API_BASE_URL}/categories`, { credentials: 'include' }),
+                    fetch(`${API_BASE_URL}/games`, { credentials: 'include' })
+                ]);
+                const catData = await catRes.json();
+                const gamesData = await gamesRes.json();
+                
+                if (catData.status === 'success') categories = catData.data || [];
+                if (gamesData.status === 'success') games = gamesData.data || [];
+                
+                updateStats();
+                renderCategories();
+            } catch (e) { console.error(e); }
+        }
+
+        function updateStats() {
+            document.getElementById('totalCategories').textContent = categories.length;
+            document.getElementById('totalGames').textContent = games.length;
+            const avg = categories.length > 0 ? (games.length / categories.length).toFixed(1) : 0;
+            document.getElementById('avgGames').textContent = avg;
+        }
+
+        function renderCategories() {
+            const grid = document.getElementById('categoriesGrid');
+            if (categories.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center text-muted py-5">No categories found</div>';
+                return;
+            }
+            
+            grid.innerHTML = categories.map((c, i) => {
+                const gameCount = games.filter(g => g.category === c.name).length;
+                const color = colors[i % colors.length];
+                return `
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span class="${color} text-white avatar avatar-lg">
+                                            <i class="ti ti-category"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">${c.name}</div>
+                                        <div class="text-muted">${gameCount} games</div>
+                                    </div>
+                                </div>
+                                ${c.description ? `<p class="text-muted small mt-2 mb-0" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.description}</p>` : ''}
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary flex-fill" onclick="viewCategory(${c.catId})">
+                                        <i class="ti ti-eye me-1"></i>View
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" onclick="editCategory(${c.catId})" title="Edit">
+                                        <i class="ti ti-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteCategory(${c.catId})" title="Delete">
+                                        <i class="ti ti-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function addCategory() {
+            const form = document.getElementById('addCategoryForm');
+            const data = Object.fromEntries(new FormData(form));
+            try {
+                const res = await fetch(`${API_BASE_URL}/categories`, {
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include', 
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    bootstrap.Modal.getInstance(document.getElementById('addCategoryModal')).hide();
+                    form.reset();
+                    loadData();
+                    alert('Category added successfully!');
+                } else {
+                    alert(result.message || 'Error adding category');
+                }
+            } catch (e) { 
+                console.error(e); 
+                alert('Error adding category');
+            }
+        }
+
+        function viewCategory(catId) {
+            const cat = categories.find(c => c.catId === catId);
+            if (!cat) return;
+            
+            const catGames = games.filter(g => g.category === cat.name);
+            
+            document.getElementById('viewCategoryBody').innerHTML = `
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center mb-3">
+                            <span class="avatar avatar-xl bg-primary text-white">
+                                <i class="ti ti-category" style="font-size: 2rem;"></i>
+                            </span>
+                        </div>
+                        <h3 class="text-center">${cat.name}</h3>
+                        <p class="text-center text-muted">${cat.description || 'No description'}</p>
+                        <hr>
+                        <div class="text-center">
+                            <span class="badge bg-primary fs-5">${catGames.length} games</span>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h5>Games in this category</h5>
+                        <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+                            ${catGames.length > 0 ? catGames.map(g => `
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="font-weight-medium">${g.name}</div>
+                                        <div class="text-muted small">${g.description ? g.description.substring(0, 50) + '...' : 'No description'}</div>
+                                    </div>
+                                    <span class="badge bg-success">${formatCurrency(g.price)}</span>
+                                </div>
+                            `).join('') : '<div class="list-group-item text-muted">No games in this category</div>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+            new bootstrap.Modal(document.getElementById('viewCategoryModal')).show();
+        }
+
+        function editCategory(catId) {
+            const cat = categories.find(c => c.catId === catId);
+            if (!cat) return;
+            
+            document.getElementById('editCategoryId').value = cat.catId;
+            document.getElementById('editCategoryName').value = cat.name || '';
+            document.getElementById('editCategoryDescription').value = cat.description || '';
+            
+            new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
+        }
+
+        async function updateCategory() {
+            const form = document.getElementById('editCategoryForm');
+            const data = Object.fromEntries(new FormData(form));
+            const catId = data.catId;
+            
+            try {
+                const res = await fetch(`${API_BASE_URL}/categories/${catId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    bootstrap.Modal.getInstance(document.getElementById('editCategoryModal')).hide();
+                    loadData();
+                    alert('Category updated successfully!');
+                } else {
+                    alert(result.message || 'Error updating category');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Error updating category');
+            }
+        }
+
+        async function deleteCategory(catId) {
+            const cat = categories.find(c => c.catId === catId);
+            const gameCount = games.filter(g => g.category === cat?.name).length;
+            
+            if (gameCount > 0) {
+                alert(`Cannot delete this category. It has ${gameCount} games associated with it.`);
+                return;
+            }
+            
+            if (!confirm(`Are you sure you want to delete "${cat?.name}"?`)) return;
+            
+            try {
+                const res = await fetch(`${API_BASE_URL}/categories/${catId}`, { 
+                    method: 'DELETE', 
+                    credentials: 'include' 
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    loadData();
+                    alert('Category deleted successfully!');
+                } else {
+                    alert(result.message || 'Error deleting category');
+                }
+            } catch (e) { 
+                console.error(e); 
+                alert('Error deleting category');
+            }
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
