@@ -10,6 +10,7 @@
 </head>
 <body class="layout-fluid">
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <div class="page">
         <!-- Sidebar -->
@@ -251,7 +252,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Date of Birth</label>
-                                <input type="date" class="form-control" name="dob" id="editDob">
+                                <input type="date" class="form-control" name="DOB" id="editDob">
                             </div>
                         </div>
                     </form>
@@ -259,6 +260,59 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" onclick="updateUser()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View User Modal -->
+    <div class="modal modal-blur fade" id="viewUserModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">User Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-4">
+                        <div class="col-auto">
+                            <span class="avatar avatar-xl" id="viewUserAvatar">U</span>
+                        </div>
+                        <div class="col">
+                            <h3 class="mb-1" id="viewUserName">Username</h3>
+                            <div class="text-muted" id="viewUserEmail">email@example.com</div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">User ID</label>
+                            <div class="form-control-plaintext" id="viewUserId">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Full Name</label>
+                            <div class="form-control-plaintext" id="viewUserFullName">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Date of Birth</label>
+                            <div class="form-control-plaintext" id="viewUserDob">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Balance</label>
+                            <div class="form-control-plaintext" id="viewUserBalance">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Status</label>
+                            <div class="form-control-plaintext" id="viewUserStatus">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Created At</label>
+                            <div class="form-control-plaintext" id="viewUserCreated">-</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="viewUserEditBtn">Edit User</button>
                 </div>
             </div>
         </div>
@@ -335,13 +389,14 @@
                     ? '<span class="badge bg-danger">Locked</span>' 
                     : '<span class="badge bg-success">Active</span>';
                 
+                const avatarUrl = user.avatar && user.avatar.startsWith('http') ? user.avatar : '';
                 return `
                 <tr>
                     <td class="text-muted">${user.uid}</td>
                     <td>
                         <div class="d-flex align-items-center">
-                            <span class="avatar avatar-sm me-2" style="background-image: url('${user.avatar || ''}')">
-                                ${!user.avatar ? (user.uname || 'U')[0].toUpperCase() : ''}
+                            <span class="avatar avatar-sm me-2" style="background-image: url('${avatarUrl}')">
+                                ${!avatarUrl ? (user.uname || 'U')[0].toUpperCase() : ''}
                             </span>
                             <div>
                                 <div class="font-weight-medium">${user.uname || 'N/A'}</div>
@@ -355,10 +410,13 @@
                     <td>${statusBadge}</td>
                     <td>
                         <div class="btn-list flex-nowrap">
-                            <button class="btn btn-sm btn-primary" onclick="editUser(${user.uid})">
+                            <button class="btn btn-sm btn-info" onclick="viewUser(${user.uid})" title="View">
+                                <i class="ti ti-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="editUser(${user.uid})" title="Edit">
                                 <i class="ti ti-edit"></i>
                             </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.uid})">
+                            <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.uid})" title="Delete">
                                 <i class="ti ti-trash"></i>
                             </button>
                         </div>
@@ -436,7 +494,7 @@
         }
 
         function editUser(uid) {
-            const user = allUsers.find(u => u.uid === uid);
+            const user = allUsers.find(u => u.uid == uid);
             if (!user) return;
 
             document.getElementById('editUserId').value = user.uid;
@@ -445,9 +503,42 @@
             document.getElementById('editFirstName').value = user.fname || '';
             document.getElementById('editLastName').value = user.lname || '';
             document.getElementById('editBalance').value = user.balance || 0;
-            document.getElementById('editDob').value = user.dob || '';
+            document.getElementById('editDob').value = user.DOB || '';
 
             new bootstrap.Modal(document.getElementById('editUserModal')).show();
+        }
+
+        function viewUser(uid) {
+            const user = allUsers.find(u => u.uid == uid);
+            if (!user) return;
+
+            const isLocked = user.lockout_time && new Date(user.lockout_time) > new Date();
+            
+            document.getElementById('viewUserAvatar').textContent = (user.uname || 'U')[0].toUpperCase();
+            const avatarUrl = user.avatar && user.avatar.startsWith('http') ? user.avatar : '';
+            if (avatarUrl) {
+                document.getElementById('viewUserAvatar').style.backgroundImage = `url('${avatarUrl}')`;
+                document.getElementById('viewUserAvatar').textContent = '';
+            } else {
+                document.getElementById('viewUserAvatar').style.backgroundImage = '';
+            }
+            document.getElementById('viewUserName').textContent = user.uname || 'N/A';
+            document.getElementById('viewUserEmail').textContent = user.email || 'N/A';
+            document.getElementById('viewUserId').textContent = user.uid;
+            document.getElementById('viewUserFullName').textContent = `${user.fname || ''} ${user.lname || ''}`.trim() || 'N/A';
+            document.getElementById('viewUserDob').textContent = formatDate(user.DOB);
+            document.getElementById('viewUserBalance').textContent = formatCurrency(user.balance);
+            document.getElementById('viewUserStatus').innerHTML = isLocked 
+                ? '<span class="badge bg-danger">Locked</span>' 
+                : '<span class="badge bg-success">Active</span>';
+            document.getElementById('viewUserCreated').textContent = formatDate(user.created_at);
+            
+            document.getElementById('viewUserEditBtn').onclick = () => {
+                bootstrap.Modal.getInstance(document.getElementById('viewUserModal')).hide();
+                editUser(uid);
+            };
+
+            new bootstrap.Modal(document.getElementById('viewUserModal')).show();
         }
 
         async function updateUser() {
@@ -456,6 +547,8 @@
             const data = Object.fromEntries(formData);
             const uid = data.uid;
 
+            console.log('Updating user:', uid, 'with data:', data);
+
             try {
                 const response = await fetch(`${API_BASE_URL}/users/${uid}`, {
                     method: 'PUT',
@@ -463,9 +556,14 @@
                     credentials: 'include',
                     body: JSON.stringify(data)
                 });
-                const result = await response.json();
                 
-                if (result.status === 'success') {
+                console.log('Response status:', response.status);
+                const text = await response.text();
+                console.log('Response text:', text);
+                
+                const result = text ? JSON.parse(text) : { status: response.ok ? 'success' : 'error' };
+                
+                if (result.status === 'success' || response.ok) {
                     bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
                     loadUsers();
                     alert('User updated successfully!');
@@ -486,9 +584,10 @@
                     method: 'DELETE',
                     credentials: 'include'
                 });
-                const result = await response.json();
+                const text = await response.text();
+                const result = text ? JSON.parse(text) : { status: response.ok ? 'success' : 'error' };
                 
-                if (result.status === 'success') {
+                if (result.status === 'success' || response.ok) {
                     loadUsers();
                     alert('User deleted successfully!');
                 } else {

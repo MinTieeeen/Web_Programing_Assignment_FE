@@ -13,6 +13,7 @@
 </head>
 <body class="layout-fluid">
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <div class="page">
         <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
             <div class="container-fluid">
@@ -166,6 +167,42 @@
         </div></div>
     </div>
 
+    <!-- View News Modal -->
+    <div class="modal modal-blur fade" id="viewNewsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg"><div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">News Article Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <img id="viewNewsThumbnail" src="" class="img-fluid rounded mb-3" style="max-height: 300px; width: 100%; object-fit: cover;" onerror="this.style.display='none'">
+                </div>
+                <h3 id="viewNewsTitle" class="mb-2">Title</h3>
+                <div class="d-flex gap-3 mb-3">
+                    <span class="badge bg-azure-lt" id="viewNewsCategory">Category</span>
+                    <span class="text-muted"><i class="ti ti-eye me-1"></i><span id="viewNewsViews">0</span> views</span>
+                    <span class="text-muted"><i class="ti ti-calendar me-1"></i><span id="viewNewsDate">Date</span></span>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <span class="avatar avatar-sm me-2" id="viewNewsAuthorAvatar">A</span>
+                    <div>
+                        <div class="small text-muted">Author</div>
+                        <div id="viewNewsAuthor">Unknown</div>
+                    </div>
+                </div>
+                <hr>
+                <div id="viewNewsContent" style="white-space: pre-wrap;">Content</div>
+                <hr>
+                <div class="row g-3 text-muted small">
+                    <div class="col-md-6"><strong>Source:</strong> <span id="viewNewsSource">-</span></div>
+                    <div class="col-md-6"><strong>ID:</strong> <span id="viewNewsId">-</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="viewNewsEditBtn">Edit Article</button>
+            </div>
+        </div></div>
+    </div>
+
     <script src="../env.js"></script>
     <script>
         const API_BASE_URL = window.ENV?.API_URL || '';
@@ -205,7 +242,7 @@
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            <img src="${news.thumbnail || '/assets/images/placeholder.jpg'}" class="news-thumb me-3" onerror="this.src='/assets/images/placeholder.jpg'">
+                            <img src="${news.thumbnail || 'https://placehold.co/120x80?text=No+Image'}" class="news-thumb me-3" onerror="this.onerror=null;this.src='https://placehold.co/120x80?text=No+Image'">
                             <div>
                                 <div class="font-weight-medium">${news.title}</div>
                                 <div class="text-muted small">ID: ${news.id}</div>
@@ -223,8 +260,9 @@
                     <td>${news.created_at ? new Date(news.created_at).toLocaleDateString() : 'N/A'}</td>
                     <td>
                         <div class="btn-list flex-nowrap">
-                            <button class="btn btn-sm btn-primary" onclick="editNews(${news.id})"><i class="ti ti-edit"></i></button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteNews(${news.id})"><i class="ti ti-trash"></i></button>
+                            <button class="btn btn-sm btn-info" onclick="viewNews(${news.id})" title="View"><i class="ti ti-eye"></i></button>
+                            <button class="btn btn-sm btn-primary" onclick="editNews(${news.id})" title="Edit"><i class="ti ti-edit"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteNews(${news.id})" title="Delete"><i class="ti ti-trash"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -259,8 +297,44 @@
             } catch (e) { console.error(e); alert('Error adding news'); }
         }
 
+        function viewNews(id) {
+            const news = newsList.find(n => n.id == id);
+            if (!news) return;
+            
+            const thumb = document.getElementById('viewNewsThumbnail');
+            if (news.thumbnail) {
+                thumb.src = news.thumbnail;
+                thumb.style.display = 'block';
+            } else {
+                thumb.style.display = 'none';
+            }
+            document.getElementById('viewNewsTitle').textContent = news.title || 'Untitled';
+            document.getElementById('viewNewsCategory').textContent = news.category || 'General';
+            document.getElementById('viewNewsViews').textContent = (news.views || 0).toLocaleString();
+            document.getElementById('viewNewsDate').textContent = news.created_at ? new Date(news.created_at).toLocaleDateString() : 'N/A';
+            document.getElementById('viewNewsAuthor').textContent = news.author_name || 'Unknown';
+            const authorAvatar = document.getElementById('viewNewsAuthorAvatar');
+            if (news.author_avatar) {
+                authorAvatar.style.backgroundImage = `url('${news.author_avatar}')`;
+                authorAvatar.textContent = '';
+            } else {
+                authorAvatar.style.backgroundImage = '';
+                authorAvatar.textContent = (news.author_name || 'A')[0].toUpperCase();
+            }
+            document.getElementById('viewNewsContent').textContent = news.content || 'No content';
+            document.getElementById('viewNewsSource').textContent = news.source || '-';
+            document.getElementById('viewNewsId').textContent = news.id;
+            
+            document.getElementById('viewNewsEditBtn').onclick = () => {
+                bootstrap.Modal.getInstance(document.getElementById('viewNewsModal')).hide();
+                editNews(id);
+            };
+            
+            new bootstrap.Modal(document.getElementById('viewNewsModal')).show();
+        }
+
         function editNews(id) {
-            const news = newsList.find(n => n.id === id);
+            const news = newsList.find(n => n.id == id);
             if (!news) return;
             
             document.getElementById('editNewsId').value = news.id;
