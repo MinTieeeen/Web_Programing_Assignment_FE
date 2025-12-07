@@ -14,7 +14,7 @@
 
     const ENV = {
         // Backend API URL - CHANGE THIS TO MATCH YOUR BACKEND
-        API_URL: 'http://localhost/index.php',
+        API_URL: 'http://localhost/BTL_LTW/BTL_LTW_BE',
         
         // Alternative API URL (for older endpoints)
         API_URL_ALT: 'http://localhost',

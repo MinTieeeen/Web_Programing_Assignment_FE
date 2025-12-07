@@ -125,5 +125,4 @@ Frontend giao tiếp với Backend thông qua RESTful API:
     *   `/pages/*`: Nội dung trang tĩnh (CMS).
     *   `/users/*`: Thông tin người dùng.
 
----
-*Dự án Bài Tập Lớn Lập Trình Web - NextPlay Team*
+

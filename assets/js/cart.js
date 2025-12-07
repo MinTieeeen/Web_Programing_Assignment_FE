@@ -149,7 +149,8 @@ if (!window.Cart) {
 
     // Update Header Badge
     async updateCartCount() {
-        const countSpan = document.getElementById('cart-count');
+        // Updated to target the new ID from header.html
+        const countSpan = document.getElementById('cartBadge');
         if (!countSpan) return;
 
         const userStr = localStorage.getItem('user');
@@ -185,7 +186,16 @@ if (!window.Cart) {
         }
 
         countSpan.textContent = count;
-        countSpan.style.display = count > 0 ? 'flex' : 'none';
+        // Don't hide the badge when 0, usually users like to see '0' or just the icon with 0
+        // But if concealment is desired: countSpan.style.display = count > 0 ? 'flex' : 'none';
+        
+        // For this design, let's keep it visible if > 0 or show 0 if preferred.
+        // User asked for "number... change according to database".
+        if (count > 0) {
+             countSpan.style.display = 'flex';
+        } else {
+             countSpan.style.display = 'none'; // Or 'flex' if you want to show 0
+        }
     },
 
     // Fetch User Balance

@@ -1,5 +1,4 @@
 <header data-aos="fade-down" data-aos-duration="2000">
-    <a href="/">
     <div class="left">
         <a href="/index.html">
             <img src="/assets/images/logo.png" alt="NextPlay logo" class="np-logo">
@@ -25,6 +24,37 @@
             <span>Đăng ký</span>
         </a>
     </div>
+
+    <div class="header-actions">
+        <!-- Cart Icon -->
+        <a href="/cart/index.html" class="header-cart-btn" id="headerCartBtn">
+            <i class='bx bx-cart'></i>
+            <span class="cart-badge" id="cartBadge">0</span>
+        </a>
+
+        <!-- User Profile -->
+        <div class="user-profile-wrapper">
+            <div class="user-profile" id="userProfile">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User Avatar" class="user-avatar" id="userAvatar">
+            </div>
+            
+            <!-- Dropdown Menu -->
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="dropdown-info">
+                    <p class="dropdown-name" id="dropdownName">Loading...</p>
+                    <p class="dropdown-email" id="dropdownEmail">...</p>
+                </div>
+                <hr>
+                <a href="/users/profile.html" class="dropdown-item">
+                    <i class='bx bx-user-circle'></i> Hồ sơ cá nhân
+                </a>
+                <a href="#" class="dropdown-item" id="logoutBtnDropdown">
+                    <i class='bx bx-log-out'></i> Đăng xuất
+                </a>
+            </div>
+        </div>
+    </div>
+
 
     <div class="menu-icon">
         <i class='bx bx-menu'></i>

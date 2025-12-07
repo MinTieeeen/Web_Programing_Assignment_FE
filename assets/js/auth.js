@@ -22,58 +22,112 @@
     }
   }
 
-  function updateHeaderLoginStatus() {
-    const authActions = document.getElementById('auth-actions');
-    if (!authActions) return;
+  async function updateHeaderLoginStatus(retryCount = 0) {
+    // console.log('[Auth] Checking login status, attempt:', retryCount);
+    
+    const authButtons = document.querySelector('.auth-buttons');
+    const userProfile = document.getElementById('userProfile');
+    const headerCartBtn = document.getElementById('headerCartBtn');
 
-    // Cart Icon HTML
-    const cartHtml = `
-      <a href="${(window.APP_ROOT || '/') + 'cart/index.html'}" class="np-cart-btn me-3">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bag-fill" viewBox="0 0 16 16">
-          <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
-        </svg>
-        <span class="cart-badge" id="cart-count" style="display: none;">0</span>
-      </a>
-    `;
+    // If elements are missing, we might be on a page without the standard header or header not loaded yet
+    if (!authButtons && !userProfile) {
+        if (retryCount < 5) {
+            // console.log('[Auth] Header elements not found, retrying in 500ms...');
+            setTimeout(() => updateHeaderLoginStatus(retryCount + 1), 500);
+        }
+        return;
+    }
 
     const userStr = localStorage.getItem('user');
+    
     if (userStr) {
-      const user = JSON.parse(userStr);
-      // Show Avatar and Dropdown
-      const avatarUrl = user.avatar 
-        ? (user.avatar.startsWith('http') ? user.avatar : (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar)
-        : (window.APP_ROOT || '/') + 'assets/images/default-avatar.png';
+      let user = JSON.parse(userStr);
+      
+      // Update UI immediately with local data
+      updateUserUI(user);
 
-      authActions.innerHTML = `
-        <div class="d-flex align-items-center">
-          ${cartHtml}
-          <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="${avatarUrl}" alt="${user.uname}" width="32" height="32" class="rounded-circle me-2" style="object-fit: cover; border: 2px solid #fff;">
-              <strong>${user.uname}</strong>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-              <li><a class="dropdown-item" href="${window.APP_ROOT || '/'}users/profile.html">Hồ sơ cá nhân</a></li>
-              <li><a class="dropdown-item" href="#" id="logout-btn">Đăng xuất</a></li>
-            </ul>
-          </div>
-        </div>
-      `;
-    }
-    else {
-      // Show Login/Register
-      authActions.innerHTML = `
-        <div class="d-flex align-items-center">
-          <a href="${window.APP_ROOT || '/'}auth/register.html" class="np-btn np-btn-outline me-2">Đăng ký</a>
-          <a href="${window.APP_ROOT || '/'}auth/login.html" class="np-btn np-btn-primary">Đăng nhập</a>
-        </div>
-      `;
+      // Fetch fresh data from backend
+      try {
+          const uid = user.uid || user.id;
+          const response = await fetch(`${API_URL}/users/${uid}`);
+          if (response.ok) {
+              const data = await response.json();
+              if (data.status === 'success') {
+                  user = { ...user, ...data.data };
+                  localStorage.setItem('user', JSON.stringify(user));
+                  updateUserUI(user);
+              }
+          }
+      } catch (e) {
+          console.error('[Auth] Error fetching fresh user data:', e);
+      }
+
+    } else {
+      // Not logged in
+      if (authButtons) authButtons.style.display = 'flex';
+      if (userProfile) userProfile.parentElement.style.display = 'none'; // Hide wrapper
+      if (headerCartBtn) headerCartBtn.style.display = 'none';
     }
 
-    // Update cart count if Cart object is available
+    // Update cart
     if (window.Cart && window.Cart.updateCartCount) {
       window.Cart.updateCartCount();
     }
+  }
+
+  function updateUserUI(user) {
+      const authButtons = document.querySelector('.auth-buttons');
+      const userProfile = document.getElementById('userProfile');
+      const headerCartBtn = document.getElementById('headerCartBtn');
+      
+      if (authButtons) authButtons.style.display = 'none';
+      
+      // Show Cart
+      if (headerCartBtn) {
+          headerCartBtn.style.display = 'inline-flex';
+      }
+
+      if (userProfile) {
+          const wrapper = userProfile.parentElement; // .user-profile-wrapper
+          if(wrapper) wrapper.style.display = 'block';
+          
+          userProfile.style.display = 'flex';
+          
+          // Construct Avatar URL
+          const avatarUrl = user.avatar 
+            ? (user.avatar.startsWith('http') ? user.avatar : (window.APP_ROOT || '/') + 'assets/uploads/' + user.avatar)
+            : (window.APP_ROOT || '/') + 'assets/images/default-avatar.svg';
+
+          const userAvatar = document.getElementById('userAvatar');
+          if (userAvatar) {
+              userAvatar.src = avatarUrl;
+              // Add click event to toggle dropdown
+              userAvatar.onclick = function(e) {
+                  e.stopPropagation();
+                  toggleProfileDropdown();
+              };
+          }
+          
+          // Populate Dropdown Data
+          populateProfileDropdown(user, avatarUrl);
+      }
+  }
+
+  function populateProfileDropdown(user, avatarUrl) {
+      const els = {
+          name: document.getElementById('dropdownName'),
+          email: document.getElementById('dropdownEmail')
+      };
+
+      if (els.name) els.name.textContent = `${user.fname} ${user.lname}`.trim() || user.uname;
+      if (els.email) els.email.textContent = user.email;
+  }
+
+  function toggleProfileDropdown() {
+      const dropdown = document.getElementById('profileDropdown');
+      if (dropdown) {
+          dropdown.classList.toggle('show');
+      }
   }
 
   function logout() {
@@ -106,12 +160,26 @@
 
   // Event Delegation for Logout
   document.addEventListener('click', function (e) {
-    const logoutBtn = e.target.closest('#logout-btn');
+    // Support both ID formats just in case
+    const logoutBtn = e.target.closest('#logoutBtnDropdown') || e.target.closest('#logoutBtn');
     if (logoutBtn) {
       console.log('Logout button clicked');
       e.preventDefault();
       logout();
     }
+  });
+
+  // Event Delegation for Profile Dropdown Closing
+  document.addEventListener('click', function(e) {
+      const dropdown = document.getElementById('profileDropdown');
+      const userProfile = document.getElementById('userProfile');
+      
+      if (!dropdown || !dropdown.classList.contains('show')) return;
+
+      // Close if clicking outside the dropdown AND outside the profile avatar
+      if (!dropdown.contains(e.target) && (!userProfile || !userProfile.contains(e.target))) {
+          dropdown.classList.remove('show');
+      }
   });
 
 })();
