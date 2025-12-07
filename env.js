@@ -17,7 +17,7 @@
         API_URL: 'http://localhost/BTL_LTW/BTL_LTW_BE',
         
         // Alternative API URL (for older endpoints)
-        API_URL_ALT: 'http://localhost/BE',
+        API_URL_ALT: 'http://localhost',
         
         // Frontend base URL
         FRONTEND_URL: 'http://localhost:3000',
