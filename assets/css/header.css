@@ -27,11 +27,42 @@ header {
     margin: 0 15px;
 }
 
-header ul {
+/* Logo Text Styles */
+.left h2 {
+    margin: 0;
     display: flex;
-    justify-content: space-between;
-    width: 40%;
-    padding: 15px 15px;
+    align-items: center;
+}
+
+.logo-next {
+    color: #72a1dea2;
+    font-size: 24px; /* Explicit size */
+}
+
+.logo-play {
+    color: white; /* Default h2 color usually */
+    font-size: 24px; /* Same as Next to be "bằng nhau" */
+    font-weight: 700; 
+}
+
+header .right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+header ul {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Ensure text is vertically centered in the pill */
+    width: auto;
+    min-width: 400px;
+    padding: 10px 30px; /* Restore symmetric padding */
+    margin: 0; /* Reset browser default margin which affects homepage */
     border-radius: 50px;
     background-color: rgba(0, 0, 69, 0.326);
     backdrop-filter: blur(10px);
@@ -47,7 +78,7 @@ header ul a {
     color: white;
     font-weight: 700;
     transition: 0.3s;
-    margin: 0 10px;
+    margin: 0 15px; /* Increased spacing */
 }
 
 header ul a:hover {
@@ -296,5 +327,79 @@ header ul a:hover {
     
     .profile-dropdown {
         right: -50px; /* Shift slightly for mobile if needed, or keep 0 */
+    }
+}
+
+/* Global Sidebar Styles */
+.tq-sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 280px;
+    height: 100vh;
+    background: rgba(15, 31, 43, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+    z-index: 2000;
+    transition: right 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tq-sidebar.open-sidebar {
+    right: 0;
+}
+
+.tq-close-icon {
+    align-self: flex-end;
+    font-size: 32px;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    margin-bottom: 40px;
+    transition: 0.3s;
+}
+
+.tq-close-icon:hover {
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.tq-sidebar ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.tq-sidebar ul li a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tq-sidebar ul li a:hover {
+    color: #00d2ff;
+    padding-left: 10px;
+}
+
+.mobile-auth {
+    display: none; /* Default hidden, shown in media query if needed, or JS */
+}
+
+@media (max-width: 768px) {
+    .mobile-auth {
+        display: block;
+        margin-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 20px;
     }
 }

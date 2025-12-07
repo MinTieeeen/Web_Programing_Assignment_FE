@@ -1152,3 +1152,64 @@ html {
 
 
 }
+
+/* Sidebar Styles (Restored/Added) */
+.tq-sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 280px;
+    height: 100vh;
+    background: rgba(15, 31, 43, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+    z-index: 2000;
+    transition: right 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tq-sidebar.open-sidebar {
+    right: 0;
+}
+
+.tq-close-icon {
+    align-self: flex-end;
+    font-size: 32px;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    margin-bottom: 40px;
+    transition: 0.3s;
+}
+
+.tq-close-icon:hover {
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.tq-sidebar ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.tq-sidebar ul li a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tq-sidebar ul li a:hover {
+    color: #00d2ff;
+    padding-left: 10px;
+}

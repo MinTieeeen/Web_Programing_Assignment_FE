@@ -104,9 +104,28 @@
     });
   }
 
+  function wireSidebar() {
+      // Global delegation for Sidebar
+      document.body.addEventListener('click', function(e) {
+          const menuIcon = e.target.closest('.menu-icon');
+          const closeIcon = e.target.closest('.tq-close-icon');
+          const overlay = e.target.closest('.tq-sidebar-overlay'); // If we have one
+          const sidebar = document.querySelector('.tq-sidebar');
+
+          if (menuIcon && sidebar) {
+              sidebar.classList.add('open-sidebar');
+          }
+
+          if ((closeIcon || overlay) && sidebar) {
+              sidebar.classList.remove('open-sidebar');
+          }
+      });
+  }
+
   function init() {
     include('[data-include="header"]', 'components/header.html');
     include('[data-include="footer"]', 'components/footer.html');
+    wireSidebar();
   }
 
   if (document.readyState === 'loading') {

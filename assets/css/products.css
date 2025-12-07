@@ -19,7 +19,7 @@
     height: 380px;
     overflow: hidden;
     border: 1px solid rgba(114, 161, 222, 0.3);
-    background: linear-gradient(135deg, rgba(8, 0, 32, 0.9) 0%, rgba(20, 10, 50, 0.8) 100%);
+    background-color: #080020b7;
     border-radius: 20px;
     transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
     cursor: pointer;
@@ -132,24 +132,25 @@
 }
 
 .btn-buy-card {
-    background-color: rgba(34, 0, 73, 0.24);
     color: white;
-    border: 1px solid rgba(114, 161, 222, 0.51);
     padding: 8px 16px;
     border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.85rem;
+    border: 1px solid #72a1de81;
+    background-color: #2200493d;
+    box-shadow: 0 0 5px #72a1de81;
     cursor: pointer;
     transition: 0.3s;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    box-shadow: 0 0 5px rgba(114, 161, 222, 0.51);
+    font-weight: 600;
+    font-size: 0.85rem;
 }
 
 .btn-buy-card:hover {
-    box-shadow: 0 0 15px rgba(114, 161, 222, 0.51);
+    box-shadow: 0 0 15px #72a1de81;
+    background-color: #2200496d;
 }
 
 /* Sidebar Filter Styles */
@@ -248,7 +249,7 @@
 
 .featured-item-content {
     display: flex;
-    background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+    background: #080020b7;
     border-radius: 12px;
     overflow: hidden;
     height: 400px;
@@ -281,7 +282,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: #0d1117;
+    background: #08002000;
     border-left: 1px solid rgba(255,255,255,0.05);
 }
 
@@ -336,19 +337,20 @@
     gap: 10px;
     width: 100%;
     padding: 14px;
-    background-color: rgba(34, 0, 73, 0.24);
+    background-color: #2200493d;
     color: white;
     font-weight: 600;
     border-radius: 10px;
     text-decoration: none;
     transition: 0.3s;
     font-size: 1rem;
-    border: 1px solid rgba(114, 161, 222, 0.51);
-    box-shadow: 0 0 5px rgba(114, 161, 222, 0.51);
+    border: 1px solid #72a1de81;
+    box-shadow: 0 0 5px #72a1de81;
 }
 
 .btn-featured-buy:hover {
-    box-shadow: 0 0 15px rgba(114, 161, 222, 0.51);
+    box-shadow: 0 0 15px #72a1de81;
+    background-color: #2200496d;
 }
 
 /* Carousel Controls (Hero) */
@@ -697,7 +699,7 @@
 }
 /* --- Search Bar Styles --- */
 .search-bar-container {
-    background: rgba(22, 27, 34, 0.8);
+    background: #080020d5;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -787,7 +789,7 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background: rgba(22, 27, 34, 0.98);
+    background: #080020f5;
     backdrop-filter: blur(20px);
     border: 1px solid rgba(114, 161, 222, 0.25);
     border-radius: 16px;
