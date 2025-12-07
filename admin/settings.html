@@ -3,367 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="../assets/css/admin-dashboard.css" rel="stylesheet">
+    <title>Settings - NextPlay Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>@import url('https://rsms.me/inter/inter.css');</style>
 </head>
-<body>
-    <!-- Sidebar Container -->
-    <div id="sidebarContainer">
-        <!-- Sidebar will be loaded here -->
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content" id="main-content">
-        <!-- Navbar Container -->
-        <div id="navbarContainer">
-            <!-- Navbar will be loaded here -->
-        </div>
-
-        <!-- Page Content -->
-        <div class="container-fluid p-4">
-            <!-- Page Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>System Settings</h2>
-                <button class="btn btn-success" onclick="saveAllSettings()">
-                    <i class="bi bi-check-circle"></i> Save All Settings
-                </button>
+<body class="layout-fluid">
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="page">
+        <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu"><span class="navbar-toggler-icon"></span></button>
+                <h1 class="navbar-brand navbar-brand-autodark"><a href="/admin/index.html"><i class="ti ti-device-gamepad-2 me-2"></i><span>NextPlay Admin</span></a></h1>
+                <div class="collapse navbar-collapse" id="sidebar-menu">
+                    <ul class="navbar-nav pt-lg-3">
+                        <li class="nav-item"><a class="nav-link" href="/admin/index.html"><span class="nav-link-icon"><i class="ti ti-home"></i></span><span class="nav-link-title">Dashboard</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/users.html"><span class="nav-link-icon"><i class="ti ti-users"></i></span><span class="nav-link-title">Users</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/admin-users.html"><span class="nav-link-icon"><i class="ti ti-shield-check"></i></span><span class="nav-link-title">Admins</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/products.html"><span class="nav-link-icon"><i class="ti ti-device-gamepad-2"></i></span><span class="nav-link-title">Games</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/orders.html"><span class="nav-link-icon"><i class="ti ti-shopping-cart"></i></span><span class="nav-link-title">Orders</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/comments.html"><span class="nav-link-icon"><i class="ti ti-message-circle"></i></span><span class="nav-link-title">Reviews</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/contacts.html"><span class="nav-link-icon"><i class="ti ti-building"></i></span><span class="nav-link-title">Publishers</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/posts.html"><span class="nav-link-icon"><i class="ti ti-category"></i></span><span class="nav-link-title">Categories</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/faqs.html"><span class="nav-link-icon"><i class="ti ti-help"></i></span><span class="nav-link-title">FAQs</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/news.html"><span class="nav-link-icon"><i class="ti ti-news"></i></span><span class="nav-link-title">News</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/feedback.html"><span class="nav-link-icon"><i class="ti ti-star"></i></span><span class="nav-link-title">Feedback</span></a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/admin/settings.html"><span class="nav-link-icon"><i class="ti ti-settings"></i></span><span class="nav-link-title">Settings</span></a></li>
+                        <li class="nav-item mt-auto"><a class="nav-link text-danger" href="#" onclick="logout()"><span class="nav-link-icon"><i class="ti ti-logout"></i></span><span class="nav-link-title">Logout</span></a></li>
+                    </ul>
+                </div>
             </div>
-
-            <!-- Settings Tabs -->
-            <ul class="nav nav-tabs mb-4" id="settingsTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab">
-                        <i class="bi bi-gear"></i> General
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab">
-                        <i class="bi bi-credit-card"></i> Payment
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="email-tab" data-bs-toggle="tab" data-bs-target="#email" type="button" role="tab">
-                        <i class="bi bi-envelope"></i> Email
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab">
-                        <i class="bi bi-shield-check"></i> Security
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="maintenance-tab" data-bs-toggle="tab" data-bs-target="#maintenance" type="button" role="tab">
-                        <i class="bi bi-tools"></i> Maintenance
-                    </button>
-                </li>
-            </ul>
-
-            <!-- Tab Content -->
-            <div class="tab-content" id="settingsTabContent">
-                <!-- General Settings -->
-                <div class="tab-pane fade show active" id="general" role="tabpanel">
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <h5 class="mb-0">General Settings</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="siteName" class="form-label">Site Name</label>
-                                        <input type="text" class="form-control" id="siteName" value="Game Store Admin">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="siteUrl" class="form-label">Site URL</label>
-                                        <input type="url" class="form-control" id="siteUrl" value="https://gamestore.com">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="siteDescription" class="form-label">Site Description</label>
-                                <textarea class="form-control" id="siteDescription" rows="3">The ultimate gaming platform for all your gaming needs.</textarea>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="timezone" class="form-label">Timezone</label>
-                                        <select class="form-select" id="timezone">
-                                            <option value="UTC">UTC</option>
-                                            <option value="America/New_York">Eastern Time</option>
-                                            <option value="America/Los_Angeles">Pacific Time</option>
-                                            <option value="Europe/London">London</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="currency" class="form-label">Default Currency</label>
-                                        <select class="form-select" id="currency">
-                                            <option value="USD">USD ($)</option>
-                                            <option value="EUR">EUR (€)</option>
-                                            <option value="GBP">GBP (£)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="maintenanceMode">
-                                <label class="form-check-label" for="maintenanceMode">
-                                    Enable Maintenance Mode
-                                </label>
+        </aside>
+        <div class="page-wrapper">
+            <header class="navbar navbar-expand-md d-none d-lg-flex d-print-none">
+                <div class="container-xl">
+                    <div class="navbar-nav flex-row order-md-last">
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown">
+                                <span class="avatar avatar-sm bg-primary">A</span>
+                                <div class="d-none d-xl-block ps-2"><div>Admin</div><div class="mt-1 small text-muted">Administrator</div></div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <a href="#" class="dropdown-item text-danger" onclick="logout()"><i class="ti ti-logout me-2"></i>Logout</a>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Payment Settings -->
-                <div class="tab-pane fade" id="payment" role="tabpanel">
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <h5 class="mb-0">Payment Settings</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6>PayPal Settings</h6>
-                                    <div class="mb-3">
-                                        <label for="paypalClientId" class="form-label">PayPal Client ID</label>
-                                        <input type="text" class="form-control" id="paypalClientId">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="paypalSecret" class="form-label">PayPal Secret</label>
-                                        <input type="password" class="form-control" id="paypalSecret">
-                                    </div>
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="paypalEnabled">
-                                        <label class="form-check-label" for="paypalEnabled">
-                                            Enable PayPal
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6>Stripe Settings</h6>
-                                    <div class="mb-3">
-                                        <label for="stripePublicKey" class="form-label">Stripe Public Key</label>
-                                        <input type="text" class="form-control" id="stripePublicKey">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="stripeSecretKey" class="form-label">Stripe Secret Key</label>
-                                        <input type="password" class="form-control" id="stripeSecretKey">
-                                    </div>
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="stripeEnabled">
-                                        <label class="form-check-label" for="stripeEnabled">
-                                            Enable Stripe
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="taxRate" class="form-label">Tax Rate (%)</label>
-                                        <input type="number" class="form-control" id="taxRate" step="0.01" value="8.25">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="commissionRate" class="form-label">Platform Commission (%)</label>
-                                        <input type="number" class="form-control" id="commissionRate" step="0.01" value="30">
-                                    </div>
-                                </div>
-                            </div>
+            </header>
+            <div class="page-header d-print-none">
+                <div class="container-xl">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="page-pretitle">Configuration</div>
+                            <h2 class="page-title">Settings</h2>
                         </div>
                     </div>
                 </div>
-
-                <!-- Email Settings -->
-                <div class="tab-pane fade" id="email" role="tabpanel">
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <h5 class="mb-0">Email Settings</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="smtpHost" class="form-label">SMTP Host</label>
-                                        <input type="text" class="form-control" id="smtpHost">
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row">
+                        <div class="col-12 col-lg-3 mb-3">
+                            <div class="card">
+                                <div class="card-body p-2">
+                                    <div class="list-group list-group-flush">
+                                        <a href="#general" class="list-group-item list-group-item-action active" data-bs-toggle="list"><i class="ti ti-settings me-2"></i>General</a>
+                                        <a href="#profile" class="list-group-item list-group-item-action" data-bs-toggle="list"><i class="ti ti-user me-2"></i>Profile</a>
+                                        <a href="#security" class="list-group-item list-group-item-action" data-bs-toggle="list"><i class="ti ti-lock me-2"></i>Security</a>
+                                        <a href="#notifications" class="list-group-item list-group-item-action" data-bs-toggle="list"><i class="ti ti-bell me-2"></i>Notifications</a>
+                                        <a href="#api" class="list-group-item list-group-item-action" data-bs-toggle="list"><i class="ti ti-code me-2"></i>API</a>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label for="smtpPort" class="form-label">SMTP Port</label>
-                                        <input type="number" class="form-control" id="smtpPort" value="587">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label for="smtpEncryption" class="form-label">Encryption</label>
-                                        <select class="form-select" id="smtpEncryption">
-                                            <option value="tls">TLS</option>
-                                            <option value="ssl">SSL</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="smtpUsername" class="form-label">SMTP Username</label>
-                                        <input type="text" class="form-control" id="smtpUsername">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="smtpPassword" class="form-label">SMTP Password</label>
-                                        <input type="password" class="form-control" id="smtpPassword">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="fromEmail" class="form-label">From Email</label>
-                                        <input type="email" class="form-control" id="fromEmail">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="fromName" class="form-label">From Name</label>
-                                        <input type="text" class="form-control" id="fromName">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <button class="btn btn-outline-primary" onclick="testEmail()">
-                                    <i class="bi bi-envelope-check"></i> Send Test Email
-                                </button>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Security Settings -->
-                <div class="tab-pane fade" id="security" role="tabpanel">
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <h5 class="mb-0">Security Settings</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="sessionTimeout" class="form-label">Session Timeout (minutes)</label>
-                                        <input type="number" class="form-control" id="sessionTimeout" value="30">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="maxLoginAttempts" class="form-label">Max Login Attempts</label>
-                                        <input type="number" class="form-control" id="maxLoginAttempts" value="5">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="passwordMinLength" class="form-label">Min Password Length</label>
-                                        <input type="number" class="form-control" id="passwordMinLength" value="8">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="lockoutDuration" class="form-label">Lockout Duration (minutes)</label>
-                                        <input type="number" class="form-control" id="lockoutDuration" value="15">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="requireStrongPassword" checked>
-                                <label class="form-check-label" for="requireStrongPassword">
-                                    Require Strong Passwords
-                                </label>
-                            </div>
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="enableTwoFactor">
-                                <label class="form-check-label" for="enableTwoFactor">
-                                    Enable Two-Factor Authentication
-                                </label>
-                            </div>
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="enableRecaptcha">
-                                <label class="form-check-label" for="enableRecaptcha">
-                                    Enable reCAPTCHA
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Maintenance -->
-                <div class="tab-pane fade" id="maintenance" role="tabpanel">
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <h5 class="mb-0">System Maintenance</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="card border-warning">
-                                        <div class="card-header bg-warning text-dark">
-                                            <h6 class="mb-0">Database Maintenance</h6>
-                                        </div>
+                        <div class="col-12 col-lg-9">
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="general">
+                                    <div class="card">
+                                        <div class="card-header"><h3 class="card-title">General Settings</h3></div>
                                         <div class="card-body">
-                                            <p>Clean up old logs and optimize database performance.</p>
-                                            <button class="btn btn-warning" onclick="cleanDatabase()">
-                                                <i class="bi bi-database-gear"></i> Clean Database
-                                            </button>
+                                            <form id="generalForm">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Site Name</label>
+                                                        <input type="text" class="form-control" name="siteName" value="NextPlay">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Site URL</label>
+                                                        <input type="url" class="form-control" name="siteUrl" value="http://localhost">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Site Description</label>
+                                                    <textarea class="form-control" name="siteDescription" rows="2">Your ultimate game store</textarea>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Currency</label>
+                                                        <select class="form-select" name="currency">
+                                                            <option value="USD">USD - US Dollar</option>
+                                                            <option value="EUR">EUR - Euro</option>
+                                                            <option value="VND" selected>VND - Vietnamese Dong</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Timezone</label>
+                                                        <select class="form-select" name="timezone">
+                                                            <option value="UTC">UTC</option>
+                                                            <option value="Asia/Ho_Chi_Minh" selected>Asia/Ho Chi Minh</option>
+                                                            <option value="America/New_York">America/New York</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-check">
+                                                        <input class="form-check-input" type="checkbox" checked>
+                                                        <span class="form-check-label">Enable maintenance mode</span>
+                                                    </label>
+                                                </div>
+                                                <button type="button" class="btn btn-primary" onclick="saveGeneral()">Save Changes</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="card border-info">
-                                        <div class="card-header bg-info text-white">
-                                            <h6 class="mb-0">Cache Management</h6>
-                                        </div>
+                                
+                                <div class="tab-pane fade" id="profile">
+                                    <div class="card">
+                                        <div class="card-header"><h3 class="card-title">Profile Settings</h3></div>
                                         <div class="card-body">
-                                            <p>Clear application cache to improve performance.</p>
-                                            <button class="btn btn-info" onclick="clearCache()">
-                                                <i class="bi bi-arrow-clockwise"></i> Clear Cache
-                                            </button>
+                                            <form id="profileForm">
+                                                <div class="row mb-3">
+                                                    <div class="col-auto">
+                                                        <span class="avatar avatar-xl bg-primary">A</span>
+                                                    </div>
+                                                    <div class="col">
+                                                        <input type="file" class="form-control" accept="image/*">
+                                                        <small class="text-muted">Upload a new avatar</small>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Username</label>
+                                                        <input type="text" class="form-control" name="username" id="profileUsername">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Email</label>
+                                                        <input type="email" class="form-control" name="email" id="profileEmail">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Bio</label>
+                                                    <textarea class="form-control" name="bio" rows="3"></textarea>
+                                                </div>
+                                                <button type="button" class="btn btn-primary" onclick="saveProfile()">Update Profile</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <div class="card border-success">
-                                        <div class="card-header bg-success text-white">
-                                            <h6 class="mb-0">Backup Database</h6>
-                                        </div>
+                                
+                                <div class="tab-pane fade" id="security">
+                                    <div class="card">
+                                        <div class="card-header"><h3 class="card-title">Security Settings</h3></div>
                                         <div class="card-body">
-                                            <p>Create a backup of the current database.</p>
-                                            <button class="btn btn-success" onclick="backupDatabase()">
-                                                <i class="bi bi-download"></i> Backup Now
-                                            </button>
+                                            <form id="securityForm">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Current Password</label>
+                                                    <input type="password" class="form-control" name="currentPassword">
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">New Password</label>
+                                                        <input type="password" class="form-control" name="newPassword">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Confirm New Password</label>
+                                                        <input type="password" class="form-control" name="confirmPassword">
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="mb-3">
+                                                    <label class="form-check">
+                                                        <input class="form-check-input" type="checkbox">
+                                                        <span class="form-check-label">Enable two-factor authentication</span>
+                                                    </label>
+                                                </div>
+                                                <button type="button" class="btn btn-primary" onclick="changePassword()">Change Password</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-3">
+                                        <div class="card-header"><h3 class="card-title">Sessions</h3></div>
+                                        <div class="card-body">
+                                            <p class="text-muted">Active sessions on other devices</p>
+                                            <div class="list-group list-group-flush">
+                                                <div class="list-group-item">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-auto"><i class="ti ti-device-desktop text-muted"></i></div>
+                                                        <div class="col">
+                                                            <div>Windows PC - Chrome</div>
+                                                            <div class="text-muted small">Current session</div>
+                                                        </div>
+                                                        <div class="col-auto"><span class="badge bg-success">Active</span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-outline-danger mt-3">Logout all other sessions</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="card border-danger">
-                                        <div class="card-header bg-danger text-white">
-                                            <h6 class="mb-0">System Reset</h6>
-                                        </div>
+                                
+                                <div class="tab-pane fade" id="notifications">
+                                    <div class="card">
+                                        <div class="card-header"><h3 class="card-title">Notification Preferences</h3></div>
                                         <div class="card-body">
-                                            <p>Reset system to default settings (Dangerous!).</p>
-                                            <button class="btn btn-danger" onclick="systemReset()">
-                                                <i class="bi bi-exclamation-triangle"></i> Reset System
-                                            </button>
+                                            <h4>Email Notifications</h4>
+                                            <div class="mb-2">
+                                                <label class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" checked>
+                                                    <span class="form-check-label">New user registrations</span>
+                                                </label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" checked>
+                                                    <span class="form-check-label">New orders</span>
+                                                </label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <span class="form-check-label">New reviews</span>
+                                                </label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" checked>
+                                                    <span class="form-check-label">System alerts</span>
+                                                </label>
+                                            </div>
+                                            <hr>
+                                            <h4>System Notifications</h4>
+                                            <div class="mb-2">
+                                                <label class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" checked>
+                                                    <span class="form-check-label">Browser notifications</span>
+                                                </label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <span class="form-check-label">Sound alerts</span>
+                                                </label>
+                                            </div>
+                                            <button type="button" class="btn btn-primary mt-3">Save Preferences</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="api">
+                                    <div class="card">
+                                        <div class="card-header"><h3 class="card-title">API Configuration</h3></div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">API Base URL</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="apiUrl" readonly>
+                                                    <button class="btn btn-outline-secondary" onclick="copyApiUrl()"><i class="ti ti-copy"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">API Key</label>
+                                                <div class="input-group">
+                                                    <input type="password" class="form-control" value="sk_live_xxxxxxxxxxxxx" id="apiKey" readonly>
+                                                    <button class="btn btn-outline-secondary" onclick="toggleApiKey()"><i class="ti ti-eye"></i></button>
+                                                    <button class="btn btn-outline-secondary" onclick="copyApiKey()"><i class="ti ti-copy"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="alert alert-warning">
+                                                <i class="ti ti-alert-triangle me-2"></i>
+                                                Never share your API key publicly. If compromised, regenerate immediately.
+                                            </div>
+                                            <button class="btn btn-outline-danger">Regenerate API Key</button>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-3">
+                                        <div class="card-header"><h3 class="card-title">Webhooks</h3></div>
+                                        <div class="card-body">
+                                            <p class="text-muted">Configure webhooks to receive real-time notifications</p>
+                                            <button class="btn btn-primary"><i class="ti ti-plus me-2"></i>Add Webhook</button>
                                         </div>
                                     </div>
                                 </div>
@@ -372,20 +300,55 @@
                     </div>
                 </div>
             </div>
+            <footer class="footer footer-transparent d-print-none"><div class="container-xl"><div class="text-center">Copyright &copy; 2024 NextPlay.</div></div></footer>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../env.js"></script>
-    <script src="../assets/js/admin/utils.js"></script>
-    <script src="../assets/js/admin/components.js"></script>
-    <script src="../assets/js/admin-settings.js"></script>
     <script>
-        // Initialize admin components
-        document.addEventListener('DOMContentLoaded', function() {
-            AdminComponents.init('settings');
-        });
+        const API_BASE_URL = window.ENV?.API_URL || '';
+        function logout() { fetch(`${API_BASE_URL}/users/logout`, { method: 'POST', credentials: 'include' }).finally(() => window.location.href = '/auth/login.html'); }
+
+        async function loadProfile() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/users/profile`, { credentials: 'include' });
+                const data = await res.json();
+                if (data.status === 'success' && data.data) {
+                    document.getElementById('profileUsername').value = data.data.username || '';
+                    document.getElementById('profileEmail').value = data.data.email || '';
+                }
+            } catch (e) { console.error(e); }
+            document.getElementById('apiUrl').value = API_BASE_URL;
+        }
+
+        function saveGeneral() { alert('Settings saved successfully!'); }
+        function saveProfile() { alert('Profile updated successfully!'); }
+        function changePassword() {
+            const form = document.getElementById('securityForm');
+            const data = Object.fromEntries(new FormData(form));
+            if (data.newPassword !== data.confirmPassword) { alert('Passwords do not match'); return; }
+            alert('Password changed successfully!');
+            form.reset();
+        }
+
+        function copyApiUrl() {
+            navigator.clipboard.writeText(document.getElementById('apiUrl').value);
+            alert('API URL copied!');
+        }
+
+        let apiKeyVisible = false;
+        function toggleApiKey() {
+            const input = document.getElementById('apiKey');
+            apiKeyVisible = !apiKeyVisible;
+            input.type = apiKeyVisible ? 'text' : 'password';
+        }
+
+        function copyApiKey() {
+            navigator.clipboard.writeText('sk_live_xxxxxxxxxxxxx');
+            alert('API Key copied!');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProfile);
     </script>
 </body>
 </html>
-

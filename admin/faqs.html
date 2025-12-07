@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs - NextPlay Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>@import url('https://rsms.me/inter/inter.css');</style>
+</head>
+<body class="layout-fluid">
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="page">
+        <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu"><span class="navbar-toggler-icon"></span></button>
+                <h1 class="navbar-brand navbar-brand-autodark"><a href="/admin/index.html"><i class="ti ti-device-gamepad-2 me-2"></i><span>NextPlay Admin</span></a></h1>
+                <div class="collapse navbar-collapse" id="sidebar-menu">
+                    <ul class="navbar-nav pt-lg-3">
+                        <li class="nav-item"><a class="nav-link" href="/admin/index.html"><span class="nav-link-icon"><i class="ti ti-home"></i></span><span class="nav-link-title">Dashboard</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/users.html"><span class="nav-link-icon"><i class="ti ti-users"></i></span><span class="nav-link-title">Users</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/admin-users.html"><span class="nav-link-icon"><i class="ti ti-shield-check"></i></span><span class="nav-link-title">Admins</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/products.html"><span class="nav-link-icon"><i class="ti ti-device-gamepad-2"></i></span><span class="nav-link-title">Games</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/orders.html"><span class="nav-link-icon"><i class="ti ti-shopping-cart"></i></span><span class="nav-link-title">Orders</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/comments.html"><span class="nav-link-icon"><i class="ti ti-message-circle"></i></span><span class="nav-link-title">Reviews</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/contacts.html"><span class="nav-link-icon"><i class="ti ti-building"></i></span><span class="nav-link-title">Publishers</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/posts.html"><span class="nav-link-icon"><i class="ti ti-category"></i></span><span class="nav-link-title">Categories</span></a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/admin/faqs.html"><span class="nav-link-icon"><i class="ti ti-help"></i></span><span class="nav-link-title">FAQs</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/news.html"><span class="nav-link-icon"><i class="ti ti-news"></i></span><span class="nav-link-title">News</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/feedback.html"><span class="nav-link-icon"><i class="ti ti-star"></i></span><span class="nav-link-title">Feedback</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/settings.html"><span class="nav-link-icon"><i class="ti ti-settings"></i></span><span class="nav-link-title">Settings</span></a></li>
+                        <li class="nav-item mt-auto"><a class="nav-link text-danger" href="#" onclick="logout()"><span class="nav-link-icon"><i class="ti ti-logout"></i></span><span class="nav-link-title">Logout</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+        <div class="page-wrapper">
+            <header class="navbar navbar-expand-md d-none d-lg-flex d-print-none">
+                <div class="container-xl">
+                    <div class="navbar-nav flex-row order-md-last">
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown">
+                                <span class="avatar avatar-sm bg-primary" id="userAvatar">A</span>
+                                <div class="d-none d-xl-block ps-2"><div id="userName">Admin</div><div class="mt-1 small text-muted">Administrator</div></div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <a href="/admin/settings.html" class="dropdown-item"><i class="ti ti-settings me-2"></i>Settings</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item text-danger" onclick="logout()"><i class="ti ti-logout me-2"></i>Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="page-header d-print-none">
+                <div class="container-xl">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="page-pretitle">Content Management</div>
+                            <h2 class="page-title">Frequently Asked Questions</h2>
+                        </div>
+                        <div class="col-auto ms-auto">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFaqModal"><i class="ti ti-plus me-2"></i>Add FAQ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <!-- Stats -->
+                    <div class="row row-deck row-cards mb-3">
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto"><span class="bg-primary text-white avatar"><i class="ti ti-category"></i></span></div>
+                                        <div class="col"><div class="font-weight-medium" id="totalTopics">0</div><div class="text-muted">Total Topics</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto"><span class="bg-green text-white avatar"><i class="ti ti-help"></i></span></div>
+                                        <div class="col"><div class="font-weight-medium" id="totalQuestions">0</div><div class="text-muted">Total Questions</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Topics -->
+                    <div class="row row-cards" id="faqsGrid">
+                        <div class="col-12 text-center text-muted py-5">Loading...</div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer footer-transparent d-print-none"><div class="container-xl"><div class="text-center">Copyright &copy; 2024 NextPlay.</div></div></footer>
+        </div>
+    </div>
+
+    <!-- Add FAQ Modal -->
+    <div class="modal modal-blur fade" id="addFaqModal" tabindex="-1">
+        <div class="modal-dialog modal-lg"><div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Add New FAQ</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <form id="addFaqForm">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Topic Key *</label>
+                            <input type="text" class="form-control" name="topic_key" placeholder="e.g., general" required>
+                            <small class="text-muted">Unique identifier for the topic</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Topic Name *</label>
+                            <input type="text" class="form-control" name="topic_name" placeholder="e.g., General" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Topic Icon *</label>
+                            <input type="text" class="form-control" name="topic_icon" placeholder="e.g., ti ti-help" required>
+                            <small class="text-muted">Tabler Icons class</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Question *</label>
+                        <input type="text" class="form-control" name="question" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Answer *</label>
+                        <textarea class="form-control" name="answer" rows="4" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addFaq()">Add FAQ</button>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- Edit FAQ Modal -->
+    <div class="modal modal-blur fade" id="editFaqModal" tabindex="-1">
+        <div class="modal-dialog modal-lg"><div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Edit FAQ</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <form id="editFaqForm">
+                    <input type="hidden" name="id" id="editFaqId">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Topic Key *</label>
+                            <input type="text" class="form-control" name="topic_key" id="editTopicKey" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Topic Name *</label>
+                            <input type="text" class="form-control" name="topic_name" id="editTopicName" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Topic Icon *</label>
+                            <input type="text" class="form-control" name="topic_icon" id="editTopicIcon" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Question *</label>
+                        <input type="text" class="form-control" name="question" id="editQuestion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Answer *</label>
+                        <textarea class="form-control" name="answer" id="editAnswer" rows="4" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateFaq()">Save Changes</button>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- View FAQ Modal -->
+    <div class="modal modal-blur fade" id="viewFaqModal" tabindex="-1">
+        <div class="modal-dialog modal-lg"><div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">FAQ Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="avatar avatar-lg me-3" id="viewFaqTopicIcon"><i class="ti ti-help"></i></span>
+                    <div>
+                        <h4 class="mb-0" id="viewFaqTopicName">Topic</h4>
+                        <div class="text-muted small">Key: <code id="viewFaqTopicKey">topic_key</code></div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header"><h5 class="card-title mb-0"><i class="ti ti-help-circle me-2"></i>Question</h5></div>
+                    <div class="card-body" id="viewFaqQuestion">Question text here</div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h5 class="card-title mb-0"><i class="ti ti-message-circle me-2"></i>Answer</h5></div>
+                    <div class="card-body" id="viewFaqAnswer" style="white-space: pre-wrap;">Answer text here</div>
+                </div>
+                <hr>
+                <div class="text-muted small"><strong>FAQ ID:</strong> <span id="viewFaqId">-</span></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="viewFaqEditBtn">Edit FAQ</button>
+            </div>
+        </div></div>
+    </div>
+
+    <script src="../env.js"></script>
+    <script>
+        const API_BASE_URL = window.ENV?.API_URL || '';
+        let faqs = [];
+        let faqsFlat = [];
+        const colors = ['bg-primary', 'bg-azure', 'bg-success', 'bg-warning', 'bg-danger', 'bg-purple', 'bg-pink', 'bg-teal'];
+        
+        function logout() { 
+            fetch(`${API_BASE_URL}/users/logout`, { method: 'POST', credentials: 'include' })
+            .finally(() => window.location.href = '/admin/login.html'); 
+        }
+
+        async function loadData() {
+            try {
+                // Load grouped FAQs for display
+                const res = await fetch(`${API_BASE_URL}/faqs`, { credentials: 'include' });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    faqs = Array.isArray(data.data) ? data.data : [];
+                    updateStats();
+                    renderFaqs();
+                }
+
+                // Load flat FAQs for editing
+                const resFlat = await fetch(`${API_BASE_URL}/faqs/flat`, { credentials: 'include' });
+                const dataFlat = await resFlat.json();
+                if (dataFlat.status === 'success') {
+                    faqsFlat = Array.isArray(dataFlat.data) ? dataFlat.data : [];
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function updateStats() {
+            document.getElementById('totalTopics').textContent = faqs.length;
+            const totalQuestions = faqs.reduce((sum, topic) => sum + (topic.questions?.length || 0), 0);
+            document.getElementById('totalQuestions').textContent = totalQuestions;
+        }
+
+        function renderFaqs() {
+            const grid = document.getElementById('faqsGrid');
+            if (faqs.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center text-muted py-5">No FAQs found</div>';
+                return;
+            }
+            
+            grid.innerHTML = faqs.map((topic, i) => {
+                const color = colors[i % colors.length];
+                const questionsHtml = topic.questions?.map(q => `
+                    <div class="list-group-item">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="flex-fill me-2">
+                                <div class="font-weight-medium">${q.title}</div>
+                                <div class="text-muted small mt-1">${q.answer?.substring(0, 100)}...</div>
+                            </div>
+                            <div class="btn-list flex-nowrap">
+                                <button class="btn btn-sm btn-info" onclick="viewFaq(${q.id})" title="View">
+                                    <i class="ti ti-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-primary" onclick="editFaq(${q.id})" title="Edit">
+                                    <i class="ti ti-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteFaq(${q.id})" title="Delete">
+                                    <i class="ti ti-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') || '<div class="list-group-item text-muted">No questions</div>';
+                
+                return `
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex align-items-center">
+                                    <span class="${color} text-white avatar me-3">
+                                        <i class="${topic.icon || 'ti ti-help'}"></i>
+                                    </span>
+                                    <div>
+                                        <h3 class="card-title mb-0">${topic.name}</h3>
+                                        <div class="text-muted small">${topic.questions?.length || 0} questions</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+                                ${questionsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function addFaq() {
+            const form = document.getElementById('addFaqForm');
+            const data = Object.fromEntries(new FormData(form));
+            
+            try {
+                const res = await fetch(`${API_BASE_URL}/faqs`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    bootstrap.Modal.getInstance(document.getElementById('addFaqModal')).hide();
+                    form.reset();
+                    loadData();
+                    alert('FAQ added successfully!');
+                } else {
+                    alert(result.message || 'Error adding FAQ');
+                }
+            } catch (e) { console.error(e); alert('Error adding FAQ'); }
+        }
+
+        function viewFaq(id) {
+            const faq = faqsFlat.find(f => f.id == id);
+            if (!faq) {
+                alert('FAQ not found');
+                return;
+            }
+            
+            const iconContainer = document.getElementById('viewFaqTopicIcon');
+            iconContainer.innerHTML = `<i class="${faq.topic_icon || 'ti ti-help'}"></i>`;
+            document.getElementById('viewFaqTopicName').textContent = faq.topic_name || 'Unknown Topic';
+            document.getElementById('viewFaqTopicKey').textContent = faq.topic_key || '-';
+            document.getElementById('viewFaqQuestion').textContent = faq.question || 'No question';
+            document.getElementById('viewFaqAnswer').textContent = faq.answer || 'No answer';
+            document.getElementById('viewFaqId').textContent = faq.id;
+            
+            document.getElementById('viewFaqEditBtn').onclick = () => {
+                bootstrap.Modal.getInstance(document.getElementById('viewFaqModal')).hide();
+                editFaq(id);
+            };
+            
+            new bootstrap.Modal(document.getElementById('viewFaqModal')).show();
+        }
+
+        function editFaq(id) {
+            const faq = faqsFlat.find(f => f.id == id);
+            if (!faq) {
+                alert('FAQ not found');
+                return;
+            }
+            
+            document.getElementById('editFaqId').value = faq.id;
+            document.getElementById('editTopicKey').value = faq.topic_key || '';
+            document.getElementById('editTopicName').value = faq.topic_name || '';
+            document.getElementById('editTopicIcon').value = faq.topic_icon || '';
+            document.getElementById('editQuestion').value = faq.question || '';
+            document.getElementById('editAnswer').value = faq.answer || '';
+            
+            new bootstrap.Modal(document.getElementById('editFaqModal')).show();
+        }
+
+        async function updateFaq() {
+            const form = document.getElementById('editFaqForm');
+            const data = Object.fromEntries(new FormData(form));
+            const id = data.id;
+            
+            try {
+                const res = await fetch(`${API_BASE_URL}/faqs/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    bootstrap.Modal.getInstance(document.getElementById('editFaqModal')).hide();
+                    loadData();
+                    alert('FAQ updated successfully!');
+                } else {
+                    alert(result.message || 'Error updating FAQ');
+                }
+            } catch (e) { console.error(e); alert('Error updating FAQ'); }
+        }
+
+        async function deleteFaq(id) {
+            if (!confirm('Are you sure you want to delete this FAQ?')) return;
+            
+            try {
+                const res = await fetch(`${API_BASE_URL}/faqs/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    loadData();
+                    alert('FAQ deleted successfully!');
+                } else {
+                    alert(result.message || 'Error deleting FAQ');
+                }
+            } catch (e) { console.error(e); alert('Error deleting FAQ'); }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

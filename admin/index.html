@@ -3,433 +3,526 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Store - Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="../assets/css/admin-dashboard.css" rel="stylesheet">
+    <title>Dashboard - NextPlay Admin</title>
+    <!-- Tabler CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+        @import url('https://rsms.me/inter/inter.css');
+    </style>
 </head>
-<body>
-    <!-- Sidebar Container -->
-    <div id="sidebarContainer">
-        <!-- Sidebar will be loaded here -->
+<body class="layout-fluid">
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <div class="page">
+        <!-- Sidebar -->
+        <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <h1 class="navbar-brand navbar-brand-autodark">
+                    <a href="/admin/index.html">
+                        <i class="ti ti-device-gamepad-2 me-2"></i>
+                        <span class="nav-link-title">NextPlay Admin</span>
+                    </a>
+                </h1>
+                <div class="collapse navbar-collapse" id="sidebar-menu">
+                    <ul class="navbar-nav pt-lg-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/admin/index.html">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-home"></i>
+                                </span>
+                                <span class="nav-link-title">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/users.html">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-users"></i>
+                                </span>
+                                <span class="nav-link-title">Users</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/admin-users.html">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-shield-check"></i>
+                                </span>
+                                <span class="nav-link-title">Admins</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/products.html">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-device-gamepad-2"></i>
+                                </span>
+                                <span class="nav-link-title">Games</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/orders.html">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-shopping-cart"></i>
+                                </span>
+                                <span class="nav-link-title">Orders</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/comments.html">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-message-circle"></i>
+                                </span>
+                                <span class="nav-link-title">Reviews</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/contacts.html">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-building"></i>
+                                </span>
+                                <span class="nav-link-title">Publishers</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/posts.html">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-category"></i>
+                                </span>
+                                <span class="nav-link-title">Categories</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/settings.html">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-settings"></i>
+                                </span>
+                                <span class="nav-link-title">Settings</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mt-auto">
+                            <a class="nav-link text-danger" href="#" onclick="logout()">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-logout"></i>
+                                </span>
+                                <span class="nav-link-title">Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="page-wrapper">
+            <!-- Header -->
+            <header class="navbar navbar-expand-md d-none d-lg-flex d-print-none">
+                <div class="container-xl">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-nav flex-row order-md-last">
+                        <div class="d-none d-md-flex me-3">
+                            <a href="/" class="nav-link px-0" title="Back to Store" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                <i class="ti ti-home"></i>
+                            </a>
+                        </div>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown">
+                                <span class="avatar avatar-sm bg-primary" id="userAvatar">A</span>
+                                <div class="d-none d-xl-block ps-2">
+                                    <div id="userName">Admin</div>
+                                    <div class="mt-1 small text-muted" id="userRole">Administrator</div>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <a href="/admin/settings.html" class="dropdown-item">
+                                    <i class="ti ti-settings me-2"></i> Settings
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item text-danger" onclick="logout()">
+                                    <i class="ti ti-logout me-2"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Header -->
+            <div class="page-header d-print-none">
+                <div class="container-xl">
+                    <div class="page-pretitle">Overview</div>
+                    <h2 class="page-title">Dashboard</h2>
+                </div>
+            </div>
+
+            <!-- Page Body -->
+            <div class="page-body">
+                <div class="container-xl">
+                    <!-- Stats Cards -->
+                    <div class="row row-deck row-cards">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Total Users</div>
+                                    </div>
+                                    <div class="h1 mb-3" id="totalUsers">0</div>
+                                    <div class="d-flex mb-2">
+                                        <div>
+                                            <span class="text-green d-inline-flex align-items-center lh-1">
+                                                <i class="ti ti-trending-up me-1"></i> Active Users
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="/admin/users.html" class="btn btn-primary w-100">
+                                        <i class="ti ti-users me-2"></i> Manage Users
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Total Games</div>
+                                    </div>
+                                    <div class="h1 mb-3" id="totalGames">0</div>
+                                    <div class="d-flex mb-2">
+                                        <div>
+                                            <span class="text-azure d-inline-flex align-items-center lh-1">
+                                                <i class="ti ti-device-gamepad-2 me-1"></i> In Store
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="/admin/products.html" class="btn btn-azure w-100">
+                                        <i class="ti ti-device-gamepad-2 me-2"></i> Manage Games
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Total Orders</div>
+                                    </div>
+                                    <div class="h1 mb-3" id="totalOrders">0</div>
+                                    <div class="d-flex mb-2">
+                                        <div>
+                                            <span class="text-yellow d-inline-flex align-items-center lh-1">
+                                                <i class="ti ti-shopping-cart me-1"></i> Completed
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="/admin/orders.html" class="btn btn-yellow w-100">
+                                        <i class="ti ti-shopping-cart me-2"></i> View Orders
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Revenue</div>
+                                    </div>
+                                    <div class="h1 mb-3" id="totalRevenue">₫0</div>
+                                    <div class="d-flex mb-2">
+                                        <div>
+                                            <span class="text-green d-inline-flex align-items-center lh-1">
+                                                <i class="ti ti-currency-dollar me-1"></i> Total Earnings
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="/admin/orders.html" class="btn btn-success w-100">
+                                        <i class="ti ti-report-analytics me-2"></i> View Report
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row row-deck row-cards mt-3">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Sales Analytics</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="chart-sales" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Popular Categories</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="chart-categories" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Tables -->
+                    <div class="row row-deck row-cards mt-3">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Recent Orders</h3>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-vcenter card-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Customer</th>
+                                                <th>Items</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentOrdersBody">
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted">Loading...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Recent Reviews</h3>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-vcenter card-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Game</th>
+                                                <th>User</th>
+                                                <th>Rating</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentReviewsBody">
+                                            <tr>
+                                                <td colspan="4" class="text-center text-muted">Loading...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer footer-transparent d-print-none">
+                <div class="container-xl">
+                    <div class="row text-center align-items-center flex-row-reverse">
+                        <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                            <ul class="list-inline list-inline-dots mb-0">
+                                <li class="list-inline-item">
+                                    Copyright &copy; 2024 NextPlay. All rights reserved.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content" id="main-content">
-        <!-- Navbar Container -->
-        <div id="navbarContainer">
-            <!-- Navbar will be loaded here -->
-        </div>
-
-        <!-- Dashboard Content -->
-        <div class="container-fluid p-4">
-            <!-- Stats Cards -->
-            <div class="row mb-4">
-                <div class="col-xl-3 col-md-6">
-                    <div class="card stats-card bg-primary text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="card-title">Total Users</h5>
-                                    <h3 id="totalUsers">1,234</h3>
-                                </div>
-                                <div class="stats-icon">
-                                    <i class="bi bi-people fs-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card stats-card bg-success text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="card-title">Total Games</h5>
-                                    <h3 id="totalGames">567</h3>
-                                </div>
-                                <div class="stats-icon">
-                                    <i class="bi bi-joystick fs-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card stats-card bg-warning text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="card-title">Total Orders</h5>
-                                    <h3 id="totalOrders">2,890</h3>
-                                </div>
-                                <div class="stats-icon">
-                                    <i class="bi bi-cart3 fs-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card stats-card bg-info text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="card-title">Revenue</h5>
-                                    <h3 id="totalRevenue">$45,230</h3>
-                                </div>
-                                <div class="stats-icon">
-                                    <i class="bi bi-currency-dollar fs-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Row -->
-            <div class="row mb-4">
-                <div class="col-xl-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Sales Analytics</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="salesChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Popular Categories</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="categoryChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tables Row -->
-            <div class="row">
-                <div class="col-xl-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Recent Orders</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Order ID</th>
-                                            <th>Customer</th>
-                                            <th>Game</th>
-                                            <th>Amount</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recentOrdersBody">
-                                        <!-- Dynamic content -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Recent Reviews</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Game</th>
-                                            <th>Customer</th>
-                                            <th>Rating</th>
-                                            <th>Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recentReviewsBody">
-                                        <!-- Dynamic content -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- ENV -->
     <script src="../env.js"></script>
-    <script src="../assets/js/admin/utils.js"></script>
-    <script src="../assets/js/admin/components.js"></script>
+    
     <script>
-        // Ensure ENV is loaded
+        // Check ENV
         if (!window.ENV || !window.ENV.API_URL) {
-            document.body.innerHTML = '<div class="alert alert-danger m-5"><h4>Configuration Error</h4><p>ENV not loaded! Make sure env.js is included and API_URL is configured.</p></div>';
-            throw new Error('[admin/index.html] ENV not loaded!');
+            document.body.innerHTML = '<div class="container mt-5"><div class="alert alert-danger"><h4>Configuration Error</h4><p>ENV not loaded!</p></div></div>';
+            throw new Error('ENV not loaded!');
         }
-        const API_BASE_URL = window.ENV.API_URL;
         
-        // Dashboard Manager Class
-        class DashboardManager {
-            async init() {
-                // Initialize components first
-                await AdminComponents.init('dashboard');
+        const API_BASE_URL = window.ENV.API_URL;
+
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/profile`, {
+                    credentials: 'include'
+                });
+                const result = await response.json();
                 
-                // Load dashboard data
-                await this.loadStats();
-                await this.loadRecentOrders();
-                await this.loadRecentReviews();
-                this.initCharts();
-            }
-
-            async loadStats() {
-                try {
-                    // Fetch all data in parallel
-                    const [usersResponse, gamesResponse, cartsResponse, reviewsResponse] = await Promise.all([
-                        fetch(`${API_BASE_URL}/users`, {
-                            credentials: 'include',
-                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                        }),
-                        fetch(`${API_BASE_URL}/games`, {
-                            credentials: 'include',
-                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                        }),
-                        fetch(`${API_BASE_URL}/carts/stats`, {
-                            credentials: 'include',
-                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                        }),
-                        fetch(`${API_BASE_URL}/reviews/stats`, {
-                            credentials: 'include',
-                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                        })
-                    ]);
-
-                    const usersResult = await usersResponse.json();
-                    const gamesResult = await gamesResponse.json();
-                    const cartsResult = await cartsResponse.json();
-                    const reviewsResult = await reviewsResponse.json();
-
-                    const users = usersResult.status === 'success' ? usersResult.data : [];
-                    const games = gamesResult.status === 'success' ? gamesResult.data : [];
-                    const cartStats = cartsResult.status === 'success' ? cartsResult.data.stats : {};
-                    
-                    // Calculate total revenue from completed orders
-                    const totalRevenue = cartStats.total_revenue || 0;
-                    const totalOrders = cartStats.completed_orders || 0;
-
-                    document.getElementById('totalUsers').textContent = users.length.toLocaleString();
-                    document.getElementById('totalGames').textContent = games.length.toLocaleString();
-                    document.getElementById('totalOrders').textContent = totalOrders.toLocaleString();
-                    document.getElementById('totalRevenue').textContent = AdminUtils.formatCurrency(totalRevenue);
-                } catch (error) {
-                    console.error('Error loading stats:', error);
-                    document.getElementById('totalUsers').textContent = '0';
-                    document.getElementById('totalGames').textContent = '0';
-                    document.getElementById('totalOrders').textContent = '0';
-                    document.getElementById('totalRevenue').textContent = '₫0';
+                if (result.status !== 'success' || !result.data) {
+                    window.location.href = '/admin/login.html';
+                    return false;
                 }
-            }
-
-            initCharts() {
-                this.initSalesChart();
-                this.initCategoryChart();
-            }
-
-            async initSalesChart() {
-                const ctx = document.getElementById('salesChart').getContext('2d');
                 
-                try {
-                    // Fetch review stats to get monthly data
-                    const response = await fetch(`${API_BASE_URL}/reviews/stats`, {
-                        credentials: 'include',
-                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                    });
-                    const result = await response.json();
-                    
-                    let labels = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                    let data = [10, 10, 10, 10, 10, 2]; // Default from review data
-                    
-                    if (result.status === 'success' && result.data.byMonth) {
-                        const monthData = result.data.byMonth;
-                        labels = monthData.map(m => {
-                            const date = new Date(m.month + '-01');
-                            return date.toLocaleDateString('en-US', { month: 'short' });
-                        }).reverse();
-                        data = monthData.map(m => m.review_count).reverse();
-                    }
-                    
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Reviews',
-                                data: data,
-                                borderColor: 'rgb(75, 192, 192)',
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                tension: 0.1,
-                                fill: true
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            scales: {
-                                y: { beginAtZero: true }
-                            }
-                        }
-                    });
-                } catch (error) {
-                    console.error('Error loading sales chart:', error);
-                }
-            }
-
-            async initCategoryChart() {
-                const ctx = document.getElementById('categoryChart').getContext('2d');
+                // Check if user is admin using admin check endpoint
+                const uid = result.data.uid || result.data.id;
+                const adminCheckRes = await fetch(`${API_BASE_URL}/admins/check/${uid}`, { credentials: 'include' });
+                const adminCheckData = await adminCheckRes.json();
                 
-                try {
-                    // Fetch games to count by category
-                    const response = await fetch(`${API_BASE_URL}/games`, {
-                        credentials: 'include',
-                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                    });
-                    const result = await response.json();
-                    
-                    let labels = ['Action', 'RPG', 'Adventure', 'Indie', 'MOBA'];
-                    let data = [5, 5, 3, 4, 2];
-                    
-                    if (result.status === 'success' && result.data) {
-                        // Count games by category
-                        const categoryCount = {};
-                        result.data.forEach(game => {
-                            const cat = game.category || 'Other';
-                            categoryCount[cat] = (categoryCount[cat] || 0) + 1;
-                        });
-                        
-                        // Sort by count and take top 5
-                        const sorted = Object.entries(categoryCount)
-                            .sort((a, b) => b[1] - a[1])
-                            .slice(0, 5);
-                        
-                        labels = sorted.map(([cat]) => cat);
-                        data = sorted.map(([, count]) => count);
-                    }
-                    
-                    new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                data: data,
-                                backgroundColor: [
-                                    '#FF6384',
-                                    '#36A2EB',
-                                    '#FFCE56',
-                                    '#4BC0C0',
-                                    '#9966FF'
-                                ]
-                            }]
-                        },
-                        options: { responsive: true }
-                    });
-                } catch (error) {
-                    console.error('Error loading category chart:', error);
+                if (adminCheckData.status !== 'success' || !adminCheckData.isAdmin) {
+                    window.location.href = '/admin/login.html';
+                    return false;
                 }
-            }
-
-            async loadRecentOrders() {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/carts?status=purchased`, {
-                        credentials: 'include',
-                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                    });
-                    const result = await response.json();
-                    
-                    const tbody = document.getElementById('recentOrdersBody');
-                    if (tbody) {
-                        const orders = result.status === 'success' ? result.data : [];
-                        
-                        if (orders.length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No orders yet</td></tr>';
-                        } else {
-                            const recentOrders = orders.slice(0, 5);
-                            tbody.innerHTML = recentOrders.map(order => `
-                                <tr>
-                                    <td>#${order.uid}</td>
-                                    <td>${order.fname || ''} ${order.lname || order.uname}</td>
-                                    <td>${order.item_count} items</td>
-                                    <td>${AdminUtils.formatCurrency(order.total_amount)}</td>
-                                    <td>
-                                        <span class="badge bg-success">Completed</span>
-                                    </td>
-                                </tr>
-                            `).join('');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error loading recent orders:', error);
-                    const tbody = document.getElementById('recentOrdersBody');
-                    if (tbody) {
-                        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Failed to load orders</td></tr>';
-                    }
-                }
-            }
-
-            async loadRecentReviews() {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/reviews?limit=5`, {
-                        credentials: 'include',
-                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                    });
-                    const result = await response.json();
-
-                    const tbody = document.getElementById('recentReviewsBody');
-                    if (tbody) {
-                        const reviews = result.status === 'success' ? result.data : [];
-                        
-                        if (reviews.length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No reviews yet</td></tr>';
-                        } else {
-                            tbody.innerHTML = reviews.map(review => `
-                                <tr>
-                                    <td>${review.game_name}</td>
-                                    <td>${review.uname}</td>
-                                    <td>
-                                        ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
-                                    </td>
-                                    <td>${AdminUtils.formatDate(review.review_time)}</td>
-                                </tr>
-                            `).join('');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error loading recent reviews:', error);
-                    const tbody = document.getElementById('recentReviewsBody');
-                    if (tbody) {
-                        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Failed to load reviews</td></tr>';
-                    }
-                }
+                
+                document.getElementById('userName').textContent = result.data.uname || 'Admin';
+                document.getElementById('userAvatar').textContent = (result.data.uname || 'A')[0].toUpperCase();
+                return true;
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '/admin/login.html';
+                return false;
             }
         }
 
-        // Initialize dashboard when DOM is loaded
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Check authentication first
-            const authResult = await AdminUtils.checkAuthentication();
-            if (authResult) {
-                const dashboard = new DashboardManager();
-                dashboard.init();
+        // Logout
+        function logout() {
+            fetch(`${API_BASE_URL}/users/logout`, {
+                method: 'POST',
+                credentials: 'include'
+            }).finally(() => {
+                window.location.href = '/admin/login.html';
+            });
+        }
+
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(amount || 0);
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+            return new Date(dateStr).toLocaleDateString('vi-VN');
+        }
+
+        // Load stats from the admin stats endpoint
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admins/stats`, { credentials: 'include' });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const stats = result.data;
+                    document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
+                    document.getElementById('totalGames').textContent = stats.totalGames || 0;
+                    document.getElementById('totalOrders').textContent = stats.totalOrders || 0;
+                    document.getElementById('totalRevenue').textContent = formatCurrency(stats.totalRevenue || 0);
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
             }
+        }
+
+        // Load recent orders
+        async function loadRecentOrders() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/carts?status=purchased`, {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                const tbody = document.getElementById('recentOrdersBody');
+
+                if (result.status === 'success' && result.data.length > 0) {
+                    tbody.innerHTML = result.data.slice(0, 5).map(order => `
+                        <tr>
+                            <td class="text-muted">#${order.uid}</td>
+                            <td>${order.uname || 'Unknown'}</td>
+                            <td>${order.item_count} items</td>
+                            <td>${formatCurrency(order.total_amount)}</td>
+                            <td><span class="badge bg-success">Completed</span></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No orders yet</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        // Load recent reviews
+        async function loadRecentReviews() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/reviews?limit=5`, {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                const tbody = document.getElementById('recentReviewsBody');
+
+                if (result.status === 'success' && result.data.length > 0) {
+                    tbody.innerHTML = result.data.slice(0, 5).map(review => `
+                        <tr>
+                            <td>${review.game_name || 'Unknown'}</td>
+                            <td>${review.uname || 'Unknown'}</td>
+                            <td>
+                                <span class="text-yellow">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</span>
+                            </td>
+                            <td class="text-muted">${formatDate(review.review_time)}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No reviews yet</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+            }
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // Sales Chart
+            new ApexCharts(document.getElementById('chart-sales'), {
+                chart: { type: 'area', height: 300, toolbar: { show: false } },
+                series: [{ name: 'Sales', data: [30, 40, 35, 50, 49, 60, 70, 91, 125] }],
+                xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'] },
+                colors: ['#206bc4'],
+                stroke: { curve: 'smooth', width: 2 },
+                fill: { type: 'gradient', gradient: { opacityFrom: 0.5, opacityTo: 0 } }
+            }).render();
+
+            // Categories Chart
+            new ApexCharts(document.getElementById('chart-categories'), {
+                chart: { type: 'donut', height: 300 },
+                series: [44, 55, 41, 17, 15],
+                labels: ['Action', 'RPG', 'Adventure', 'Sports', 'Puzzle'],
+                colors: ['#206bc4', '#4299e1', '#2fb344', '#f59f00', '#d63939']
+            }).render();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            loadStats();
+            loadRecentOrders();
+            loadRecentReviews();
+            initCharts();
         });
     </script>
 </body>

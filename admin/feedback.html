@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reviews - NextPlay Admin</title>
+    <title>Game Feedback - NextPlay Admin</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <style>@import url('https://rsms.me/inter/inter.css');</style>
 </head>
 <body class="layout-fluid">
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <div class="page">
         <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
             <div class="container-fluid">
@@ -23,12 +24,12 @@
                         <li class="nav-item"><a class="nav-link" href="/admin/admin-users.html"><span class="nav-link-icon"><i class="ti ti-shield-check"></i></span><span class="nav-link-title">Admins</span></a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/products.html"><span class="nav-link-icon"><i class="ti ti-device-gamepad-2"></i></span><span class="nav-link-title">Games</span></a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/orders.html"><span class="nav-link-icon"><i class="ti ti-shopping-cart"></i></span><span class="nav-link-title">Orders</span></a></li>
-                        <li class="nav-item"><a class="nav-link active" href="/admin/comments.html"><span class="nav-link-icon"><i class="ti ti-message-circle"></i></span><span class="nav-link-title">Reviews</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/comments.html"><span class="nav-link-icon"><i class="ti ti-message-circle"></i></span><span class="nav-link-title">Reviews</span></a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/contacts.html"><span class="nav-link-icon"><i class="ti ti-building"></i></span><span class="nav-link-title">Publishers</span></a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/posts.html"><span class="nav-link-icon"><i class="ti ti-category"></i></span><span class="nav-link-title">Categories</span></a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/faqs.html"><span class="nav-link-icon"><i class="ti ti-help"></i></span><span class="nav-link-title">FAQs</span></a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/news.html"><span class="nav-link-icon"><i class="ti ti-news"></i></span><span class="nav-link-title">News</span></a></li>
-                        <li class="nav-item"><a class="nav-link" href="/admin/feedback.html"><span class="nav-link-icon"><i class="ti ti-star"></i></span><span class="nav-link-title">Feedback</span></a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/admin/feedback.html"><span class="nav-link-icon"><i class="ti ti-star"></i></span><span class="nav-link-title">Feedback</span></a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/settings.html"><span class="nav-link-icon"><i class="ti ti-settings"></i></span><span class="nav-link-title">Settings</span></a></li>
                         <li class="nav-item mt-auto"><a class="nav-link text-danger" href="#" onclick="logout()"><span class="nav-link-icon"><i class="ti ti-logout"></i></span><span class="nav-link-title">Logout</span></a></li>
                     </ul>
@@ -51,18 +52,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex-grow-1 d-flex">
-                        <div class="input-icon w-100" style="max-width: 400px;">
-                            <span class="input-icon-addon"><i class="ti ti-search"></i></span>
-                            <input type="text" class="form-control" id="searchInput" placeholder="Search reviews..." onkeyup="filterReviews()">
-                        </div>
-                    </div>
                 </div>
             </header>
             <div class="page-header d-print-none">
                 <div class="container-xl">
-                    <div class="page-pretitle">Management</div>
-                    <h2 class="page-title">Game Reviews</h2>
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="page-pretitle">Content Management</div>
+                            <h2 class="page-title">Game Feedback & Reviews</h2>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="page-body">
@@ -74,7 +73,7 @@
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-auto"><span class="bg-primary text-white avatar"><i class="ti ti-message-circle"></i></span></div>
-                                        <div class="col"><div class="font-weight-medium" id="totalReviews">0</div><div class="text-muted">Total Reviews</div></div>
+                                        <div class="col"><div class="font-weight-medium" id="totalFeedback">0</div><div class="text-muted">Total Reviews</div></div>
                                     </div>
                                 </div>
                             </div>
@@ -103,44 +102,61 @@
                             <div class="card card-sm">
                                 <div class="card-body">
                                     <div class="row align-items-center">
-                                        <div class="col-auto"><span class="bg-danger text-white avatar"><i class="ti ti-thumb-down"></i></span></div>
+                                        <div class="col-auto"><span class="bg-red text-white avatar"><i class="ti ti-thumb-down"></i></span></div>
                                         <div class="col"><div class="font-weight-medium" id="negativeReviews">0</div><div class="text-muted">Negative (1-2★)</div></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Reviews Table -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">All Reviews</h3>
-                            <div class="card-actions">
-                                <select class="form-select form-select-sm" id="ratingFilter" onchange="filterReviews()">
-                                    <option value="">All Ratings</option>
-                                    <option value="5">5 Stars</option>
-                                    <option value="4">4 Stars</option>
-                                    <option value="3">3 Stars</option>
-                                    <option value="2">2 Stars</option>
-                                    <option value="1">1 Star</option>
-                                </select>
+
+                    <!-- Filters -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="searchFeedback" placeholder="Search by game or user...">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="ratingFilter">
+                                        <option value="">All Ratings</option>
+                                        <option value="5">5 Stars</option>
+                                        <option value="4">4 Stars</option>
+                                        <option value="3">3 Stars</option>
+                                        <option value="2">2 Stars</option>
+                                        <option value="1">1 Star</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-secondary w-100" onclick="resetFilters()"><i class="ti ti-refresh me-1"></i>Reset</button>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Feedback Table -->
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title">All Game Reviews</h3></div>
                         <div class="table-responsive">
                             <table class="table table-vcenter card-table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Game</th>
                                         <th>User</th>
+                                        <th>Game</th>
                                         <th>Rating</th>
-                                        <th>Comment</th>
+                                        <th>Content</th>
                                         <th>Date</th>
                                         <th class="w-1">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="reviewsTableBody">
+                                <tbody id="feedbackTableBody">
                                     <tr><td colspan="6" class="text-center text-muted">Loading...</td></tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="card-footer d-flex align-items-center">
+                            <p class="m-0 text-muted">Showing <span id="showingFrom">0</span> to <span id="showingTo">0</span> of <span id="totalEntries">0</span></p>
+                            <ul class="pagination m-0 ms-auto" id="pagination"></ul>
                         </div>
                     </div>
                 </div>
@@ -149,162 +165,133 @@
         </div>
     </div>
 
-    <!-- View Review Modal -->
-    <div class="modal modal-blur fade" id="viewReviewModal" tabindex="-1">
-        <div class="modal-dialog modal-lg"><div class="modal-content">
-            <div class="modal-header"><h5 class="modal-title">Review Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body" id="viewReviewBody"></div>
-        </div></div>
-    </div>
-
     <script src="../env.js"></script>
     <script>
         const API_BASE_URL = window.ENV?.API_URL || '';
-        let reviews = [];
+        let feedbackList = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
         
         function logout() { 
             fetch(`${API_BASE_URL}/users/logout`, { method: 'POST', credentials: 'include' })
             .finally(() => window.location.href = '/admin/login.html'); 
         }
-        
-        function formatDate(d) { return d ? new Date(d).toLocaleDateString('vi-VN') : 'N/A'; }
-        
-        function renderStars(rating) {
-            const r = parseInt(rating) || 0;
-            return `<span class="text-yellow">${'★'.repeat(r)}${'☆'.repeat(5-r)}</span>`;
-        }
 
-        async function loadReviews() {
+        async function loadData() {
             try {
                 const res = await fetch(`${API_BASE_URL}/feedback`, { credentials: 'include' });
                 const data = await res.json();
-                
                 if (data.status === 'success') {
-                    reviews = data.data || [];
+                    feedbackList = Array.isArray(data.data) ? data.data : [];
                     updateStats();
-                    renderReviews(reviews);
-                } else {
-                    document.getElementById('reviewsTableBody').innerHTML = '<tr><td colspan="6" class="text-center text-muted">No reviews found</td></tr>';
+                    renderFeedback();
                 }
-            } catch (e) { 
-                console.error(e); 
-                document.getElementById('reviewsTableBody').innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error loading reviews</td></tr>';
-            }
+            } catch (e) { console.error(e); }
         }
 
         function updateStats() {
-            document.getElementById('totalReviews').textContent = reviews.length;
+            document.getElementById('totalFeedback').textContent = feedbackList.length;
             
-            if (reviews.length > 0) {
-                const totalRating = reviews.reduce((sum, r) => sum + (parseInt(r.rating) || 0), 0);
-                document.getElementById('avgRating').textContent = (totalRating / reviews.length).toFixed(1);
-                document.getElementById('positiveReviews').textContent = reviews.filter(r => r.rating >= 4).length;
-                document.getElementById('negativeReviews').textContent = reviews.filter(r => r.rating <= 2).length;
+            if (feedbackList.length > 0) {
+                const totalRating = feedbackList.reduce((sum, f) => sum + (f.rating || 0), 0);
+                document.getElementById('avgRating').textContent = (totalRating / feedbackList.length).toFixed(1);
             }
+            
+            const positive = feedbackList.filter(f => f.rating >= 4).length;
+            const negative = feedbackList.filter(f => f.rating <= 2).length;
+            document.getElementById('positiveReviews').textContent = positive;
+            document.getElementById('negativeReviews').textContent = negative;
         }
 
-        function renderReviews(data) {
-            const tbody = document.getElementById('reviewsTableBody');
-            if (data.length === 0) {
+        function renderStars(rating) {
+            return Array(5).fill(0).map((_, i) => 
+                `<i class="ti ti-star${i < rating ? '-filled text-yellow' : ' text-muted'}"></i>`
+            ).join('');
+        }
+
+        function renderFeedback() {
+            const tbody = document.getElementById('feedbackTableBody');
+            const search = document.getElementById('searchFeedback').value.toLowerCase();
+            const ratingFilter = document.getElementById('ratingFilter').value;
+
+            let filtered = feedbackList.filter(f => {
+                const matchSearch = (f.game_name || '').toLowerCase().includes(search) || 
+                                   (f.uname || '').toLowerCase().includes(search) ||
+                                   (f.content || '').toLowerCase().includes(search);
+                const matchRating = !ratingFilter || f.rating == ratingFilter;
+                return matchSearch && matchRating;
+            });
+
+            const totalPages = Math.ceil(filtered.length / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage;
+            const paginated = filtered.slice(start, start + itemsPerPage);
+
+            document.getElementById('showingFrom').textContent = filtered.length ? start + 1 : 0;
+            document.getElementById('showingTo').textContent = Math.min(start + itemsPerPage, filtered.length);
+            document.getElementById('totalEntries').textContent = filtered.length;
+
+            if (paginated.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No reviews found</td></tr>';
                 return;
             }
-            
-            tbody.innerHTML = data.map(r => `
+
+            tbody.innerHTML = paginated.map(fb => `
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            <span class="avatar bg-azure text-white me-2"><i class="ti ti-device-gamepad-2"></i></span>
-                            <div>${r.game_name || 'Unknown Game'}</div>
+                            <span class="avatar avatar-sm bg-primary me-2">${(fb.uname || 'U')[0].toUpperCase()}</span>
+                            ${fb.uname || 'Unknown'}
                         </div>
                     </td>
-                    <td>${r.uname || 'Unknown User'}</td>
-                    <td>${renderStars(r.rating)}</td>
-                    <td class="text-wrap" style="max-width:300px">${r.content || '-'}</td>
-                    <td>${formatDate(r.feedback_time)}</td>
+                    <td><span class="badge bg-azure-lt">${fb.game_name || 'N/A'}</span></td>
+                    <td>${renderStars(fb.rating)}</td>
                     <td>
-                        <div class="btn-list flex-nowrap">
-                            <button class="btn btn-sm btn-outline-primary" onclick="viewReview(${r.customerid}, ${r.Gid})" title="View">
-                                <i class="ti ti-eye"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteReview(${r.customerid}, ${r.Gid})" title="Delete">
-                                <i class="ti ti-trash"></i>
-                            </button>
+                        <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            ${fb.content || 'No content'}
                         </div>
+                    </td>
+                    <td>${fb.feedback_time ? new Date(fb.feedback_time).toLocaleDateString() : 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteFeedback(${fb.customerid}, ${fb.Gid})">
+                            <i class="ti ti-trash"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
+
+            renderPagination(totalPages);
         }
 
-        function filterReviews() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const ratingFilter = document.getElementById('ratingFilter').value;
-            
-            let filtered = reviews;
-            
-            if (search) {
-                filtered = filtered.filter(r => 
-                    (r.game_name || '').toLowerCase().includes(search) ||
-                    (r.uname || '').toLowerCase().includes(search) ||
-                    (r.content || '').toLowerCase().includes(search)
-                );
+        function renderPagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            let html = `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="goToPage(${currentPage - 1})"><i class="ti ti-chevron-left"></i></a>
+            </li>`;
+            for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+                html += `<li class="page-item ${currentPage === i ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="goToPage(${i})">${i}</a>
+                </li>`;
             }
-            
-            if (ratingFilter) {
-                filtered = filtered.filter(r => r.rating == ratingFilter);
-            }
-            
-            renderReviews(filtered);
+            html += `<li class="page-item ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="goToPage(${currentPage + 1})"><i class="ti ti-chevron-right"></i></a>
+            </li>`;
+            pagination.innerHTML = html;
         }
 
-        function viewReview(customerid, gid) {
-            const review = reviews.find(r => r.customerid == customerid && r.Gid == gid);
-            if (!review) return;
-            
-            document.getElementById('viewReviewBody').innerHTML = `
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label text-muted">Game</label>
-                            <div class="d-flex align-items-center">
-                                <span class="avatar bg-azure text-white me-2"><i class="ti ti-device-gamepad-2"></i></span>
-                                <strong>${review.game_name || 'Unknown Game'}</strong>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label text-muted">Reviewer</label>
-                            <div><strong>${review.uname || 'Unknown User'}</strong></div>
-                            <div class="text-muted small">Customer ID: ${review.customerid}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label text-muted">Rating</label>
-                            <div class="fs-4">${renderStars(review.rating)}</div>
-                            <div class="text-muted small">${review.rating}/5 stars</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label text-muted">Date</label>
-                            <div>${formatDate(review.feedback_time)}</div>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-                <div class="mb-3">
-                    <label class="form-label text-muted">Review Content</label>
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="mb-0">${review.content || 'No content provided'}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-            new bootstrap.Modal(document.getElementById('viewReviewModal')).show();
+        function goToPage(page) {
+            currentPage = page;
+            renderFeedback();
         }
 
-        async function deleteReview(customerid, gid) {
-            const review = reviews.find(r => r.customerid == customerid && r.Gid == gid);
-            if (!confirm(`Are you sure you want to delete this review from "${review?.uname || 'Unknown'}" for "${review?.game_name || 'Unknown'}"?`)) return;
+        function resetFilters() {
+            document.getElementById('searchFeedback').value = '';
+            document.getElementById('ratingFilter').value = '';
+            currentPage = 1;
+            renderFeedback();
+        }
+
+        async function deleteFeedback(customerid, gid) {
+            if (!confirm('Are you sure you want to delete this review?')) return;
             
             try {
                 const res = await fetch(`${API_BASE_URL}/feedback/${customerid}/${gid}`, { 
@@ -312,20 +299,19 @@
                     credentials: 'include' 
                 });
                 const result = await res.json();
-                
                 if (result.status === 'success') {
-                    loadReviews();
+                    loadData();
                     alert('Review deleted successfully!');
                 } else {
                     alert(result.message || 'Error deleting review');
                 }
-            } catch (e) { 
-                console.error(e); 
-                alert('Error deleting review');
-            }
+            } catch (e) { console.error(e); alert('Error deleting review'); }
         }
 
-        document.addEventListener('DOMContentLoaded', loadReviews);
+        document.getElementById('searchFeedback').addEventListener('input', () => { currentPage = 1; renderFeedback(); });
+        document.getElementById('ratingFilter').addEventListener('change', () => { currentPage = 1; renderFeedback(); });
+
+        document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
