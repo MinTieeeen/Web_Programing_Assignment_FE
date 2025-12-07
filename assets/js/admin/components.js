@@ -7,7 +7,18 @@ class AdminComponents {
             this.setActivePage(currentPage);
             this.initializeSidebar();
             this.initializeEventListeners();
-            AdminUtils.checkAuthentication();
+            await AdminUtils.checkAuthentication();
+            
+            // Force update user display again to ensure elements in loaded components are updated
+            const currentUser = localStorage.getItem('currentUser') || localStorage.getItem('user');
+            if (currentUser) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    AdminUtils.updateUserDisplay(userData);
+                } catch (e) {
+                    console.error('Error updating user display after init:', e);
+                }
+            }
         } catch (error) {
             console.error('Error initializing admin components:', error);
         }
@@ -15,14 +26,33 @@ class AdminComponents {
 
     static async loadSidebar() {
         try {
-            const response = await fetch('../components/admin-sidebar.html');
+            const response = await fetch('../components/admin-sidebar.html?v=' + new Date().getTime());
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const sidebarHTML = await response.text();
             const container = document.getElementById('sidebarContainer');
             if (container) {
-                container.innerHTML = sidebarHTML;
+                // Parse HTML to get the element
+                const temp = document.createElement('div');
+                temp.innerHTML = sidebarHTML;
+                const sidebarElement = temp.firstElementChild;
+
+                if (sidebarElement) {
+                    // Start: Fix for Tabler Layout
+                    // Replace the wrapper container with the sidebar element itself
+                    // to ensure it's a direct child of .page for proper flex behavior
+                    sidebarElement.id = 'sidebar'; // Ensure ID for listeners
+                    
+                    // Add 'sidebar' class if missing, for setActivePage compatibility
+                    if (!sidebarElement.classList.contains('sidebar')) {
+                        sidebarElement.classList.add('sidebar');
+                    }
+
+                    container.replaceWith(sidebarElement);
+                } else {
+                    container.innerHTML = sidebarHTML; // Fallback if parsing fails
+                }
             }
         } catch (error) {
             console.error('Error loading sidebar:', error);
@@ -33,14 +63,24 @@ class AdminComponents {
 
     static async loadNavbar() {
         try {
-            const response = await fetch('../components/admin-navbar.html');
+            const response = await fetch('../components/admin-navbar.html?v=' + new Date().getTime());
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const navbarHTML = await response.text();
             const container = document.getElementById('navbarContainer');
             if (container) {
-                container.innerHTML = navbarHTML;
+                const temp = document.createElement('div');
+                temp.innerHTML = navbarHTML;
+                const navbarElement = temp.firstElementChild;
+
+                if (navbarElement) {
+                    // Unwrap navbar for cleaner DOM
+                    navbarElement.id = 'navbar'; // Tag it for reference
+                    container.replaceWith(navbarElement);
+                } else {
+                    container.innerHTML = navbarHTML;
+                }
             }
         } catch (error) {
             console.error('Error loading navbar:', error);
@@ -60,48 +100,48 @@ class AdminComponents {
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/index.html" data-page="dashboard">
-                            <i class="bi bi-speedometer2"></i> Dashboard
+                        <a class="nav-link" href="index.html" data-page="dashboard">
+                            <i class="bi bi-speedometer2"></i> Bảng điều khiển
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/users.html" data-page="users">
-                            <i class="bi bi-people"></i> Users
+                        <a class="nav-link" href="users.html" data-page="users">
+                            <i class="bi bi-people"></i> Người dùng
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/admin-users.html" data-page="admin-users">
-                            <i class="bi bi-shield-check"></i> Admin Management
+                        <a class="nav-link" href="admin-users.html" data-page="admin-users">
+                            <i class="bi bi-shield-check"></i> Quản trị viên
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/products.html" data-page="products">
-                            <i class="bi bi-joystick"></i> Games
+                        <a class="nav-link" href="products.html" data-page="products">
+                            <i class="bi bi-joystick"></i> Trò chơi
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/orders.html" data-page="orders">
-                            <i class="bi bi-cart3"></i> Orders & Carts
+                        <a class="nav-link" href="orders.html" data-page="orders">
+                            <i class="bi bi-cart3"></i> Đơn hàng
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/comments.html" data-page="comments">
-                            <i class="bi bi-chat-square-text"></i> Reviews
+                        <a class="nav-link" href="comments.html" data-page="comments">
+                            <i class="bi bi-chat-square-text"></i> Đánh giá
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/contacts.html" data-page="contacts">
-                            <i class="bi bi-building"></i> Publishers
+                        <a class="nav-link" href="contacts.html" data-page="contacts">
+                            <i class="bi bi-building"></i> Nhà phát hành
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/posts.html" data-page="posts">
-                            <i class="bi bi-tags"></i> Categories
+                        <a class="nav-link" href="posts.html" data-page="posts">
+                            <i class="bi bi-tags"></i> Danh mục
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/settings.html" data-page="settings">
-                            <i class="bi bi-gear"></i> Settings
+                        <a class="nav-link" href="settings.html" data-page="settings">
+                            <i class="bi bi-gear"></i> Cài đặt
                         </a>
                     </li>
                 </ul>
@@ -111,7 +151,7 @@ class AdminComponents {
                         <span id="adminUserName">Admin User</span>
                     </div>
                     <button class="btn btn-outline-light btn-sm" onclick="AdminUtils.logout()">
-                        <i class="bi bi-box-arrow-right"></i> Logout
+                        <i class="bi bi-box-arrow-right"></i> Đăng xuất
                     </button>
                 </div>
             </div>
@@ -136,16 +176,16 @@ class AdminComponents {
                                 <span class="badge bg-danger" id="notificationCount">3</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" id="notificationList">
-                                <li><h6 class="dropdown-header">Notifications</h6></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-person-plus text-primary"></i> 5 new user registrations</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-check-circle text-success"></i> 3 pending game approvals</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-chat text-info"></i> 12 new reviews</a></li>
+                                <li><h6 class="dropdown-header">Thông báo</h6></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-person-plus text-primary"></i> 5 đăng ký mới</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-check-circle text-success"></i> 3 game chờ duyệt</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-chat text-info"></i> 12 đánh giá mới</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-center" href="#" onclick="AdminUtils.markAllNotificationsRead()">Mark all as read</a></li>
+                                <li><a class="dropdown-item text-center" href="#" onclick="AdminUtils.markAllNotificationsRead()">Đánh dấu tất cả là đã đọc</a></li>
                             </ul>
                         </div>
-                        <button class="btn btn-outline-light" onclick="AdminUtils.logout()" title="Logout">
-                            <i class="bi bi-box-arrow-right"></i> Logout
+                        <button class="btn btn-outline-light" onclick="AdminUtils.logout()" title="Đăng xuất">
+                            <i class="bi bi-box-arrow-right"></i> Đăng xuất
                         </button>
                     </div>
                 </div>
@@ -167,14 +207,15 @@ class AdminComponents {
 
         // Update page title
         const pageTitles = {
-            'dashboard': 'Dashboard',
-            'users': 'User Management',
-            'products': 'Game Management',
-            'orders': 'Orders & Carts Management',
-            'comments': 'Reviews Management',
-            'contacts': 'Publishers Management',
-            'posts': 'Categories Management',
-            'settings': 'System Settings'
+            'dashboard': 'Bảng điều khiển',
+            'users': 'Quản lý người dùng',
+            'admin-users': 'Quản lý quản trị viên',
+            'products': 'Quản lý trò chơi',
+            'orders': 'Quản lý đơn hàng',
+            'comments': 'Quản lý đánh giá',
+            'contacts': 'Quản lý nhà phát hành',
+            'posts': 'Quản lý danh mục',
+            'settings': 'Cài đặt hệ thống'
         };
 
         const pageTitle = document.getElementById('pageTitle');
@@ -261,8 +302,8 @@ class AdminComponents {
                             <p>${message}</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-danger" id="confirmBtn">Confirm</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-danger" id="confirmBtn">Xác nhận</button>
                         </div>
                     </div>
                 </div>

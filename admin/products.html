@@ -4,278 +4,257 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Management - Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="../assets/css/admin-dashboard.css" rel="stylesheet">
+    <!-- Tabler Core -->
+    <link href="../assets/tabler/css/tabler.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-flags.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-payments.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-vendors.min.css" rel="stylesheet"/>
+    <link href="../assets/css/toast.css" rel="stylesheet"/>
+    <style>
+      @import url('https://rsms.me/inter/inter.css');
+      :root {
+      	--tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      }
+      body {
+      	font-feature-settings: "cv03", "cv04", "cv11";
+      }
+    </style>
 </head>
 <body>
-    <!-- Sidebar Container -->
-    <div id="sidebarContainer">
-        <!-- Sidebar will be loaded here -->
-    </div>
+    <script src="../assets/tabler/js/tabler-theme.min.js"></script>
+    <div class="page">
+        <!-- Sidebar -->
+        <div id="sidebarContainer"></div>
 
-    <!-- Main Content -->
-    <div class="main-content" id="main-content">
-        <!-- Navbar Container -->
-        <div id="navbarContainer">
-            <!-- Navbar will be loaded here -->
-        </div>
+        <div class="page-wrapper">
+            <!-- Navbar -->
+            <div id="navbarContainer"></div>
 
-        <!-- Page Content -->
-        <div class="container-fluid p-4">
             <!-- Page Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Game Management</h2>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGameModal">
-                    <i class="bi bi-plus-circle"></i> Add New Game
-                </button>
-            </div>
+            <div class="page-header d-print-none">
+                <div class="container-xl">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title">
+                                Quản lý trò chơi
+                            </h2>
+                        </div>
+                        <div class="col-auto ms-auto d-print-none">
+                            <div class="btn-list">
 
-            <!-- Stats Cards -->
-            <div class="row mb-4">
-                <div class="col-lg-3 col-md-6">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-joystick fa-2x"></i>
-                                <div class="ms-3">
-                                    <div class="small">Total Games</div>
-                                    <div class="h4" id="totalGamesCount">456</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card bg-success text-white">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-check-circle fa-2x"></i>
-                                <div class="ms-3">
-                                    <div class="small">Approved</div>
-                                    <div class="h4" id="approvedGamesCount">423</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card bg-warning text-white">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-clock fa-2x"></i>
-                                <div class="ms-3">
-                                    <div class="small">Pending</div>
-                                    <div class="h4" id="pendingGamesCount">33</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card bg-info text-white">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-download fa-2x"></i>
-                                <div class="ms-3">
-                                    <div class="small">Total Downloads</div>
-                                    <div class="h4" id="totalDownloads">125K</div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Filters and Search -->
-            <div class="card shadow mb-4">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <input type="text" class="form-control" id="searchGame" placeholder="Search games...">
-                        </div>
-                        <div class="col-md-2">
-                            <select class="form-select" id="categoryFilter">
-                                <option value="">All Categories</option>
-                                <option value="action">Action</option>
-                                <option value="adventure">Adventure</option>
-                                <option value="rpg">RPG</option>
-                                <option value="strategy">Strategy</option>
-                                <option value="simulation">Simulation</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <select class="form-select" id="publisherFilter">
-                                <option value="">All Publishers</option>
-                                <!-- Dynamic options -->
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <select class="form-select" id="statusFilter">
-                                <option value="">All Status</option>
-                                <option value="approved">Approved</option>
-                                <option value="pending">Pending</option>
-                                <option value="rejected">Rejected</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <select class="form-select" id="sortBy">
-                                <option value="name">Name (A-Z)</option>
-                                <option value="name_desc">Name (Z-A)</option>
-                                <option value="price">Price (Low-High)</option>
-                                <option value="price_desc">Price (High-Low)</option>
-                                <option value="downloads">Reviews (Most)</option>
-                                <option value="downloads_desc">Reviews (Least)</option>
-                                <option value="date">Date (Newest)</option>
-                                <option value="date_desc">Date (Oldest)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <button class="btn btn-outline-secondary" onclick="resetFilters()">
-                                <i class="bi bi-arrow-clockwise"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Games Table -->
-            <div class="card shadow">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Games List</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped" id="gamesTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Game</th>
-                                    <th>Publisher</th>
-                                    <th>Category</th>
-                                    <th>Version</th>
-                                    <th>Price</th>
-                                    <th>Downloads</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Dynamic content -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Pagination -->
-                    <nav aria-label="Games pagination">
-                        <ul class="pagination justify-content-center" id="gamesPagination">
-                            <!-- Pagination will be generated dynamically -->
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Game Modal -->
-    <div class="modal fade" id="addGameModal" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New Game</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addGameForm">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="gameName" class="form-label">Game Name</label>
-                                    <input type="text" class="form-control" id="gameName" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="gameVersion" class="form-label">Version</label>
-                                    <input type="text" class="form-control" id="gameVersion" required>
+            <!-- Page Body -->
+            <div class="page-body">
+                <div class="container-xl">
+                    <!-- Stats Cards -->
+                    <div class="row row-deck row-cards mb-4">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Tổng số trò chơi</div>
+                                    </div>
+                                    <div class="h1 mb-3" id="totalGamesCount">...</div>
+                                    <div class="d-flex mb-2">
+                                        <div>Tất cả trò chơi trong danh mục</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="gamePublisher" class="form-label">Publisher</label>
-                                    <select class="form-select" id="gamePublisher" required>
-                                        <option value="">Select Publisher</option>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Đã duyệt</div>
+                                    </div>
+                                    <div class="h1 mb-3" id="approvedGamesCount">...</div>
+                                    <div class="d-flex mb-2">
+                                        <div class="text-success">
+                                            <span class="status-dot status-dot-animated bg-success me-1"></span>
+                                            Đang hoạt động trên cửa hàng
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Chờ duyệt</div>
+                                    </div>
+                                    <div class="h1 mb-3" id="pendingGamesCount">0</div>
+                                    <div class="d-flex mb-2">
+                                        <div>Đang chờ xem xét</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Tổng giá trị</div>
+                                    </div>
+                                    <div class="h1 mb-3" id="totalDownloads">...</div>
+                                    <div class="d-flex mb-2">
+                                        <div>Tổng giá trị danh mục</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <div class="input-icon">
+                                        <span class="input-icon-addon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 0 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                                        </span>
+                                        <input type="text" class="form-control" id="searchGame" placeholder="Tìm kiếm trò chơi...">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="categoryFilter">
+                                        <option value="">Tất cả danh mục</option>
+                                        <option value="action">Hành động</option>
+                                        <option value="adventure">Phiêu lưu</option>
+                                        <option value="rpg">RPG</option>
+                                        <option value="strategy">Chiến thuật</option>
+                                        <option value="simulation">Mô phỏng</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="publisherFilter">
+                                        <option value="">Tất cả nhà phát hành</option>
                                         <!-- Dynamic options -->
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="gameCategory" class="form-label">Category</label>
-                                    <select class="form-select" id="gameCategory" required>
-                                        <option value="">Select Category</option>
-                                        <!-- Dynamic options -->
+                                <div class="col-md-2">
+                                    <select class="form-select" id="statusFilter">
+                                        <option value="">Tất cả trạng thái</option>
+                                        <option value="approved">Đã duyệt</option>
+                                        <option value="pending">Chờ duyệt</option>
+                                        <option value="rejected">Từ chối</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="gamePrice" class="form-label">Price ($)</label>
-                                    <input type="number" class="form-control" id="gamePrice" step="0.01" required>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="sortBy">
+                                        <option value="name">Tên (A-Z)</option>
+                                        <option value="name_desc">Tên (Z-A)</option>
+                                        <option value="price">Giá (Thấp-Cao)</option>
+                                        <option value="price_desc">Giá (Cao-Thấp)</option>
+                                        <option value="downloads">Đánh giá (Nhiều nhất)</option>
+                                        <option value="downloads_desc">Đánh giá (Ít nhất)</option>
+                                        <option value="date">Ngày (Mới nhất)</option>
+                                        <option value="date_desc">Ngày (Cũ nhất)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" /><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" /></svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="gameDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="gameDescription" rows="4" required></textarea>
+                    </div>
+
+                    <!-- Games Table -->
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table card-table table-vcenter text-nowrap datatable" id="gamesTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Trò chơi</th>
+                                        <th>Nhà phát hành</th>
+                                        <th>Danh mục</th>
+                                        <th>Phiên bản</th>
+                                        <th>Giá</th>
+                                        <th>Lượt tải</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="mb-3">
-                            <label for="gameImage" class="form-label">Game Image</label>
-                            <input type="file" class="form-control" id="gameImage" accept="image/*">
+                        <div class="card-footer d-flex align-items-center justify-content-center">
+                            <ul class="pagination m-0" id="gamesPagination">
+                                <!-- Pagination will be generated dynamically -->
+                            </ul>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="saveGame()">Save Game</button>
+                    </div>
                 </div>
             </div>
+            
+             <footer class="footer footer-transparent d-print-none">
+                <div class="container-xl">
+                    <div class="row text-center align-items-center flex-row-reverse">
+                        <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                            <ul class="list-inline list-inline-dots mb-0">
+                                <li class="list-inline-item">
+                                    Copyright &copy; 2025
+                                    <a href="." class="link-secondary">Game Store</a>.
+                                    All rights reserved.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
+
+
 
     <!-- Game Details Modal -->
-    <div class="modal fade" id="gameDetailsModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+    <div class="modal modal-blur fade" id="gameDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Game Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title">Chi tiết trò chơi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="gameDetailsContent">
                     <!-- Dynamic content -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="editGame()" id="editBtn">
-                        <i class="bi bi-pencil"></i> Edit
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="deleteCurrentGame()" id="deleteBtn">
-                        <i class="bi bi-trash"></i> Delete
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <div class="d-flex w-100 justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <div>
+                             <button type="button" class="btn btn-primary" onclick="editGame()" id="editBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
+                                Sửa
+                            </button>
+                            <button type="button" class="btn btn-danger" onclick="deleteCurrentGame()" id="deleteBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                                Xóa
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Edit Game Modal -->
-    <div class="modal fade" id="editGameModal" tabindex="-1">
-        <div class="modal-dialog modal-xl">
+    <div class="modal modal-blur fade" id="editGameModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Game</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title">Sửa trò chơi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="editGameForm">
@@ -283,13 +262,13 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="editGameName" class="form-label">Game Name</label>
+                                    <label class="form-label">Tên trò chơi</label>
                                     <input type="text" class="form-control" id="editGameName" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="editGameVersion" class="form-label">Version</label>
+                                    <label class="form-label">Phiên bản</label>
                                     <input type="text" class="form-control" id="editGameVersion">
                                 </div>
                             </div>
@@ -297,19 +276,19 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="editGameCategory" class="form-label">Category</label>
+                                    <label class="form-label">Danh mục</label>
                                     <select class="form-select" id="editGameCategory"></select>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="editGamePrice" class="form-label">Price (VND)</label>
+                                    <label class="form-label">Giá (VND)</label>
                                     <input type="number" class="form-control" id="editGamePrice" step="1000" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="editGameThumbnail" class="form-label">Thumbnail URL</label>
+                                    <label class="form-label">URL Hình ảnh</label>
                                     <input type="text" class="form-control" id="editGameThumbnail">
                                 </div>
                             </div>
@@ -317,41 +296,44 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="editGameDeveloper" class="form-label">Developer</label>
+                                    <label class="form-label">Nhà phát triển</label>
                                     <input type="text" class="form-control" id="editGameDeveloper">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="editGamePublisher" class="form-label">Publisher</label>
-                                    <input type="text" class="form-control" id="editGamePublisher">
+                                    <label class="form-label">Nhà phát hành</label>
+                                    <select class="form-select" id="editGamePublisher">
+                                        <option value="">Chọn nhà phát hành</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="editGameDescription" class="form-label">Description</label>
+                            <label class="form-label">Mô tả</label>
                             <textarea class="form-control" id="editGameDescription" rows="4"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="editGameTags" class="form-label">Tags (comma separated)</label>
+                            <label class="form-label">Tags (phân cách bằng dấu phẩy)</label>
                             <input type="text" class="form-control" id="editGameTags">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="updateGame()">Save Changes</button>
+                    <button type="button" class="btn me-auto" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="updateGame()">Lưu thay đổi</button>
                 </div>
             </div>
         </div>
     </div>
 
-    </div>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../env.js"></script>
-    <script src="../assets/js/admin/utils.js"></script>
-    <script src="../assets/js/admin/components.js"></script>
+    <script src="../assets/tabler/js/tabler.min.js"></script>
+    <script src="../env.js?v=2"></script>
+    <script src="../assets/js/admin/utils.js?v=2"></script>
+    <script src="../assets/js/admin/components.js?v=2"></script>
+    <script src="../assets/js/toast.js?v=2"></script>
     <script>
         // Ensure ENV is loaded
         if (!window.ENV || !window.ENV.API_URL) {
@@ -361,6 +343,7 @@
         const API_BASE_URL = window.ENV.API_URL;
         let allGames = [];
         let allCategories = [];
+        let allPublishers = [];
         let currentPage = 1;
         let pageSize = 10;
         let currentGameId = null;
@@ -370,8 +353,7 @@
             const authResult = await AdminUtils.checkAuthentication();
             if (authResult) {
                 await AdminComponents.init('products');
-                await loadCategories();
-                await loadGames();
+                await Promise.all([loadCategories(), loadPublishers(), loadGames()]);
                 setupFilters();
             }
         });
@@ -393,13 +375,30 @@
             }
         }
 
+        // Load publishers
+        async function loadPublishers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/publishers`, {
+                    credentials: 'include',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    allPublishers = result.data;
+                    populatePublisherDropdowns();
+                }
+            } catch (error) {
+                console.error('Error loading publishers:', error);
+            }
+        }
+
         function populateCategoryDropdowns() {
             const selectors = ['categoryFilter', 'gameCategory', 'editGameCategory'];
             selectors.forEach(id => {
                 const select = document.getElementById(id);
                 if (select) {
                     const isFilter = id === 'categoryFilter';
-                    select.innerHTML = isFilter ? '<option value="">All Categories</option>' : '<option value="">Select Category</option>';
+                    select.innerHTML = isFilter ? '<option value="">Tất cả danh mục</option>' : '<option value="">Chọn danh mục</option>';
                     allCategories.forEach(cat => {
                         select.innerHTML += `<option value="${cat.name}">${cat.name}</option>`;
                     });
@@ -419,7 +418,6 @@
                 if (result.status === 'success') {
                     allGames = result.data;
                     updateStats();
-                    populatePublisherFilter();
                     displayGames();
                 } else {
                     console.error('Failed to load games:', result.message);
@@ -429,24 +427,216 @@
             }
         }
 
-        function populatePublisherFilter() {
-            // Get unique publishers from games
-            const publishers = [...new Set(allGames.map(g => g.publisher).filter(Boolean))];
-            const select = document.getElementById('publisherFilter');
-            if (select) {
-                select.innerHTML = '<option value="">All Publishers</option>';
-                publishers.sort().forEach(pub => {
-                    select.innerHTML += `<option value="${pub}">${pub}</option>`;
+        function populatePublisherDropdowns() {
+            // Populate Filter
+            const filterSelect = document.getElementById('publisherFilter');
+            if (filterSelect) {
+                filterSelect.innerHTML = '<option value="">Tất cả nhà phát hành</option>';
+                allPublishers.forEach(pub => {
+                    filterSelect.innerHTML += `<option value="${pub.uid}">${pub.uname}</option>`;
                 });
             }
+
+            // Populate Add Form
+
+
+            // Populate Edit Form (if needed dynamically, though handled in openEditModal maybe?)
+            // We can pre-populate the options, and select the value later
+            const editSelect = document.getElementById('editGamePublisher');
+            // Check if editGamePublisher is input or select. In HTML it was input text. It should be select.
+            // I will change it to select in a separate edit or handle it here if I can change HTML too.
+            // The previous HTML view showed it as input type="text". I should change it to select.
         }
 
         function updateStats() {
+            const approved = allGames.filter(g => g.status === 'approved').length;
+            const pending = allGames.filter(g => g.status === 'pending').length;
+            
             document.getElementById('totalGamesCount').textContent = allGames.length;
-            document.getElementById('approvedGamesCount').textContent = allGames.length;
-            document.getElementById('pendingGamesCount').textContent = 0;
+            document.getElementById('approvedGamesCount').textContent = approved;
+            document.getElementById('pendingGamesCount').textContent = pending;
+            
             const totalRevenue = allGames.reduce((sum, game) => sum + (parseFloat(game.price) || 0), 0);
             document.getElementById('totalDownloads').textContent = AdminUtils.formatCurrency(totalRevenue);
+        }
+
+        function setupFilters() {
+            ['searchGame', 'categoryFilter', 'publisherFilter', 'statusFilter', 'sortBy'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', () => {
+                        currentPage = 1;
+                        displayGames();
+                    });
+                    if (id === 'searchGame') {
+                        element.addEventListener('input', () => {
+                            currentPage = 1;
+                            displayGames();
+                        });
+                    }
+                }
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('searchGame').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('publisherFilter').value = '';
+            document.getElementById('statusFilter').value = ''; // Reset to show all
+            document.getElementById('sortBy').value = 'name';
+            currentPage = 1;
+            displayGames();
+        }
+
+        function getFilteredGames() {
+            const searchTerm = document.getElementById('searchGame').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const publisher = document.getElementById('publisherFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            let filtered = allGames.filter(game => {
+                const matchSearch = game.name.toLowerCase().includes(searchTerm);
+                const matchCategory = !category || game.category === category;
+                const matchPublisher = !publisher || game.publisherid == publisher || (game.publisher && game.publisher.toString() === publisher);
+                const matchStatus = !status || (game.status || 'pending') === status;
+                return matchSearch && matchCategory && matchPublisher && matchStatus;
+            });
+
+            // Sorting
+            filtered.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name': return a.name.localeCompare(b.name);
+                    case 'name_desc': return b.name.localeCompare(a.name);
+                    case 'price': return (parseFloat(a.price) || 0) - (parseFloat(b.price) || 0);
+                    case 'price_desc': return (parseFloat(b.price) || 0) - (parseFloat(a.price) || 0);
+                    case 'downloads': return (b.reviews || 0) - (a.reviews || 0);
+                    case 'downloads_desc': return (a.reviews || 0) - (b.reviews || 0);
+                    case 'date': return new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0);
+                    case 'date_desc': return new Date(a.releaseDate || 0) - new Date(b.releaseDate || 0);
+                    default: return 0;
+                }
+            });
+
+            return filtered;
+        }
+
+        function renderPagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / pageSize);
+            const pagination = document.getElementById('gamesPagination');
+            pagination.innerHTML = '';
+
+            // Previous
+            pagination.innerHTML += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Trước</a>
+                </li>
+            `;
+
+            // Pages
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    pagination.innerHTML += `
+                        <li class="page-item ${currentPage === i ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                        </li>
+                    `;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    pagination.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
+            }
+
+            // Next
+            pagination.innerHTML += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Sau</a>
+                </li>
+            `;
+        }
+
+        function changePage(page) {
+            const filtered = getFilteredGames(); // Recalculate to get correct total pages
+            const totalPages = Math.ceil(filtered.length / pageSize);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                displayGames();
+            }
+        }
+
+        function viewGame(id) {
+            const game = allGames.find(g => g.id == id);
+            if (!game) return;
+            
+            currentGameId = id;
+            const statusBadges = {
+                'active': '<span class="badge bg-success">Hoạt động</span>',
+                'approved': '<span class="badge bg-success">Đã duyệt</span>',
+                'pending': '<span class="badge bg-warning">Chờ duyệt</span>',
+                'rejected': '<span class="badge bg-danger">Từ chối</span>'
+            };
+
+             // Get publisher name
+             let pubName = game.publisher_name || game.publisher;
+             if (!pubName && game.publisherid) {
+                 const pub = allPublishers.find(p => p.uid == game.publisherid);
+                 pubName = pub ? pub.uname : 'Unknown';
+             }
+
+            const content = `
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="${game.image || 'https://placehold.co/400x300'}" class="img-fluid rounded mb-3" onerror="this.src='https://placehold.co/400x300'">
+                        <div class="mb-3">
+                            <label class="form-label">Trạng thái</label>
+                            <div>${statusBadges[game.status || 'pending'] || statusBadges['pending']}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h3>${game.name} <span class="badge bg-secondary-lt ms-2">${game.version || '1.0'}</span></h3>
+                        <p><strong>Nhà phát hành:</strong> ${pubName || '-'}</p>
+                        <p><strong>Nhà phát triển:</strong> ${game.developer || '-'}</p>
+                        <p><strong>Danh mục:</strong> ${game.category || '-'}</p>
+                        <p><strong>Giá:</strong> ${AdminUtils.formatCurrency(game.price)}</p>
+                        <p><strong>Tags:</strong> ${game.tags && Array.isArray(game.tags) ? game.tags.map(t => `<span class="badge bg-blue-lt me-1">${t}</span>`).join('') : '-'}</p>
+                        <div class="hr-text">Mô tả</div>
+                        <p>${game.description || 'Chưa có mô tả'}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('gameDetailsContent').innerHTML = content;
+            new bootstrap.Modal(document.getElementById('gameDetailsModal')).show();
+        }
+
+        function openEditModal(id) {
+            const game = allGames.find(g => g.id == id);
+            if (!game) return;
+            
+            currentGameId = id;
+            document.getElementById('editGameId').value = game.id;
+            document.getElementById('editGameName').value = game.name;
+            document.getElementById('editGameVersion').value = game.version || '';
+            document.getElementById('editGamePrice').value = game.price;
+            document.getElementById('editGameThumbnail').value = game.image || '';
+            document.getElementById('editGameDeveloper').value = game.developer || '';
+            document.getElementById('editGameDescription').value = game.description || '';
+            document.getElementById('editGameTags').value = game.tags && Array.isArray(game.tags) ? game.tags.join(', ') : '';
+            
+            // Set selects
+            const pubSelect = document.getElementById('editGamePublisher');
+            // Ensure publisher select is populated first if it wasn't
+            if (pubSelect.options.length <= 1 && allPublishers.length > 0) {
+                 pubSelect.innerHTML = '<option value="">Chọn nhà phát hành</option>';
+                 allPublishers.forEach(pub => {
+                    pubSelect.innerHTML += `<option value="${pub.uid}">${pub.uname}</option>`;
+                });
+            }
+            pubSelect.value = game.publisherid || '';
+            
+            const catSelect = document.getElementById('editGameCategory');
+            catSelect.value = game.category || '';
+
+            new bootstrap.Modal(document.getElementById('editGameModal')).show();
         }
 
         function displayGames() {
@@ -458,212 +648,136 @@
             const pageGames = filtered.slice(startIdx, endIdx);
 
             if (pageGames.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">No games found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Không tìm thấy trò chơi</td></tr>';
+                renderPagination(0);
                 return;
             }
 
-            tbody.innerHTML = pageGames.map(game => `
+            tbody.innerHTML = pageGames.map(game => {
+                const statusBadges = {
+                    'active': '<span class="badge bg-success me-1"></span> Hoạt động',
+                    'approved': '<span class="badge bg-success me-1"></span> Đã duyệt',
+                    'pending': '<span class="badge bg-warning me-1"></span> Chờ duyệt',
+                    'rejected': '<span class="badge bg-danger me-1"></span> Từ chối'
+                };
+                const status = game.status || 'pending';
+                const statusBadge = statusBadges[status] || statusBadges['pending'];
+
+                let actionButtons = `
+                    <button class="btn btn-outline-info btn-icon" onclick="viewGame(${game.id})" title="Xem chi tiết">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+                    </button>
+                    <button class="btn btn-outline-primary btn-icon" onclick="openEditModal(${game.id})" title="Sửa">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
+                    </button>
+                    <button class="btn btn-outline-danger btn-icon" onclick="deleteGame(${game.id})" title="Xóa">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                    </button>
+                `;
+
+                if (status === 'pending') {
+                    actionButtons = `
+                        <button class="btn btn-outline-success btn-icon" onclick="updateGameStatus(${game.id}, 'approved')" title="Duyệt">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                        </button>
+                        <button class="btn btn-outline-warning btn-icon" onclick="updateGameStatus(${game.id}, 'rejected')" title="Từ chối">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+                        </button>
+                        ${actionButtons}
+                    `;
+                }
+
+                // Get publisher name from object or string
+                let pubName = game.publisher_name || game.publisher;
+                if (!pubName && game.publisherid) {
+                    const pub = allPublishers.find(p => p.uid == game.publisherid);
+                    pubName = pub ? pub.uname : 'Unknown';
+                }
+
+                return `
                 <tr>
-                    <td>${game.Gid}</td>
+                    <td><span class="text-muted">${game.id}</span></td>
                     <td>
                         <div class="d-flex align-items-center">
-                            <img src="${game.thumbnail || 'https://via.placeholder.com/50'}" 
+                            <img src="${game.image || 'https://placehold.co/50'}" 
                                  alt="${game.name}" 
-                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" 
-                                 class="me-2">
-                            <strong>${game.name}</strong>
+                                 style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" 
+                                 class="me-2"
+                                 onerror="this.src='https://placehold.co/50'">
+                            <div class="font-weight-medium">${game.name}</div>
                         </div>
                     </td>
-                    <td>${game.publisher || '-'}</td>
-                    <td><span class="badge bg-secondary">${game.category || 'N/A'}</span></td>
+                    <td>${pubName || '-'}</td>
+                    <td><span class="badge bg-secondary-lt">${game.category || 'N/A'}</span></td>
                     <td>${game.version || '1.0'}</td>
                     <td>${AdminUtils.formatCurrency(game.price)}</td>
                     <td>${game.reviews || 0}</td>
-                    <td><span class="badge bg-success">Active</span></td>
+                    <td>${statusBadge}</td>
                     <td>
-                        <button class="btn btn-info btn-sm" onclick="viewGame(${game.Gid})">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                        <button class="btn btn-primary btn-sm" onclick="openEditModal(${game.Gid})">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteGame(${game.Gid})">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <div class="btn-list flex-nowrap">
+                            ${actionButtons}
+                        </div>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
 
             renderPagination(filtered.length);
         }
 
-        function getFilteredGames() {
-            const searchTerm = document.getElementById('searchGame')?.value.toLowerCase() || '';
-            const categoryFilter = document.getElementById('categoryFilter')?.value || '';
-            const publisherFilter = document.getElementById('publisherFilter')?.value || '';
-            const statusFilter = document.getElementById('statusFilter')?.value || '';
-            const sortBy = document.getElementById('sortBy')?.value || 'name';
+        // ... helpers ...
 
-            let filtered = allGames.filter(game => {
-                const matchesSearch = !searchTerm || 
-                    game.name.toLowerCase().includes(searchTerm) ||
-                    (game.publisher && game.publisher.toLowerCase().includes(searchTerm)) ||
-                    (game.developer && game.developer.toLowerCase().includes(searchTerm));
-                const matchesCategory = !categoryFilter || game.category === categoryFilter;
-                const matchesPublisher = !publisherFilter || game.publisher === publisherFilter;
-                // Status filter - since all games are 'Active' by default, handle this
-                const gameStatus = game.status || 'approved';
-                const matchesStatus = !statusFilter || gameStatus === statusFilter;
-                return matchesSearch && matchesCategory && matchesPublisher && matchesStatus;
-            });
+        // Update game status
+        function updateGameStatus(gameId, status) {
+            const action = status === 'approved' ? 'duyệt' : 'từ chối';
+            Toast.confirm(`Bạn có chắc chắn muốn ${action} trò chơi này?`, async () => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/games/${gameId}/status`, {
+                        method: 'PATCH',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify({ status: status })
+                    });
 
-            // Apply sorting
-            filtered.sort((a, b) => {
-                switch(sortBy) {
-                    case 'name':
-                        return (a.name || '').localeCompare(b.name || '');
-                    case 'name_desc':
-                        return (b.name || '').localeCompare(a.name || '');
-                    case 'downloads':
-                        return (b.reviews || 0) - (a.reviews || 0);
-                    case 'downloads_desc':
-                        return (a.reviews || 0) - (b.reviews || 0);
-                    case 'price':
-                        return (parseFloat(a.price) || 0) - (parseFloat(b.price) || 0);
-                    case 'price_desc':
-                        return (parseFloat(b.price) || 0) - (parseFloat(a.price) || 0);
-                    case 'date':
-                        return new Date(b.release_date || 0) - new Date(a.release_date || 0);
-                    case 'date_desc':
-                        return new Date(a.release_date || 0) - new Date(b.release_date || 0);
-                    default:
-                        return 0;
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        Toast.success('Cập nhật trạng thái thành công!');
+                        await loadGames();
+                    } else {
+                        Toast.error('Lỗi: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error updating status:', error);
+                    Toast.error('Lỗi cập nhật trạng thái');
                 }
             });
-
-            return filtered;
         }
 
-        function renderPagination(totalItems) {
-            const totalPages = Math.ceil(totalItems / pageSize);
-            const pagination = document.getElementById('gamesPagination');
-            
-            let html = `
-                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Previous</a>
-                </li>
-            `;
-            
-            for (let i = 1; i <= totalPages; i++) {
-                if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-                    html += `
-                        <li class="page-item ${currentPage === i ? 'active' : ''}">
-                            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
-                        </li>
-                    `;
-                } else if (i === currentPage - 3 || i === currentPage + 3) {
-                    html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+        // Delete game
+        function deleteGame(gameId) {
+            Toast.confirm('Bạn có chắc chắn muốn xóa trò chơi này không?', async () => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/games/${gameId}`, {
+                        method: 'DELETE',
+                        credentials: 'include',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        Toast.success('Xóa trò chơi thành công!');
+                        await loadGames();
+                    } else {
+                        Toast.error('Xóa thất bại: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error deleting game:', error);
+                    Toast.error('Lỗi khi xóa trò chơi');
                 }
-            }
-            
-            html += `
-                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a>
-                </li>
-            `;
-            
-            pagination.innerHTML = html;
-        }
-
-        function changePage(page) {
-            const totalPages = Math.ceil(getFilteredGames().length / pageSize);
-            if (page >= 1 && page <= totalPages) {
-                currentPage = page;
-                displayGames();
-            }
-        }
-
-        function setupFilters() {
-            document.getElementById('searchGame')?.addEventListener('input', () => {
-                currentPage = 1;
-                displayGames();
             });
-            document.getElementById('categoryFilter')?.addEventListener('change', () => {
-                currentPage = 1;
-                displayGames();
-            });
-            document.getElementById('publisherFilter')?.addEventListener('change', () => {
-                currentPage = 1;
-                displayGames();
-            });
-            document.getElementById('statusFilter')?.addEventListener('change', () => {
-                currentPage = 1;
-                displayGames();
-            });
-            document.getElementById('sortBy')?.addEventListener('change', () => {
-                currentPage = 1;
-                displayGames();
-            });
-        }
-
-        function resetFilters() {
-            document.getElementById('searchGame').value = '';
-            document.getElementById('categoryFilter').value = '';
-            document.getElementById('publisherFilter').value = '';
-            document.getElementById('statusFilter').value = '';
-            document.getElementById('sortBy').value = 'name';
-            currentPage = 1;
-            displayGames();
-        }
-
-        // View game details
-        function viewGame(gameId) {
-            const game = allGames.find(g => g.Gid === gameId);
-            if (!game) return;
-
-            currentGameId = gameId;
-            const content = document.getElementById('gameDetailsContent');
-            content.innerHTML = `
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="${game.thumbnail || 'https://via.placeholder.com/200'}" 
-                             alt="${game.name}" class="img-fluid rounded">
-                    </div>
-                    <div class="col-md-8">
-                        <h4>${game.name}</h4>
-                        <p class="text-muted">${game.developer || 'Unknown Developer'} | ${game.publisher || 'Unknown Publisher'}</p>
-                        <p><strong>Category:</strong> ${game.category || 'N/A'}</p>
-                        <p><strong>Price:</strong> ${AdminUtils.formatCurrency(game.price)}</p>
-                        <p><strong>Version:</strong> ${game.version || '1.0'}</p>
-                        <p><strong>Rating:</strong> ${game.rating || 0} ⭐ (${game.reviews || 0} reviews)</p>
-                        <p><strong>Tags:</strong> ${game.tags || 'None'}</p>
-                        <p><strong>Release Date:</strong> ${game.release_date || 'N/A'}</p>
-                        <hr>
-                        <p>${game.description || 'No description available.'}</p>
-                    </div>
-                </div>
-            `;
-            
-            new bootstrap.Modal(document.getElementById('gameDetailsModal')).show();
-        }
-
-        // Open edit modal
-        function openEditModal(gameId) {
-            const game = allGames.find(g => g.Gid === gameId);
-            if (!game) return;
-
-            document.getElementById('editGameId').value = game.Gid;
-            document.getElementById('editGameName').value = game.name;
-            document.getElementById('editGameVersion').value = game.version || '';
-            document.getElementById('editGameCategory').value = game.category || '';
-            document.getElementById('editGamePrice').value = game.price || 0;
-            document.getElementById('editGameThumbnail').value = game.thumbnail || '';
-            document.getElementById('editGameDeveloper').value = game.developer || '';
-            document.getElementById('editGamePublisher').value = game.publisher || '';
-            document.getElementById('editGameDescription').value = game.description || '';
-            document.getElementById('editGameTags').value = game.tags || '';
-
-            new bootstrap.Modal(document.getElementById('editGameModal')).show();
         }
 
         // Update game
@@ -676,10 +790,20 @@
                 price: parseFloat(document.getElementById('editGamePrice').value),
                 thumbnail: document.getElementById('editGameThumbnail').value,
                 developer: document.getElementById('editGameDeveloper').value,
-                publisher: document.getElementById('editGamePublisher').value,
+                publisherid: document.getElementById('editGamePublisher').value, // Send publisherid
                 description: document.getElementById('editGameDescription').value,
-                tags: document.getElementById('editGameTags').value
+                tags: document.getElementById('editGameTags').value.split(',').map(t => t.trim()), // Format tags
+                status: 'pending' // Or keep existing? For now let's set to pending on edit for re-review? Or keep?
             };
+            
+            // Should probably fetch existing status to preserve it or let admin decide. 
+            // Simplified: If admin edits, status likely remains unless stated.
+            // But we didn't add status field to edit form. 
+            // Let's grab the current game object to keep status.
+            const currentGame = allGames.find(g => g.id == gameId);
+            if (currentGame) {
+                gameData.status = currentGame.status;
+            }
 
             try {
                 const response = await fetch(`${API_BASE_URL}/games/${gameId}`, {
@@ -694,77 +818,22 @@
 
                 const result = await response.json();
                 if (result.status === 'success') {
-                    alert('Game updated successfully!');
+                    Toast.success('Cập nhật trò chơi thành công!');
                     bootstrap.Modal.getInstance(document.getElementById('editGameModal')).hide();
                     await loadGames();
                 } else {
-                    alert('Failed to update game: ' + result.message);
+                    Toast.error('Cập nhật trò chơi thất bại: ' + result.message);
                 }
             } catch (error) {
                 console.error('Error updating game:', error);
-                alert('Error updating game');
+                Toast.error('Lỗi cập nhật trò chơi');
             }
         }
 
         // Save new game
-        async function saveGame() {
-            const gameData = {
-                name: document.getElementById('gameName').value,
-                version: document.getElementById('gameVersion').value,
-                category: document.getElementById('gameCategory').value,
-                price: parseFloat(document.getElementById('gamePrice').value),
-                description: document.getElementById('gameDescription').value
-            };
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/games`, {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: JSON.stringify(gameData)
-                });
 
-                const result = await response.json();
-                if (result.status === 'success') {
-                    alert('Game created successfully!');
-                    bootstrap.Modal.getInstance(document.getElementById('addGameModal')).hide();
-                    document.getElementById('addGameForm').reset();
-                    await loadGames();
-                } else {
-                    alert('Failed to create game: ' + result.message);
-                }
-            } catch (error) {
-                console.error('Error creating game:', error);
-                alert('Error creating game');
-            }
-        }
 
-        // Delete game
-        async function deleteGame(gameId) {
-            if (!confirm('Are you sure you want to delete this game?')) return;
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/games/${gameId}`, {
-                    method: 'DELETE',
-                    credentials: 'include',
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                });
-
-                const result = await response.json();
-                if (result.status === 'success') {
-                    alert('Game deleted successfully!');
-                    await loadGames();
-                } else {
-                    alert('Failed to delete game: ' + result.message);
-                }
-            } catch (error) {
-                console.error('Error deleting game:', error);
-                alert('Error deleting game');
-            }
-        }
 
         function deleteCurrentGame() {
             if (currentGameId) {

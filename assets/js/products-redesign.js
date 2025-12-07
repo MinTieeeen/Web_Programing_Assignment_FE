@@ -36,7 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const data = await response.json();
         
         if (data.status === 'success' && data.data) {
-            allGames = data.data.map(game => normalizeGameData(game));
+            // Filter only approved games
+            const approvedGames = data.data.filter(game => game.status === 'approved');
+            allGames = approvedGames.map(game => normalizeGameData(game));
             initPage();
         } else {
             throw new Error('Invalid data format');
@@ -60,7 +62,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             category: game.category_name || game.category || 'Unknown',
             tags: typeof game.tags === 'string' ? game.tags.split(',') : (Array.isArray(game.tags) ? game.tags : []),
             description: game.description || 'No description available',
-            rating: game.rating || 0
+            rating: game.rating || 0,
+            status: game.status // Include status in normalized data
         };
     }
 

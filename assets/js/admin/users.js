@@ -35,28 +35,13 @@ class AdminUsers {
             }
         });
 
-        // Form submissions
-        const addUserForm = document.getElementById('addUserForm');
-        if (addUserForm) {
-            addUserForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.validateAndSaveUser();
-            });
-        }
 
-        const editUserForm = document.getElementById('editUserForm');
-        if (editUserForm) {
-            editUserForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.validateAndUpdateUser();
-            });
-        }
     }
 
     async loadUsers() {
         try {
             // Use admin endpoint to get users with balance
-            const response = await fetch(`${API_BASE_URL}/admin/users/all`, {
+            const response = await fetch(`${API_BASE_URL}/users`, {
                 credentials: 'include'
             });
             const result = await response.json();
@@ -78,14 +63,14 @@ class AdminUsers {
                 
                 this.totalUsers = this.users.length;
             } else {
-                throw new Error(result.message || 'Failed to fetch users');
+                throw new Error(result.message || 'Không thể tải danh sách người dùng');
             }
         } catch (error) {
             console.error('Error loading users:', error);
             // Fallback to empty array if API fails
             this.users = [];
             this.totalUsers = 0;
-            showToast('Failed to load users: ' + error.message, 'error');
+            showToast('Lỗi tải người dùng: ' + error.message, 'error');
         }
         
         this.renderUsers();
@@ -105,27 +90,43 @@ class AdminUsers {
             <tr>
                 <td>${user.id}</td>
                 <td>
-                    <img src=\"${user.avatar}\" alt=\"${user.firstName} ${user.lastName}\" class=\"avatar me-2\">
+                    <img src="${user.avatar}" 
+                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.firstName + ' ' + user.lastName)}&background=random'" 
+                         alt="${user.firstName} ${user.lastName}" 
+                         class="avatar me-2">
                 </td>
                 <td><strong>${user.username}</strong></td>
                 <td>${user.firstName} ${user.lastName}</td>
                 <td>${user.email}</td>
                 <td>${this.formatDate(user.dateOfBirth)}</td>
-                <td>$${user.balance.toFixed(2)}</td>
+                <td>${AdminUtils.formatCurrency(user.balance)}</td>
                 <td>
-                    <span class=\"badge status-${user.status}\">${this.capitalizeFirst(user.status)}</span>
+                    <span class="badge status-${user.status}">${this.translateStatus(user.status)}</span>
                 </td>
                 <td>
-                    <div class=\"btn-group\" role=\"group\">
-                        <button class=\"btn btn-primary btn-sm\" onclick=\"adminUsers.editUser(${user.id})\" data-bs-toggle=\"tooltip\" title=\"Edit User\">
-                            <i class=\"bi bi-pencil\"></i>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">
+                            Thao tác
                         </button>
-                        <button class=\"btn btn-info btn-sm\" onclick=\"adminUsers.viewUser(${user.id})\" data-bs-toggle=\"tooltip\" title=\"View Details\">
-                            <i class=\"bi bi-eye\"></i>
-                        </button>
-                        <button class=\"btn btn-danger btn-sm\" onclick=\"adminUsers.deleteUser(${user.id})\" data-bs-toggle=\"tooltip\" title=\"Delete User\">
-                            <i class=\"bi bi-trash\"></i>
-                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="#" onclick="adminUsers.viewUser(${user.id})">
+                                <i class="bi bi-eye me-2"></i>
+                                Xem chi tiết
+                            </a>
+                            <a class="dropdown-item" href="#" onclick="adminUsers.initResetPassword(${user.id}, '${user.username}')">
+                                <i class="bi bi-key me-2"></i>
+                                Đặt lại mật khẩu
+                            </a>
+                            <a class="dropdown-item" href="#" onclick="adminUsers.initToggleLock(${user.id}, ${user.status !== 'suspended'}, '${user.username}')">
+                                <i class="bi ${user.status === 'suspended' ? 'bi-unlock' : 'bi-lock'} me-2"></i>
+                                ${user.status === 'suspended' ? 'Mở khóa tài khoản' : 'Khóa tài khoản'}
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#" onclick="adminUsers.deleteUser(${user.id})">
+                                <i class="bi bi-trash me-2"></i>
+                                Xóa người dùng
+                            </a>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -134,6 +135,8 @@ class AdminUsers {
         // Reinitialize tooltips
         this.initializeTooltips();
     }
+
+    // ... (renderUsers implementation)
 
     getFilteredUsers() {
         const searchTerm = document.getElementById('searchUser')?.value.toLowerCase() || '';
@@ -172,8 +175,8 @@ class AdminUsers {
 
         // Previous button
         paginationHTML += `
-            <li class=\"page-item ${this.currentPage === 1 ? 'disabled' : ''}\">
-                <a class=\"page-link\" href=\"#\" onclick=\"adminUsers.changePage(${this.currentPage - 1})\">Previous</a>
+            <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="adminUsers.changePage(${this.currentPage - 1})">Trước</a>
             </li>
         `;
 
@@ -181,19 +184,19 @@ class AdminUsers {
         for (let i = 1; i <= totalPages; i++) {
             if (i === 1 || i === totalPages || (i >= this.currentPage - 2 && i <= this.currentPage + 2)) {
                 paginationHTML += `
-                    <li class=\"page-item ${this.currentPage === i ? 'active' : ''}\">
-                        <a class=\"page-link\" href=\"#\" onclick=\"adminUsers.changePage(${i})\">${i}</a>
+                    <li class="page-item ${this.currentPage === i ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="adminUsers.changePage(${i})">${i}</a>
                     </li>
                 `;
             } else if (i === this.currentPage - 3 || i === this.currentPage + 3) {
-                paginationHTML += `<li class=\"page-item disabled\"><span class=\"page-link\">...</span></li>`;
+                paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
             }
         }
 
         // Next button
         paginationHTML += `
-            <li class=\"page-item ${this.currentPage === totalPages ? 'disabled' : ''}\">
-                <a class=\"page-link\" href=\"#\" onclick=\"adminUsers.changePage(${this.currentPage + 1})\">Next</a>
+            <li class="page-item ${this.currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="adminUsers.changePage(${this.currentPage + 1})">Sau</a>
             </li>
         `;
 
@@ -211,37 +214,12 @@ class AdminUsers {
         }
     }
 
-    editUser(userId) {
-        const user = this.users.find(u => u.id === userId);
-        if (!user) return;
-
-        // Populate edit form
-        document.getElementById('editUserId').value = user.id;
-        document.getElementById('editUsername').value = user.username;
-        document.getElementById('editEmail').value = user.email;
-        document.getElementById('editFirstName').value = user.firstName;
-        document.getElementById('editLastName').value = user.lastName;
-        document.getElementById('editDateOfBirth').value = user.dateOfBirth;
-        document.getElementById('editBalance').value = user.balance;
-        document.getElementById('editStatus').value = user.status;
-
-        // Show modal
-        const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
-        modal.show();
-    }
-
-    viewUser(userId) {
-        const user = this.users.find(u => u.id === userId);
-        if (!user) return;
-
-        alert(`User Details:\nID: ${user.id}\nName: ${user.firstName} ${user.lastName}\nEmail: ${user.email}\nStatus: ${user.status}\nBalance: $${user.balance.toFixed(2)}`);
-    }
 
     deleteUser(userId) {
         const user = this.users.find(u => u.id === userId);
         if (!user) return;
 
-        if (confirm(`Are you sure you want to delete user "${user.username}"?`)) {
+        if (confirm(`Bạn có chắc muốn xóa người dùng "${user.username}"?`)) {
             this.performDeleteUser(userId, user.username);
         }
     }
@@ -256,41 +234,22 @@ class AdminUsers {
             const result = await response.json();
             
             if (result.status === 'success') {
-                showToast(`User "${username}" has been deleted`, 'success');
+                showToast(`Đã xóa người dùng "${username}"`, 'success');
                 await this.loadUsers(); // Reload from database
             } else {
-                throw new Error(result.message || 'Failed to delete user');
+                throw new Error(result.message || 'Không thể xóa người dùng');
             }
         } catch (error) {
             console.error('Delete user error:', error);
-            showToast('Failed to delete user: ' + error.message, 'error');
+            showToast('Lỗi xóa người dùng: ' + error.message, 'error');
         }
     }
 
-    validateAndSaveUser() {
-        const formData = this.getFormData('addUserForm');
-        
-        // Validation
-        if (!this.validateUserForm(formData)) {
-            return;
-        }
 
-        // Check if username or email already exists
-        const existingUser = this.users.find(u => 
-            u.username === formData.username || u.email === formData.email
-        );
-
-        if (existingUser) {
-            showToast('Username or email already exists', 'error');
-            return;
-        }
-
-        this.saveUser(formData);
-    }
 
     validateAndUpdateUser() {
         const formData = this.getFormData('editUserForm');
-        const userId = parseInt(formData.userId);
+        const userId = parseInt(formData.userid);
         
         // Validation
         if (!this.validateUserForm(formData, userId)) {
@@ -302,22 +261,22 @@ class AdminUsers {
 
     validateUserForm(formData, excludeUserId = null) {
         // Basic validation
-        if (!formData.username || !formData.email || !formData.firstName || !formData.lastName) {
-            showToast('Please fill in all required fields', 'error');
+        if (!formData.username || !formData.email || !formData.firstname || !formData.lastname) {
+            showToast('Vui lòng điền đầy đủ thông tin bắt buộc', 'error');
             return false;
         }
 
         // Email validation
-        const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(formData.email)) {
-            showToast('Please enter a valid email address', 'error');
+            showToast('Vui lòng nhập địa chỉ email hợp lệ', 'error');
             return false;
         }
 
         // Username validation
         const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
         if (!usernameRegex.test(formData.username)) {
-            showToast('Username must be 3-20 characters long and contain only letters, numbers, and underscores', 'error');
+            showToast('Tài khoản phải từ 3-20 ký tự và chỉ chứa chữ cái, số và dấu gạch dưới', 'error');
             return false;
         }
 
@@ -328,7 +287,7 @@ class AdminUsers {
         );
 
         if (existingUser) {
-            showToast('Username or email already exists', 'error');
+            showToast('Tài khoản hoặc email đã tồn tại', 'error');
             return false;
         }
 
@@ -337,16 +296,15 @@ class AdminUsers {
 
     getFormData(formId) {
         const form = document.getElementById(formId);
-        const formData = new FormData(form);
         const data = {};
 
         // Get all form fields
         const inputs = form.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
+            const fieldName = input.id.replace('edit', '').toLowerCase();
             if (input.type === 'checkbox') {
-                data[input.id.replace('edit', '').toLowerCase()] = input.checked;
+                data[fieldName] = input.checked;
             } else {
-                const fieldName = input.id.replace('edit', '').toLowerCase();
                 data[fieldName] = input.value;
             }
         });
@@ -354,48 +312,7 @@ class AdminUsers {
         return data;
     }
 
-    saveUser(userData) {
-        this.performCreateUser(userData);
-    }
 
-    async performCreateUser(userData) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/admin/users/create`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    uname: userData.username,
-                    email: userData.email,
-                    password: userData.password,
-                    fname: userData.firstname,
-                    lname: userData.lastname,
-                    DOB: userData.dateofbirth,
-                    balance: parseFloat(userData.initialbalance) || 0
-                })
-            });
-            
-            const result = await response.json();
-            
-            if (result.status === 'success') {
-                showToast(`User "${userData.username}" has been created successfully`, 'success');
-                
-                // Close modal and reset form
-                const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
-                modal.hide();
-                document.getElementById('addUserForm').reset();
-                
-                await this.loadUsers(); // Reload from database
-            } else {
-                throw new Error(result.message || 'Failed to create user');
-            }
-        } catch (error) {
-            console.error('Create user error:', error);
-            showToast('Failed to create user: ' + error.message, 'error');
-        }
-    }
 
     updateUser(userData) {
         this.performUpdateUser(userData);
@@ -424,7 +341,7 @@ class AdminUsers {
             const result = await response.json();
             
             if (result.status === 'success') {
-                showToast(`User "${userData.username}" has been updated successfully`, 'success');
+                showToast(`Đã cập nhật người dùng "${userData.username}" thành công`, 'success');
                 
                 // Close modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
@@ -432,11 +349,11 @@ class AdminUsers {
                 
                 await this.loadUsers(); // Reload from database
             } else {
-                throw new Error(result.message || 'Failed to update user');
+                throw new Error(result.message || 'Không thể cập nhật người dùng');
             }
         } catch (error) {
             console.error('Update user error:', error);
-            showToast('Failed to update user: ' + error.message, 'error');
+            showToast('Lỗi cập nhật người dùng: ' + error.message, 'error');
         }
     }
 
@@ -448,23 +365,274 @@ class AdminUsers {
     }
 
     initializeTooltips() {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle=\"tooltip\"]'));
+        // Dispose existing tooltips first
+        const tooltips = document.querySelectorAll('.tooltip');
+        tooltips.forEach(t => t.remove());
+
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     }
 
     formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('vi-VN');
     }
 
-    capitalizeFirst(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+    translateStatus(status) {
+        const map = {
+            'active': 'Hoạt động',
+            'inactive': 'Không hoạt động',
+            'suspended': 'Bị đình chỉ'
+        };
+        return map[status] || status;
     }
+
+    initToggleLock(userId, shouldLock, username) {
+        if (!shouldLock) {
+             // If unlocking, just confirm
+             if (confirm(`Bạn có chắc muốn mở khóa tài khoản "${username}"?`)) {
+                 this.performToggleLock(userId, false, null);
+             }
+             return;
+        }
+
+        // If locking, show modal
+        document.getElementById('lockUserId').value = userId;
+        document.getElementById('lockTargetUsername').textContent = username;
+        document.getElementById('confirmLock').checked = false;
+        document.getElementById('lockDuration').value = 'permanent';
+        
+        const modal = new bootstrap.Modal(document.getElementById('lockUserModal'));
+        modal.show();
+    }
+
+    async submitLockUser() {
+        const userId = document.getElementById('lockUserId').value;
+        const duration = document.getElementById('lockDuration').value;
+        const isConfirmed = document.getElementById('confirmLock').checked;
+
+        if (!isConfirmed) {
+            AdminUtils.showToast('Vui lòng xác nhận khoá tài khoản', 'warning');
+            return;
+        }
+
+        await this.performToggleLock(userId, true, duration);
+        bootstrap.Modal.getInstance(document.getElementById('lockUserModal')).hide();
+    }
+
+    async performToggleLock(userId, shouldLock, duration) {
+        try {
+            const user = this.users.find(u => u.id == userId);
+            
+            const response = await fetch(`${API_BASE_URL}/admin/users/toggle-lock`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    uid: userId,
+                    lock: shouldLock,
+                    duration: duration
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                const action = shouldLock ? 'khóa' : 'mở khóa';
+                AdminUtils.showToast(`Đã ${action} tài khoản thành công`, 'success');
+                // Update local state and re-render
+                if (user) {
+                    user.status = shouldLock ? 'suspended' : 'active';
+                }
+                this.renderUsers();
+            } else {
+                throw new Error(result.message || 'Thao tác thất bại');
+            }
+        } catch (error) {
+            console.error('Toggle lock error:', error);
+            AdminUtils.showToast('Lỗi: ' + error.message, 'error');
+        }
+    }
+
+    async viewUser(userId) {
+        try {
+            // Show loading state or clear previous data
+            document.getElementById('viewUserUsername').textContent = 'Loading...';
+            
+            // Fetch detailed user info
+            const response = await fetch(`${API_BASE_URL}/admin/users/detail?uid=${userId}`, {
+                 credentials: 'include'
+            });
+            const result = await response.json();
+
+            if (result.status !== 'success') {
+                throw new Error(result.message || 'Không thể tải chi tiết người dùng');
+            }
+
+            const data = result.data;
+            const user = data.user;
+            const games = data.games || [];
+            const feedbacks = data.feedbacks || [];
+            const comments = data.comments || [];
+
+            // 1. Populate Overview Tab (and Header)
+            document.getElementById('viewUserAvatar').src = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fname + ' ' + user.lname)}&background=random`;
+            document.getElementById('viewUserAvatar').onerror = function() {
+                this.onerror = null;
+                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fname + ' ' + user.lname)}&background=random`;
+            };
+            document.getElementById('viewUserFullName').textContent = `${user.fname} ${user.lname}`;
+            document.getElementById('viewUserUsername').textContent = `@${user.uname}`;
+            
+            const statusBadge = document.getElementById('viewUserStatus');
+            // Assuming status might be missing in getOne result if not joined, but loadUsers had it. 
+            // In getOne, backend returns raw columns. Schema has 'status'? 
+            // If not, we infer or use what we have. Let's use user.status if exists, else active.
+            const status = user.status || 'active'; 
+            statusBadge.textContent = this.translateStatus(status);
+            statusBadge.className = `badge bg-${status === 'active' ? 'green' : (status === 'suspended' ? 'red' : 'secondary')} text-${status === 'active' ? 'green' : (status === 'suspended' ? 'red' : 'secondary')}-fg`;
+            
+            document.getElementById('viewUserId').textContent = user.uid;
+            document.getElementById('viewUserEmail').textContent = user.email;
+            document.getElementById('viewUserDob').textContent = this.formatDate(user.DOB);
+            document.getElementById('viewUserBalance').textContent = AdminUtils.formatCurrency(user.balance);
+            document.getElementById('viewUserJoined').textContent = this.formatDate(user.created_at);
+            document.getElementById('viewUserLastLogin').textContent = user.last_login ? this.formatDate(user.last_login, 'long') : 'Chưa đăng nhập';
+
+            // 2. Populate Games Tab
+            const gamesTableBody = document.querySelector('#viewUserGamesTable tbody');
+            const gamesEmpty = document.getElementById('viewUserGamesEmpty');
+            gamesTableBody.innerHTML = '';
+            
+            if (games.length > 0) {
+                gamesTableBody.innerHTML = games.map(game => `
+                    <tr>
+                        <td>
+                            <div class="d-flex py-1 align-items-center">
+                                <span class="avatar me-2" style="background-image: url(${game.header_image || ''})"></span>
+                                <div class="flex-fill">
+                                    <div class="font-weight-medium">${game.name}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${game.price > 0 ? AdminUtils.formatCurrency(game.price) : 'Miễn phí'}</td>
+                        <td>${this.formatDate(game.purchase_date || new Date())}</td>
+                    </tr>
+                `).join('');
+                gamesEmpty.classList.add('d-none');
+            } else {
+                gamesEmpty.classList.remove('d-none');
+            }
+
+            // 3. Populate Activity Tab
+            
+            // Feedbacks
+            const feedbacksTableBody = document.querySelector('#viewUserFeedbacksTable tbody');
+            const feedbacksEmpty = document.getElementById('viewUserFeedbacksEmpty');
+            feedbacksTableBody.innerHTML = '';
+
+            if (feedbacks.length > 0) {
+                feedbacksTableBody.innerHTML = feedbacks.map(fb => `
+                    <tr>
+                        <td class="text-truncate" style="max-width: 150px;" title="${fb.game_name}">${fb.game_name}</td>
+                        <td>
+                             <span class="text-warning">
+                                ${'★'.repeat(fb.rating)}${'☆'.repeat(5 - fb.rating)}
+                            </span>
+                        </td>
+                        <td class="text-truncate" style="max-width: 200px;" title="${fb.content}">${fb.content}</td>
+                        <td>${this.formatDate(fb.feedback_time)}</td>
+                    </tr>
+                `).join('');
+                feedbacksEmpty.classList.add('d-none');
+            } else {
+                feedbacksEmpty.classList.remove('d-none');
+            }
+
+            // Comments
+            const commentsTableBody = document.querySelector('#viewUserCommentsTable tbody');
+            const commentsEmpty = document.getElementById('viewUserCommentsEmpty');
+            commentsTableBody.innerHTML = '';
+
+            if (comments.length > 0) {
+                commentsTableBody.innerHTML = comments.map(cmt => `
+                    <tr>
+                        <td>#${cmt.news_id}</td>
+                        <td class="text-truncate" style="max-width: 300px;" title="${cmt.content}">${cmt.content}</td>
+                        <td>${this.formatDate(cmt.created_at || new Date())}</td> 
+                    </tr>
+                `).join('');
+                commentsEmpty.classList.add('d-none');
+            } else {
+                commentsEmpty.classList.remove('d-none');
+            }
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('viewUserModal'));
+            modal.show();
+
+        } catch (error) {
+            console.error('View user details error:', error);
+            AdminUtils.showToast('Lỗi tải thông tin chi tiết: ' + error.message, 'error');
+        }
+    }
+
+    initResetPassword(userId, username) {
+        document.getElementById('resetUserId').value = userId;
+        document.getElementById('resetTargetUsername').textContent = username;
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmNewPassword').value = '';
+        
+        const modal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+        modal.show();
+    }
+
+    async submitResetPassword() {
+        const userId = document.getElementById('resetUserId').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+        if (newPassword !== confirmNewPassword) {
+            AdminUtils.showToast('Mật khẩu xác nhận không khớp', 'error');
+            return;
+        }
+
+        if (newPassword.length < 8) {
+             AdminUtils.showToast('Mật khẩu phải có ít nhất 8 ký tự', 'error');
+             return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/admin/users/reset-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    uid: userId,
+                    newPassword: newPassword
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                AdminUtils.showToast('Đã đặt lại mật khẩu thành công', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal')).hide();
+            } else {
+                throw new Error(result.message || 'Không thể đặt lại mật khẩu');
+            }
+        } catch (error) {
+            console.error('Reset password error:', error);
+            AdminUtils.showToast('Lỗi: ' + error.message, 'error');
+        }
+    }
+
+
 }
 
 // Utility Functions
@@ -480,13 +648,9 @@ function debounce(func, wait) {
     };
 }
 
-function saveUser() {
-    adminUsers.validateAndSaveUser();
-}
 
-function updateUser() {
-    adminUsers.validateAndUpdateUser();
-}
+
+// Utility Functions
 
 function resetFilters() {
     adminUsers.resetFilters();
@@ -496,22 +660,4 @@ function resetFilters() {
 let adminUsers;
 document.addEventListener('DOMContentLoaded', () => {
     adminUsers = new AdminUsers();
-});
-
-// Initialize sidebar functionality
-document.addEventListener('DOMContentLoaded', () => {
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('main-content');
-
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', () => {
-            if (window.innerWidth <= 768) {
-                sidebar.classList.toggle('show');
-            } else {
-                sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
-            }
-        });
-    }
 });

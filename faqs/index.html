@@ -17,93 +17,51 @@
 <body>
     <div data-include="header"></div>
 
-    <div class="container mt-4 pt-5">
-        <!-- Page Header -->
-        <div class="faq-page-header text-center mb-5">
-            <h1 class="faq-page-title">Trung tâm trợ giúp</h1>
-            <p class="faq-page-subtitle">Tìm câu trả lời cho các câu hỏi thường gặp</p>
-            
-            <!-- Search Box -->
-            <div class="faq-search-wrapper mx-auto mt-4">
-                <i class="bi bi-search faq-search-icon"></i>
-                <input type="text" class="faq-search-input" id="faq-search" 
-                       placeholder="Tìm kiếm câu hỏi hoặc chủ đề..." autocomplete="off">
-                <div class="faq-search-results" id="search-results"></div>
+    <div class="faq-container container">
+        <!-- Sidebar -->
+        <aside class="faq-sidebar">
+            <div class="sidebar-header mb-4">
+                <h4 class="text-white m-0">Chủ đề</h4>
             </div>
-        </div>
+            <ul class="topic-list" id="topic-list">
+                <!-- Topics injected via JS -->
+            </ul>
+        </aside>
 
-        <!-- Breadcrumb -->
-        <nav class="faq-breadcrumb mb-4" id="faq-breadcrumb">
-            <a href="#" onclick="goHome(); return false;">
-                <i class="bi bi-house-fill"></i> Trợ giúp
-            </a>
-        </nav>
+        <!-- Main Content -->
+        <main class="faq-content">
+            <!-- Search & Header Section -->
+            <div class="faq-main-header mb-4">
+                <h1 class="faq-page-title" id="page-title">Trung tâm trợ giúp</h1>
+                
+                <!-- Search Box -->
+                <div class="faq-search-wrapper mt-3">
+                    <i class="bi bi-search faq-search-icon"></i>
+                    <input type="text" class="faq-search-input" id="faq-search" 
+                           placeholder="Tìm kiếm câu hỏi..." autocomplete="off">
+                    <div class="faq-search-results" id="search-results"></div>
+                </div>
+            </div>
 
-        <!-- Category Grid (Home View) -->
-        <div class="row" id="faq-categories">
-            <!-- Categories injected via JS -->
-        </div>
+            <!-- Dynamic Content (Questions List or Detail) -->
+            <div id="faq-dynamic-content">
+                <!-- Injected via JS -->
+            </div>
 
-        <!-- Topic Questions View -->
-        <div class="faq-topic-view" id="faq-topic-view" style="display: none;">
-            <div class="faq-topic-card">
-                <div class="faq-topic-header">
-                    <div class="faq-topic-icon-wrapper" id="topic-icon-wrapper">
-                        <i class="bi bi-info-circle" id="topic-icon"></i>
+            <!-- Contact Support (Always visible at bottom of content) -->
+            <div class="faq-contact-section mt-5" id="faq-contact">
+                <div class="faq-contact-card">
+                    <div class="faq-contact-icon">
+                        <i class="bi bi-headset"></i>
                     </div>
-                    <div>
-                        <h2 class="faq-topic-title" id="topic-title">Chung</h2>
-                        <p class="faq-topic-desc" id="topic-desc">Các câu hỏi thường gặp về chủ đề này</p>
+                    <div class="faq-contact-info">
+                        <h4>Cần hỗ trợ thêm?</h4>
+                        <p>Liên hệ đội ngũ hỗ trợ của chúng tôi</p>
                     </div>
-                </div>
-                <div class="faq-questions-list" id="questions-list">
-                    <!-- Questions injected via JS -->
+                    <a href="../contact/index.html" class="btn btn-primary rounded-pill px-4">Gửi yêu cầu</a>
                 </div>
             </div>
-        </div>
-
-        <!-- Question Detail View -->
-        <div class="faq-detail-view" id="faq-detail-view" style="display: none;">
-            <div class="faq-article-card">
-                <h1 class="faq-article-title" id="article-title"></h1>
-                <div class="faq-article-content" id="article-content"></div>
-                <div class="faq-article-meta">
-                    <span><i class="bi bi-folder2"></i> <span id="article-category"></span></span>
-                </div>
-            </div>
-            
-            <!-- Related Questions -->
-            <div class="faq-related-card" id="faq-related">
-                <h3 class="faq-related-title">Bài viết liên quan</h3>
-                <div class="faq-related-list" id="related-list"></div>
-            </div>
-        </div>
-
-        <!-- Popular Questions Section (Home) -->
-        <div class="faq-popular-section" id="faq-popular">
-            <h3 class="faq-section-title">
-                <i class="bi bi-star-fill text-warning"></i> Câu hỏi phổ biến
-            </h3>
-            <div class="faq-popular-card">
-                <div class="faq-popular-list" id="popular-list">
-                    <!-- Popular questions injected via JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Contact Support -->
-        <div class="faq-contact-section" id="faq-contact">
-            <div class="faq-contact-card">
-                <div class="faq-contact-icon">
-                    <i class="bi bi-headset"></i>
-                </div>
-                <div class="faq-contact-info">
-                    <h4>Cần hỗ trợ thêm?</h4>
-                    <p>Liên hệ đội ngũ hỗ trợ của chúng tôi</p>
-                </div>
-                <a href="/contact/index.html" class="btn btn-primary rounded-pill px-4">Liên hệ hỗ trợ</a>
-            </div>
-        </div>
+        </main>
     </div>
 
     <div data-include="footer"></div>
@@ -112,6 +70,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/include-components.js"></script>
     <script src="../assets/js/auth.js"></script>
-    <script src="../assets/js/faqs.js"></script>
+    <script src="../assets/js/faqs.js?v=sidebar_layout"></script>
 </body>
 </html>

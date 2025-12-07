@@ -2,67 +2,91 @@
 class AdminUtils {
     // Authentication
     static async checkAuthentication() {
-        let currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || sessionStorage.getItem('user') || localStorage.getItem('user');
+        // Prioritize localStorage as it's explicitly updated by login.html
+        let currentUser = localStorage.getItem('currentUser') || localStorage.getItem('user') || sessionStorage.getItem('currentUser') || sessionStorage.getItem('user');
+        
         if (!currentUser) {
+            console.warn('[AdminUtils] No user found in storage. Redirecting to login.');
             window.location.href = '../auth/login.html';
             return false;
         }
 
-        const userData = JSON.parse(currentUser);
-        
-        // Check if user is admin by querying backend
-        const isAdmin = await this.checkIfUserIsAdmin(userData.uid);
-        if (!isAdmin) {
-            alert('Access denied. Admin privileges required.');
+        try {
+            const userData = JSON.parse(currentUser);
+            console.log('[AdminUtils] Checking auth for:', userData.uname);
+            console.log('[AdminUtils] Role/UserType:', userData.role || userData.userType);
+
+            // Check role from local storage (verified at login)
+            const role = userData.role || userData.userType;
+            
+            // Allow 'admin' (strict check)
+            if (role !== 'admin') {
+                console.error('[AdminUtils] Access denied. User role is:', role);
+                alert('Truy cập bị từ chối. Yêu cầu quyền quản trị.\nVai trò hiện tại: ' + role);
+                this.logout();
+                return false;
+            }
+
+            this.updateUserDisplay(userData);
+            return true;
+        } catch (e) {
+            console.error('[AdminUtils] Error parsing user data:', e);
             this.logout();
             return false;
         }
-
-        this.updateUserDisplay(userData);
-        return true;
     }
 
+    // Deprecated: Role is now checked locally based on userType from login
     static async checkIfUserIsAdmin(uid) {
-        try {
-            if (!window.ENV || !window.ENV.API_URL) {
-                throw new Error('[utils.js] ENV not loaded! Include env.js before this script.');
-            }
-            const apiUrl = window.ENV.API_URL;
-            const response = await fetch(`${apiUrl}/admin/check/${uid}`, {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                return data.status === 'success' && data.isAdmin;
-            }
-            return false;
-        } catch (error) {
-            console.error('Admin check error:', error);
-            return false;
-        }
-    }
-
-    static updateUserDisplay(userData) {
-        const adminUserName = document.getElementById('adminUserName');
-        if (adminUserName) {
-            adminUserName.textContent = userData.name || userData.email || 'Admin User';
-        }
+        return true; 
     }
 
     static logout() {
-        // Clear all possible user storage keys
-        sessionStorage.removeItem('currentUser');
-        sessionStorage.removeItem('user');
         localStorage.removeItem('currentUser');
         localStorage.removeItem('user');
         localStorage.removeItem('rememberedUser');
         localStorage.removeItem('token');
         window.location.href = '../auth/login.html';
+    }
+
+    static updateUserDisplay(userData) {
+        // Update user name
+        const displayName = userData.fullname || userData.uname || 'Admin';
+        const nameElements = document.querySelectorAll('.admin-user-name');
+        nameElements.forEach(el => el.textContent = displayName);
+
+        // Update avatar
+        const avatarElements = document.querySelectorAll('.admin-user-avatar');
+        avatarElements.forEach(avatarEl => {
+            const fallbackUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
+            
+            if (userData.avatar) {
+                 // Create a temp image to test loading
+                 const img = new Image();
+                 img.onload = () => {
+                      if (avatarEl.tagName === 'IMG') {
+                         avatarEl.src = userData.avatar;
+                     } else {
+                         avatarEl.style.backgroundImage = `url(${userData.avatar})`;
+                     }
+                 };
+                 img.onerror = () => {
+                     // Fallback to ui-avatars
+                     if (avatarEl.tagName === 'IMG') {
+                         avatarEl.src = fallbackUrl;
+                     } else {
+                         avatarEl.style.backgroundImage = `url(${fallbackUrl})`;
+                     }
+                 };
+                 img.src = userData.avatar;
+            } else {
+                 if (avatarEl.tagName === 'IMG') {
+                     avatarEl.src = fallbackUrl;
+                 } else {
+                     avatarEl.style.backgroundImage = `url(${fallbackUrl})`;
+                 }
+            }
+        });
     }
 
     // Data Management
@@ -183,12 +207,12 @@ class AdminUtils {
             
             // Required field validation
             if (input.hasAttribute('required') && !value) {
-                errors[fieldName] = 'This field is required';
+                errors[fieldName] = 'Trường này là bắt buộc';
             }
             
             // Email validation
             if (input.type === 'email' && value && !this.isValidEmail(value)) {
-                errors[fieldName] = 'Please enter a valid email address';
+                errors[fieldName] = 'Vui lòng nhập địa chỉ email hợp lệ';
             }
             
             // Number validation
@@ -198,10 +222,10 @@ class AdminUtils {
                 const numValue = parseFloat(value);
                 
                 if (!isNaN(min) && numValue < min) {
-                    errors[fieldName] = `Value must be at least ${min}`;
+                    errors[fieldName] = `Giá trị phải ít nhất là ${min}`;
                 }
                 if (!isNaN(max) && numValue > max) {
-                    errors[fieldName] = `Value must be at most ${max}`;
+                    errors[fieldName] = `Giá trị phải tối đa là ${max}`;
                 }
             }
         });
@@ -257,13 +281,13 @@ class AdminUtils {
                     </a>
                 </li>
             `).join('')
-            : '<li><span class="dropdown-item text-muted">No notifications</span></li>';
+            : '<li><span class="dropdown-item text-muted">Không có thông báo nào</span></li>';
             
         notificationList.innerHTML = `
-            <li><h6 class="dropdown-header">Notifications</h6></li>
+            <li><h6 class="dropdown-header">Thông báo</h6></li>
             ${listHTML}
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-center" href="#" onclick="AdminUtils.markAllNotificationsRead()">Mark all as read</a></li>
+            <li><a class="dropdown-item text-center" href="#" onclick="AdminUtils.markAllNotificationsRead()">Đánh dấu tất cả là đã đọc</a></li>
         `;
     }
 
@@ -350,10 +374,10 @@ class AdminUtils {
         const hours = Math.floor(minutes / 60);
         const days = Math.floor(hours / 24);
         
-        if (seconds < 60) return 'Just now';
-        if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-        if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-        if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+        if (seconds < 60) return 'Vừa xong';
+        if (minutes < 60) return `${minutes} phút trước`;
+        if (hours < 24) return `${hours} giờ trước`;
+        if (days < 7) return `${days} ngày trước`;
         
         return date.toLocaleDateString();
     }

@@ -1,470 +1,336 @@
-// Publishers Management JavaScript
-
-// Ensure ENV is loaded before using API
-if (!window.ENV || !window.ENV.API_URL) {
-    throw new Error('[publishers.js] ENV not loaded! Include env.js before this script.');
-}
-
-// State management
-let publishers = [];
-let filteredPublishers = [];
-let currentPage = 1;
-const itemsPerPage = 10;
-
-// API Endpoints
-const API_BASE = window.ENV.API_URL;
-
 /**
- * Initialize the publishers page
+ * Publishers Management Logic
  */
-async function initPublishersPage() {
-    console.log('Initializing publishers page...');
-    await loadPublishers();
-    setupEventListeners();
-}
 
-/**
- * Load publishers from API
- */
-async function loadPublishers() {
-    try {
-        showLoading(true);
-        
-        const response = await fetch(`${API_BASE}/admin/publishers`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        const result = await response.json();
-        
-        if (result.status === 'success') {
-            publishers = result.data || [];
-            filteredPublishers = [...publishers];
-            updateStats();
-            renderPublishers();
-        } else {
-            console.error('Failed to load publishers:', result.message);
-            showError('Failed to load publishers: ' + result.message);
-        }
-    } catch (error) {
-        console.error('Error loading publishers:', error);
-        showError('Error loading publishers: ' + error.message);
-    } finally {
-        showLoading(false);
+// Mock Data for Publishers
+let publishers = [
+    {
+        id: 1,
+        name: 'Electronic Arts (EA)',
+        location: 'usa',
+        taxCode: 'US-987654321',
+        website: 'https://www.ea.com',
+        description: 'Một trong những công ty game lớn nhất thế giới.',
+        gamesCount: 42,
+        status: 'active',
+        joinedDate: '2020-01-15',
+        contactEmail: 'contact@ea.com',
+        contactPhone: '+1 650-628-1500'
+    },
+    {
+        id: 2,
+        name: 'Ubisoft',
+        location: 'france', // Will map to text
+        taxCode: 'FR-123456789',
+        website: 'https://www.ubisoft.com',
+        description: 'Nổi tiếng với Assassin\'s Creed và Far Cry.',
+        gamesCount: 35,
+        status: 'active',
+        joinedDate: '2020-03-20',
+        contactEmail: 'partners@ubisoft.com',
+        contactPhone: '+33 1 48 18 50 00'
+    },
+    {
+        id: 3,
+        name: 'Nintendo',
+        location: 'japan',
+        taxCode: 'JP-456789123',
+        website: 'https://www.nintendo.com',
+        description: 'Huyền thoại của ngành công nghiệp game.',
+        gamesCount: 28,
+        status: 'active',
+        joinedDate: '2019-11-10',
+        contactEmail: 'business@nintendo.co.jp',
+        contactPhone: '+81 75-662-9600'
+    },
+    {
+        id: 4,
+        name: 'VNG Corporation',
+        location: 'vietnam',
+        taxCode: 'VN-0102030405',
+        website: 'https://www.vng.com.vn',
+        description: 'Kỳ lân công nghệ của Việt Nam.',
+        gamesCount: 15,
+        status: 'active',
+        joinedDate: '2021-05-05',
+        contactEmail: 'publishing@vng.com.vn',
+        contactPhone: '+84 28 3962 3888'
+    },
+    {
+        id: 5,
+        name: 'Indie Game Studio X',
+        location: 'germany',
+        taxCode: 'DE-555666777',
+        website: 'https://indiestudiox.com',
+        description: 'Studio game độc lập mới nổi.',
+        gamesCount: 2,
+        status: 'pending',
+        joinedDate: '2023-06-01',
+        contactEmail: 'hello@indiestudiox.com',
+        contactPhone: '+49 30 1234567'
+    },
+    {
+        id: 6,
+        name: 'Old Games Ltd',
+        location: 'uk',
+        taxCode: 'UK-999888777',
+        website: 'https://oldgames.uk',
+        description: 'Chuyên phát hành lại các game cổ điển.',
+        gamesCount: 10,
+        status: 'inactive',
+        joinedDate: '2018-08-15',
+        contactEmail: 'info@oldgames.uk',
+        contactPhone: '+44 20 7123 4567'
     }
+];
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    renderPublishers();
+    renderStats();
+    initializeEventListeners();
+});
+
+function initializeEventListeners() {
+    document.getElementById('searchPublisher').addEventListener('input', renderPublishers);
+    document.getElementById('locationFilter').addEventListener('change', renderPublishers);
+    document.getElementById('statusFilter').addEventListener('change', renderPublishers);
 }
 
-/**
- * Update statistics cards
- */
-function updateStats() {
-    const totalPublishers = publishers.length;
-    const totalGames = publishers.reduce((sum, pub) => sum + (parseInt(pub.games_count) || 0), 0);
+// Render Stats
+function renderStats() {
+    document.getElementById('totalPublishers').textContent = publishers.length;
+    document.getElementById('activePublishers').textContent = publishers.filter(p => p.status === 'active').length;
     
-    document.getElementById('totalPublishers').textContent = totalPublishers;
-    document.getElementById('activePublishers').textContent = totalPublishers; // All are active
+    const totalGames = publishers.reduce((sum, p) => sum + p.gamesCount, 0);
     document.getElementById('totalPublishedGames').textContent = totalGames;
-    document.getElementById('pendingPublishers').textContent = '0';
+    
+    document.getElementById('pendingPublishers').textContent = publishers.filter(p => p.status === 'pending').length;
 }
 
-/**
- * Render publishers table
- */
+// Render Publishers Table
 function renderPublishers() {
     const tbody = document.querySelector('#publishersTable tbody');
     if (!tbody) return;
-    
-    // Pagination
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedPublishers = filteredPublishers.slice(startIndex, endIndex);
-    
-    if (paginatedPublishers.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="8" class="text-center py-4">
-                    <i class="bi bi-inbox text-muted fs-1"></i>
-                    <p class="text-muted mt-2">No publishers found</p>
-                </td>
-            </tr>
-        `;
-        return;
-    }
-    
-    tbody.innerHTML = paginatedPublishers.map(publisher => `
-        <tr data-id="${publisher.uid}">
-            <td>${publisher.uid}</td>
+
+    const searchTerm = document.getElementById('searchPublisher').value.toLowerCase();
+    const locationFilter = document.getElementById('locationFilter').value;
+    const statusFilter = document.getElementById('statusFilter').value;
+
+    const filteredPublishers = publishers.filter(publisher => {
+        const matchesSearch = publisher.name.toLowerCase().includes(searchTerm) || 
+                            publisher.taxCode.toLowerCase().includes(searchTerm);
+        const matchesLocation = !locationFilter || publisher.location === locationFilter;
+        const matchesStatus = !statusFilter || publisher.status === statusFilter;
+        return matchesSearch && matchesLocation && matchesStatus;
+    });
+
+    tbody.innerHTML = filteredPublishers.map(publisher => `
+        <tr>
+            <td><span class="text-muted">#${publisher.id}</span></td>
             <td>
                 <div class="d-flex align-items-center">
-                    <img src="${publisher.avatar || '../assets/images/default-avatar.png'}" 
-                         class="rounded-circle me-2" width="32" height="32" 
-                         alt="${publisher.uname}" onerror="this.src='../assets/images/default-avatar.png'">
-                    <div>
-                        <div class="fw-bold">${escapeHtml(publisher.uname || '')}</div>
-                        <small class="text-muted">${escapeHtml(publisher.email || '')}</small>
+                    <span class="avatar me-2 rounded-circle bg-blue-lt">
+                        ${getInitials(publisher.name)}
+                    </span>
+                    <div class="flex-fill">
+                        <div class="font-weight-medium">${publisher.name}</div>
+                        <div class="text-muted"><a href="mailto:${publisher.contactEmail}" class="text-reset">${publisher.contactEmail}</a></div>
                     </div>
                 </div>
             </td>
-            <td>${escapeHtml(publisher.location || 'N/A')}</td>
-            <td><code>${escapeHtml(publisher.taxcode || 'N/A')}</code></td>
             <td>
-                <span class="badge bg-primary">${publisher.games_count || 0} games</span>
+                ${getLocationLabel(publisher.location)}
             </td>
-            <td><span class="badge bg-success">Active</span></td>
-            <td>${formatDate(publisher.DOB)}</td>
+            <td>${publisher.taxCode}</td>
             <td>
-                <button class="btn btn-sm btn-outline-primary me-1" onclick="viewPublisher(${publisher.uid})" title="View">
-                    <i class="bi bi-eye"></i>
+                ${publisher.gamesCount}
+            </td>
+            <td>
+                ${renderStatusBadge(publisher.status)}
+            </td>
+            <td>${AdminUtils.formatDate(publisher.joinedDate)}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="viewPublisher(${publisher.id})">
+                    Chỉnh sửa
                 </button>
-                <button class="btn btn-sm btn-outline-warning me-1" onclick="editPublisher(${publisher.uid})" title="Edit">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger" onclick="confirmDeletePublisher(${publisher.uid})" title="Delete">
-                    <i class="bi bi-trash"></i>
+                <button class="btn btn-sm btn-outline-danger" onclick="deletePublisher(${publisher.id})">
+                    Xóa
                 </button>
             </td>
         </tr>
     `).join('');
     
-    renderPagination();
-}
-
-/**
- * Render pagination
- */
-function renderPagination() {
-    const totalPages = Math.ceil(filteredPublishers.length / itemsPerPage);
-    const pagination = document.getElementById('publishersPagination');
-    
-    if (!pagination || totalPages <= 1) {
-        if (pagination) pagination.innerHTML = '';
-        return;
-    }
-    
-    let html = '';
-    
-    // Previous button
-    html += `
-        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="goToPage(${currentPage - 1}); return false;">Previous</a>
-        </li>
-    `;
-    
-    // Page numbers
-    for (let i = 1; i <= totalPages; i++) {
-        if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-            html += `
-                <li class="page-item ${i === currentPage ? 'active' : ''}">
-                    <a class="page-link" href="#" onclick="goToPage(${i}); return false;">${i}</a>
-                </li>
-            `;
-        } else if (i === currentPage - 3 || i === currentPage + 3) {
-            html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-        }
-    }
-    
-    // Next button
-    html += `
-        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="goToPage(${currentPage + 1}); return false;">Next</a>
-        </li>
-    `;
-    
-    pagination.innerHTML = html;
-}
-
-/**
- * Go to specific page
- */
-function goToPage(page) {
-    const totalPages = Math.ceil(filteredPublishers.length / itemsPerPage);
-    if (page < 1 || page > totalPages) return;
-    currentPage = page;
-    renderPublishers();
-}
-
-/**
- * Setup event listeners
- */
-function setupEventListeners() {
-    // Search input
-    const searchInput = document.getElementById('searchPublisher');
-    if (searchInput) {
-        searchInput.addEventListener('input', debounce(() => filterPublishers(), 300));
-    }
-    
-    // Location filter
-    const locationFilter = document.getElementById('locationFilter');
-    if (locationFilter) {
-        locationFilter.addEventListener('change', filterPublishers);
-    }
-    
-    // Status filter
-    const statusFilter = document.getElementById('statusFilter');
-    if (statusFilter) {
-        statusFilter.addEventListener('change', filterPublishers);
-    }
-}
-
-/**
- * Filter publishers based on search and filters
- */
-function filterPublishers() {
-    const searchTerm = (document.getElementById('searchPublisher')?.value || '').toLowerCase();
-    const locationFilter = document.getElementById('locationFilter')?.value || '';
-    
-    filteredPublishers = publishers.filter(publisher => {
-        // Search filter
-        const matchesSearch = !searchTerm || 
-            (publisher.uname || '').toLowerCase().includes(searchTerm) ||
-            (publisher.email || '').toLowerCase().includes(searchTerm) ||
-            (publisher.description || '').toLowerCase().includes(searchTerm) ||
-            (publisher.location || '').toLowerCase().includes(searchTerm);
-        
-        // Location filter
-        const matchesLocation = !locationFilter || 
-            (publisher.location || '').toLowerCase().includes(locationFilter.toLowerCase());
-        
-        return matchesSearch && matchesLocation;
-    });
-    
-    currentPage = 1;
-    renderPublishers();
-}
-
-/**
- * Reset all filters
- */
-function resetFilters() {
-    document.getElementById('searchPublisher').value = '';
-    document.getElementById('locationFilter').value = '';
-    document.getElementById('statusFilter').value = '';
-    filteredPublishers = [...publishers];
-    currentPage = 1;
-    renderPublishers();
-}
-
-/**
- * View publisher details
- */
-function viewPublisher(uid) {
-    const publisher = publishers.find(p => p.uid == uid);
-    if (!publisher) return;
-    
-    alert(`Publisher Details:\n\nName: ${publisher.uname}\nEmail: ${publisher.email}\nLocation: ${publisher.location}\nTax Code: ${publisher.taxcode}\nGames: ${publisher.games_count}\nDescription: ${publisher.description || 'N/A'}`);
-}
-
-/**
- * Edit publisher - populate and show modal
- */
-function editPublisher(uid) {
-    const publisher = publishers.find(p => p.uid == uid);
-    if (!publisher) return;
-    
-    // Populate form fields
-    document.getElementById('editPublisherId').value = publisher.uid;
-    document.getElementById('editPublisherName').value = publisher.uname || '';
-    document.getElementById('editTaxCode').value = publisher.taxcode || '';
-    document.getElementById('editLocation').value = publisher.location || '';
-    document.getElementById('editDescription').value = publisher.description || '';
-    document.getElementById('editContactEmail').value = publisher.email || '';
-    
-    // Show modal
-    const modal = new bootstrap.Modal(document.getElementById('editPublisherModal'));
-    modal.show();
-}
-
-/**
- * Update publisher via API
- */
-async function updatePublisher() {
-    const uid = document.getElementById('editPublisherId').value;
-    
-    const data = {
-        uname: document.getElementById('editPublisherName').value,
-        taxcode: document.getElementById('editTaxCode').value,
-        location: document.getElementById('editLocation').value,
-        description: document.getElementById('editDescription').value,
-        email: document.getElementById('editContactEmail').value
-    };
-    
-    try {
-        const response = await fetch(`${API_BASE}/admin/publishers/${uid}`, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        
-        const result = await response.json();
-        
-        if (result.status === 'success') {
-            // Close modal
-            bootstrap.Modal.getInstance(document.getElementById('editPublisherModal')).hide();
-            
-            // Reload publishers
-            await loadPublishers();
-            
-            showSuccess('Publisher updated successfully!');
-        } else {
-            showError('Failed to update publisher: ' + result.message);
-        }
-    } catch (error) {
-        console.error('Error updating publisher:', error);
-        showError('Error updating publisher: ' + error.message);
-    }
-}
-
-/**
- * Confirm delete publisher
- */
-function confirmDeletePublisher(uid) {
-    const publisher = publishers.find(p => p.uid == uid);
-    if (!publisher) return;
-    
-    if (confirm(`Are you sure you want to delete publisher "${publisher.uname}"?\n\nThis action cannot be undone and will also delete all associated games.`)) {
-        deletePublisher(uid);
-    }
-}
-
-/**
- * Delete publisher via API
- */
-async function deletePublisher(uid) {
-    try {
-        const response = await fetch(`${API_BASE}/admin/publishers/${uid}`, {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        const result = await response.json();
-        
-        if (result.status === 'success') {
-            // Reload publishers
-            await loadPublishers();
-            showSuccess('Publisher deleted successfully!');
-        } else {
-            showError('Failed to delete publisher: ' + result.message);
-        }
-    } catch (error) {
-        console.error('Error deleting publisher:', error);
-        showError('Error deleting publisher: ' + error.message);
-    }
-}
-
-/**
- * Save new publisher
- */
-async function savePublisher() {
-    const data = {
-        uname: document.getElementById('publisherName').value,
-        taxcode: document.getElementById('taxCode').value,
-        location: document.getElementById('location').value,
-        description: document.getElementById('description').value,
-        email: document.getElementById('contactEmail').value,
-        password: 'password123', // Default password for new publishers
-        DOB: '1990-01-01',
-        fname: document.getElementById('publisherName').value.split(' ')[0] || 'Publisher',
-        lname: document.getElementById('publisherName').value.split(' ').slice(1).join(' ') || 'Account'
-    };
-    
-    try {
-        const response = await fetch(`${API_BASE}/publishers/register`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        
-        const result = await response.json();
-        
-        if (result.status === 'success') {
-            // Close modal
-            bootstrap.Modal.getInstance(document.getElementById('addPublisherModal')).hide();
-            
-            // Clear form
-            document.getElementById('addPublisherForm').reset();
-            
-            // Reload publishers
-            await loadPublishers();
-            
-            showSuccess('Publisher created successfully!');
-        } else {
-            showError('Failed to create publisher: ' + result.message);
-        }
-    } catch (error) {
-        console.error('Error creating publisher:', error);
-        showError('Error creating publisher: ' + error.message);
-    }
-}
-
-// Utility functions
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function formatDate(dateStr) {
-    if (!dateStr) return 'N/A';
-    try {
-        return new Date(dateStr).toLocaleDateString();
-    } catch (e) {
-        return dateStr;
-    }
-}
-
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-function showLoading(show) {
-    // Could add a loading spinner overlay
-    const table = document.querySelector('#publishersTable tbody');
-    if (show && table) {
-        table.innerHTML = `
+    if (filteredPublishers.length === 0) {
+        tbody.innerHTML = `
             <tr>
                 <td colspan="8" class="text-center py-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                    <div class="empty">
+                        <div class="empty-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9" /><line x1="9" y1="10" x2="9.01" y2="10" /><line x1="15" y1="10" x2="15.01" y2="10" /><path d="M9.5 15.25a3.5 3.5 0 0 1 5 0" /></svg>
+                        </div>
+                        <p class="empty-title">Không tìm thấy nhà phát hành nào</p>
+                        <p class="empty-subtitle text-muted">
+                            Thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn để tìm những gì bạn đang tìm kiếm.
+                        </p>
                     </div>
-                    <p class="text-muted mt-2">Loading publishers...</p>
                 </td>
             </tr>
         `;
     }
+    
+    setupPagination(filteredPublishers.length);
 }
 
-function showSuccess(message) {
-    // Simple alert for now - could be replaced with toast
-    alert(message);
+function getInitials(name) {
+    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 }
 
-function showError(message) {
-    alert('Error: ' + message);
+function getLocationLabel(location) {
+    const locations = {
+        'usa': 'Hoa Kỳ 🇺🇸',
+        'canada': 'Canada 🇨y',
+        'uk': 'Anh 🇬🇧',
+        'japan': 'Nhật Bản 🇯🇵',
+        'germany': 'Đức 🇩🇪',
+        'vietnam': 'Việt Nam 🇻🇳',
+        'france': 'Pháp 🇫🇷'
+    };
+    return locations[location] || location;
 }
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    // Wait a bit for components to load
-    setTimeout(initPublishersPage, 500);
-});
+function renderStatusBadge(status) {
+    const statusMap = {
+        'active': { class: 'bg-success', label: 'Hoạt động' },
+        'inactive': { class: 'bg-secondary', label: 'Ngừng hoạt động' },
+        'pending': { class: 'bg-warning', label: 'Chờ duyệt' }
+    };
+    const s = statusMap[status] || { class: 'bg-secondary', label: status };
+    return `<span class="badge ${s.class} me-1"></span> ${s.label}`;
+}
+
+function setupPagination(totalItems) {
+    // Mock pagination similar to other pages
+    const pagination = document.getElementById('publishersPagination');
+    if (!pagination) return;
+    
+    pagination.innerHTML = `
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
+                trước
+            </a>
+        </li>
+        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">
+                sau
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+            </a>
+        </li>
+    `;
+}
+
+// Reset Filters
+function resetFilters() {
+    document.getElementById('searchPublisher').value = '';
+    document.getElementById('locationFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    renderPublishers();
+}
+
+// Save New Publisher
+function savePublisher() {
+    const name = document.getElementById('publisherName').value;
+    const taxCode = document.getElementById('taxCode').value;
+    const location = document.getElementById('location').value;
+    const email = document.getElementById('contactEmail').value;
+    
+    if (!name || !taxCode || !location || !email) {
+        alert('Vui lòng điền đầy đủ các trường bắt buộc.');
+        return;
+    }
+    
+    // Create new publisher
+    const newPublisher = {
+        id: publishers.length + 1,
+        name: name,
+        location: location.toLowerCase(),
+        taxCode: taxCode,
+        website: document.getElementById('website').value,
+        description: document.getElementById('description').value,
+        gamesCount: 0,
+        status: 'active',
+        joinedDate: new Date().toISOString().split('T')[0],
+        contactEmail: email,
+        contactPhone: document.getElementById('contactPhone').value
+    };
+    
+    publishers.unshift(newPublisher);
+    renderPublishers();
+    renderStats();
+    
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('addPublisherModal'));
+    modal.hide();
+    
+    // Reset form
+    document.getElementById('addPublisherForm').reset();
+    
+    AdminUtils.showToast('Đã thêm nhà phát hành mới thành công', 'success');
+}
+
+// View Publisher (Edit)
+function viewPublisher(id) {
+    const publisher = publishers.find(p => p.id === id);
+    if (!publisher) return;
+    
+    document.getElementById('editPublisherId').value = publisher.id;
+    document.getElementById('editPublisherName').value = publisher.name;
+    document.getElementById('editTaxCode').value = publisher.taxCode;
+    document.getElementById('editLocation').value = publisher.location;
+    document.getElementById('editWebsite').value = publisher.website;
+    document.getElementById('editDescription').value = publisher.description;
+    document.getElementById('editContactEmail').value = publisher.contactEmail;
+    document.getElementById('editContactPhone').value = publisher.contactPhone;
+    document.getElementById('editStatus').value = publisher.status;
+    
+    const modal = new bootstrap.Modal(document.getElementById('editPublisherModal'));
+    modal.show();
+}
+
+// Update Publisher
+function updatePublisher() {
+    const id = parseInt(document.getElementById('editPublisherId').value);
+    const publisher = publishers.find(p => p.id === id);
+    
+    if (!publisher) return;
+    
+    publisher.name = document.getElementById('editPublisherName').value;
+    publisher.taxCode = document.getElementById('editTaxCode').value;
+    publisher.location = document.getElementById('editLocation').value;
+    publisher.website = document.getElementById('editWebsite').value;
+    publisher.description = document.getElementById('editDescription').value;
+    publisher.contactEmail = document.getElementById('editContactEmail').value;
+    publisher.contactPhone = document.getElementById('editContactPhone').value;
+    publisher.status = document.getElementById('editStatus').value;
+    
+    renderPublishers();
+    renderStats();
+    
+    const modal = bootstrap.Modal.getInstance(document.getElementById('editPublisherModal'));
+    modal.hide();
+    
+    AdminUtils.showToast('Đã cập nhật nhà phát hành thành công', 'success');
+}
+
+// Delete Publisher
+function deletePublisher(id) {
+    if (confirm('Bạn có chắc chắn muốn xóa nhà phát hành này? Hành động này không thể hoàn tác.')) {
+        publishers = publishers.filter(p => p.id !== id);
+        renderPublishers();
+        renderStats();
+        AdminUtils.showToast('Đã xóa nhà phát hành thành công', 'success');
+    }
+}

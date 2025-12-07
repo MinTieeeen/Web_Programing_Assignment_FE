@@ -9,7 +9,8 @@ class AdminUtils {
         }
 
         const userData = JSON.parse(currentUser);
-        if (userData.role !== 'admin') {
+        // Check both role (legacy) and userType (new RBAC)
+        if (userData.role !== 'admin' && userData.userType !== 'admin') {
             alert('Access denied. Admin privileges required.');
             this.logout();
             return false;

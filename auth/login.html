@@ -105,7 +105,7 @@
 
       try {
         const apiUrl = window.ENV.API_URL;
-        // console.log(apiUrl);
+        
         const response = await fetch(`${apiUrl}/users/signin`, {
           method: 'POST',
           credentials: 'include',
@@ -124,7 +124,6 @@
           try {
              const errorData = await response.json();
              if (errorData.message) {
-                 // Translate common error messages
                  if (errorData.message === 'Invalid username or password') {
                      errorMessage = 'Tên đăng nhập hoặc mật khẩu không chính xác';
                  } else if (errorData.message === 'Username and password are required') {
@@ -150,18 +149,9 @@
                  }
              }
           } catch (e) {
-             // If not JSON, use default message
              console.error('Could not parse error response', e);
           }
           throw new Error(errorMessage);
-        }
-
-        // Check if response is JSON
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          const responseText = await response.text();
-          console.error('Non-JSON response:', responseText);
-          throw new Error('Lỗi định dạng phản hồi từ máy chủ');
         }
 
         const data = await response.json();
@@ -171,22 +161,13 @@
             Toast.success('Đăng nhập thành công!');
           }
           
-          // Check if user is admin by querying backend
-          const isAdmin = await checkIfUserIsAdmin(data.user.uid);
+          // Get role from backend response (calculated in UserService)
+          const role = data.user.userType || 'user';
           
           // Store user data in localStorage
           const userData = {
-            uid: data.user.uid,
-            username: data.user.uname,
-            uname: data.user.uname,
-            email: data.user.email,
-            name: `${data.user.fname} ${data.user.lname}`,
-            fname: data.user.fname,
-            lname: data.user.lname,
-            avatar: data.user.avatar,
-            DOB: data.user.DOB,
-            role: isAdmin ? 'admin' : 'user', // Role determined by Admin table check
-            balance: data.user.balance || 0,
+            ...data.user,
+            role: role,
             loginTime: new Date().toISOString()
           };
 
@@ -199,9 +180,14 @@
             window.updateHeaderLoginStatus();
           }
           
-          // Redirect to home page
+          // Redirect to home page or admin dashboard based on role
           setTimeout(() => {
-             window.location.href = (window.APP_ROOT || '../') + 'index.html';
+             if (role === 'admin') {
+                 window.location.href = (window.APP_ROOT || '../') + 'admin/index.html';
+             } else {
+                 // Publisher and Customer both go to home
+                 window.location.href = (window.APP_ROOT || '../') + 'index.html';
+             }
           }, 1000);
         } else {
           if (typeof Toast !== 'undefined') {

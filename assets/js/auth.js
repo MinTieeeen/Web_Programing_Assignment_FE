@@ -46,6 +46,27 @@
       // Update UI immediately with local data
       updateUserUI(user);
 
+      // Helper to update links based on role
+      const updateLinks = (userRole) => {
+          const adminLink = document.getElementById('adminPanelLink');
+          const publisherLink = document.getElementById('publisherDashboardLink');
+          
+          if (adminLink) {
+              if (userRole === 'admin') adminLink.classList.remove('d-none');
+              else adminLink.classList.add('d-none');
+          }
+          
+          if (publisherLink) {
+              if (userRole === 'publisher') publisherLink.classList.remove('d-none');
+              else publisherLink.classList.add('d-none');
+          }
+      };
+
+      // Initial update from local storage
+      if (user.userType || user.role) {
+          updateLinks(user.userType || user.role);
+      }
+
       // Fetch fresh data from backend
       try {
           const uid = user.uid || user.id;
@@ -53,9 +74,16 @@
           if (response.ok) {
               const data = await response.json();
               if (data.status === 'success') {
-                  user = { ...user, ...data.data };
-                  localStorage.setItem('user', JSON.stringify(user));
-                  updateUserUI(user);
+                  const newUser = { ...user, ...data.data };
+                  
+                  // userType is now included in data.data from backend
+                  if (newUser.userType) {
+                    newUser.role = newUser.userType; // Sync role
+                  }
+                  
+                  localStorage.setItem('user', JSON.stringify(newUser));
+                  updateUserUI(newUser);
+                  updateLinks(newUser.userType || newUser.role);
               }
           }
       } catch (e) {
@@ -136,20 +164,7 @@
     window.location.href = (window.APP_ROOT || '/') + 'auth/login.html';
   }
 
-  async function checkIfUserIsAdmin(uid) {
-    try {
-      const response = await fetch(`${API_URL}/users/check_admin?uid=${uid}`);
-      if (!response.ok) return false;
-      const data = await response.json();
-      return data.isAdmin === true;
-    } catch (error) {
-      console.error('Error checking admin status:', error);
-      return false;
-    }
-  }
-
   // Expose function globally
-  window.checkIfUserIsAdmin = checkIfUserIsAdmin;
   window.updateHeaderLoginStatus = updateHeaderLoginStatus;
   window.API_URL = API_URL;
 
