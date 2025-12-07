@@ -1,7 +1,7 @@
 (function(){
-  // Determine the base path based on the script location
-  // We assume this script is at /assets/js/include-components.js
-  // So we need to go up 2 levels to get to the root (public/)
+  // // Determine the base path based on the script location
+  // // We assume this script is at /assets/js/include-components.js
+  // // So we need to go up 2 levels to get to the root (public/)
   var scripts = document.getElementsByTagName('script');
   var scriptPath = scripts[scripts.length - 1].src;
   
@@ -13,8 +13,8 @@
     }
   }
   
-  // scriptPath is like http://localhost/.../assets/js/include-components.js
-  // We want http://localhost/.../
+  // // scriptPath is like http://localhost/.../assets/js/include-components.js
+  // // We want http://localhost/.../
   var rootPath = scriptPath.replace(/\/assets\/js\/include-components\.js.*/, '/');
   
   // Fallback if regex fails (e.g. strange hosting setup)
@@ -27,7 +27,7 @@
      }
   }
 
-  window.APP_ROOT = rootPath;
+  // window.APP_ROOT = rootPath;
   console.log('[DEBUG] Root Path identified as:', rootPath);
 
   function include(selector, url){

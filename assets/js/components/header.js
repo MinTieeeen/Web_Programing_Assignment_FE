@@ -212,7 +212,57 @@ function ensureHeaderInitialization() {
   // Try with delays to ensure DOM is ready
   setTimeout(initializeHeader, 50);
   setTimeout(initializeHeader, 100);
-  setTimeout(initializeHeader, 250);
+}
+
+// Initialize mobile menu
+function initMobileMenu() {
+    const menuIcon = document.querySelector('.menu-icon');
+    const sidebar = document.querySelector('.tq-sidebar');
+    const closeIcon = document.querySelector('.tq-close-icon');
+    
+    // Kiểm tra nếu không có các phần tử cần thiết thì thoát
+    if (!menuIcon || !sidebar) return;
+
+    // Mở sidebar
+    menuIcon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.body.style.overflow = 'hidden';
+        sidebar.classList.add('open-sidebar');
+    });
+
+    // Đóng sidebar
+    function closeSidebar() {
+        document.body.style.overflow = '';
+        sidebar.classList.remove('open-sidebar');
+    }
+
+    // Sự kiện đóng khi click nút đóng
+    if (closeIcon) {
+        closeIcon.addEventListener('click', closeSidebar);
+    }
+
+    // Đóng khi click ra ngoài sidebar
+    document.addEventListener('click', function(e) {
+        if (sidebar.classList.contains('open-sidebar') && 
+            !sidebar.contains(e.target) && 
+            !menuIcon.contains(e.target)) {
+            closeSidebar();
+        }
+    });
+
+    // Đóng khi nhấn phím ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar.classList.contains('open-sidebar')) {
+            closeSidebar();
+        }
+    });
+}
+
+// Khởi tạo menu mobile khi DOM đã tải xong
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+} else {
+    initMobileMenu();
 }
 
 // Run initialization

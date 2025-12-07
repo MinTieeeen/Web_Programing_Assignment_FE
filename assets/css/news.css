@@ -5,6 +5,7 @@
     --glass-bg: rgba(20, 20, 20, 0.7);
     --glass-border: rgba(255, 255, 255, 0.1);
     --neon-accent: #72a1de;
+    --accent-gradient: linear-gradient(135deg, #72a1de 0%, #0066ff 100%);
     --neon-glow: 0 0 20px rgba(114, 161, 222, 0.35);
     --text-primary: #ffffff;
     --text-secondary: #b3b3b3;
@@ -108,14 +109,17 @@
 }
 
 .source-badge {
-    background: #ff4757;
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 4px;
-    font-weight: 800;
+    background: rgba(255, 71, 87, 0.15);
+    color: #ff4757;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-weight: 700;
     text-transform: uppercase;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.1);
+    backdrop-filter: blur(4px);
 }
 
 /* Sub Featured Cards */
@@ -175,7 +179,7 @@
 
 /* Sidebar Widget */
 .sidebar-widget {
-    background: linear-gradient(160deg, rgba(8, 0, 32, 0.8) 0%, rgba(8, 0, 32, 0.95) 100%);
+    background: #080020d5;
     border: 1px solid rgba(114, 161, 222, 0.3);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     border-radius: 16px;
@@ -374,7 +378,7 @@
 /* Topic Section */
 .topic-section {
     margin-top: 100px;
-    padding-top: 40px;
+    padding-top: 20px;
     border-top: 4px solid var(--neon-accent);
     box-shadow: 0 -2px 10px rgba(114, 161, 222, 0.3);
 }
@@ -383,7 +387,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+    padding: 20px;
 }
 
 .topic-title {
@@ -568,11 +573,11 @@
 
 /* Form Controls */
 .form-control.bg-dark {
-    background: rgba(0, 0, 0, 0.3) !important;
+    background: rgba(237, 237, 237, 0.844) !important;
     border: 1px solid rgba(114, 161, 222, 0.3) !important;
     padding: 15px;
     border-radius: 10px;
-    color: white !important;
+    color: rgb(194, 194, 194) !important;
     transition: all 0.3s ease;
 }
 
@@ -592,7 +597,7 @@
 }
 
 .badge.bg-secondary {
-    background: linear-gradient(90deg, #72a1de, #c182ff) !important;
+    background: var(--accent-gradient) !important;
     border: none;
     padding: 4px 10px;
     font-weight: 700;
@@ -656,7 +661,7 @@
     background: transparent;
     border-top: 1px solid rgba(114, 161, 222, 0.3);
     padding-top: 40px;
-    margin-top: 30px;
+    margin-top: 30px;   
 }
 
 .comments-title {

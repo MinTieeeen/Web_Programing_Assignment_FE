@@ -10,8 +10,8 @@ header {
     justify-content: space-between;
     padding: 0 30px;
     height: 70px;
-    background-color: rgba(255, 255, 255, 0.121);
-    backdrop-filter: blur(5px);
+    background-color: rgba(8, 0, 32, 0.6);
+    backdrop-filter: blur(8px);
     box-shadow: 0 0 15px #72a1dea2;
     z-index: 1000;
     margin-bottom: 10px;
@@ -294,13 +294,89 @@ header ul a:hover {
     color: #72a1de;
 }
 
-/* Menu Icon (Mobile) - Keep it */
+/* Menu Icon (Mobile) */
 .menu-icon {
     font-size: 35px;
     cursor: pointer;
     display: none;
     color: white;
     margin-left: 10px;
+    z-index: 1001;
+}
+
+/* Mobile Sidebar */
+.tq-sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 280px;
+    height: 100vh;
+    background: #0a0a1a;
+    z-index: 1000;
+    transition: right 0.3s ease;
+    padding: 70px 20px 20px;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+}
+
+.tq-sidebar.open-sidebar {
+    right: 0;
+}
+
+.tq-close-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 28px;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1002;
+}
+
+.tq-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tq-sidebar ul li {
+    margin: 15px 0;
+}
+
+.tq-sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.tq-sidebar ul li a:hover {
+    background: rgba(114, 161, 222, 0.2);
+    padding-left: 20px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .menu-icon {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Ẩn menu desktop trên mobile */
+    header > ul:not(.tq-sidebar ul) {
+        display: none;
+    }
+
+    /* Hiển thị sidebar */
+    .tq-sidebar {
+        display: block;
+    }
 }
 
 /* Responsive */
@@ -328,25 +404,30 @@ header ul a:hover {
     .profile-dropdown {
         right: -50px; /* Shift slightly for mobile if needed, or keep 0 */
     }
+
+    .tq-sidebar {
+        display: flex;
+    }
 }
 
 /* Global Sidebar Styles */
 .tq-sidebar {
-    position: fixed;
     top: 0;
-    right: -300px;
-    width: 280px;
+    right: -100%; /* Use percentage to ensure it's fully hidden */
+    width: 260px;
+    max-width: 80%; /* Prevent overflow on very small screens */
     height: 100vh;
-    background: rgba(15, 31, 43, 0.95);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+    background: rgba(8, 0, 32, 0.98); /* Slightly darker/more opaque for readability */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: -5px 0 30px rgba(0,0,0,0.6);
     z-index: 2000;
-    transition: right 0.4s ease;
-    display: flex;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: none;
     flex-direction: column;
-    padding: 30px;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    border-left: 1px solid rgba(114, 161, 222, 0.2);
+    box-sizing: border-box;
 }
 
 .tq-sidebar.open-sidebar {
@@ -355,15 +436,20 @@ header ul a:hover {
 
 .tq-close-icon {
     align-self: flex-end;
-    font-size: 32px;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 28px;
+    color: rgba(255, 255, 255, 0.6);
     cursor: pointer;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     transition: 0.3s;
+    padding: 5px;
+    border-radius: 50%;
+    border: 1px solid transparent;
 }
 
 .tq-close-icon:hover {
-    color: #fff;
+    color: #ff4757;
+    background: rgba(255, 71, 87, 0.1);
+    border-color: rgba(255, 71, 87, 0.3);
     transform: rotate(90deg);
 }
 
@@ -376,19 +462,25 @@ header ul a:hover {
 }
 
 .tq-sidebar ul li a {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
     transition: all 0.3s;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid transparent;
 }
 
 .tq-sidebar ul li a:hover {
-    color: #00d2ff;
-    padding-left: 10px;
+    color: #ffffff;
+    background: rgba(114, 161, 222, 0.2);
+    border-color: rgba(114, 161, 222, 0.3);
+    padding-left: 20px;
+    box-shadow: 0 0 15px rgba(114, 161, 222, 0.2);
 }
 
 .mobile-auth {
@@ -401,5 +493,9 @@ header ul a:hover {
         margin-top: 20px;
         border-top: 1px solid rgba(255,255,255,0.1);
         padding-top: 20px;
+    }
+
+    .tq-sidebar {
+        display: flex;
     }
 }
