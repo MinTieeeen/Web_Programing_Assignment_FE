@@ -1,4 +1,6 @@
-const Toast = {
+// Prevent re-declaration if script is loaded multiple times
+if (!window.Toast) {
+window.Toast = {
     container: null,
 
     init() {
@@ -139,5 +141,7 @@ const Toast = {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
-    Toast.init();
+    if (window.Toast) window.Toast.init();
 });
+
+} // End of guard check
