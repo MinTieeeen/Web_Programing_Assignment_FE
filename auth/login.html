@@ -104,6 +104,7 @@
 
       try {
         const apiUrl = window.ENV.API_URL;
+        // console.log(apiUrl);
         const response = await fetch(`${apiUrl}/users/signin`, {
           method: 'POST',
           credentials: 'include',
