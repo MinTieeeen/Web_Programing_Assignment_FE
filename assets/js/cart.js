@@ -1,15 +1,20 @@
-const CART_STORAGE_KEY = 'nextplay_cart';
+// Prevent re-declaration if script is loaded multiple times
+if (!window.Cart) {
+(function() {
+    'use strict';
+    
+    var CART_STORAGE_KEY = 'nextplay_cart';
 
-// Helper function to get API URL with strict checking
-function getApiUrl() {
-    if (!window.ENV || !window.ENV.API_URL) {
-        console.error('[cart.js] ENV not loaded! Include env.js before this script.');
-        throw new Error('ENV not configured');
+    // Helper function to get API URL with strict checking
+    function getApiUrl() {
+        if (!window.ENV || !window.ENV.API_URL) {
+            console.error('[cart.js] ENV not loaded! Include env.js before this script.');
+            throw new Error('ENV not configured');
+        }
+        return window.ENV.API_URL;
     }
-    return window.ENV.API_URL;
-}
 
-window.Cart = {
+    window.Cart = {
     // Get all items (Sync - LocalStorage only)
     getItems: function () {
         const cartJson = localStorage.getItem(CART_STORAGE_KEY);
@@ -292,3 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+})(); // End of IIFE
+} // End of guard check
