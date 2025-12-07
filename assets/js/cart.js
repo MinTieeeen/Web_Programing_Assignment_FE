@@ -1,15 +1,20 @@
-const CART_STORAGE_KEY = 'nextplay_cart';
+// Prevent re-declaration if script is loaded multiple times
+if (!window.Cart) {
+(function() {
+    'use strict';
+    
+    var CART_STORAGE_KEY = 'nextplay_cart';
 
-// Helper function to get API URL with strict checking
-function getApiUrl() {
-    if (!window.ENV || !window.ENV.API_URL) {
-        console.error('[cart.js] ENV not loaded! Include env.js before this script.');
-        throw new Error('ENV not configured');
+    // Helper function to get API URL with strict checking
+    function getApiUrl() {
+        if (!window.ENV || !window.ENV.API_URL) {
+            console.error('[cart.js] ENV not loaded! Include env.js before this script.');
+            throw new Error('ENV not configured');
+        }
+        return window.ENV.API_URL;
     }
-    return window.ENV.API_URL;
-}
 
-window.Cart = {
+    window.Cart = {
     // Get all items (Sync - LocalStorage only)
     getItems: function () {
         const cartJson = localStorage.getItem(CART_STORAGE_KEY);
@@ -144,7 +149,8 @@ window.Cart = {
 
     // Update Header Badge
     async updateCartCount() {
-        const countSpan = document.getElementById('cart-count');
+        // Updated to target the new ID from header.html
+        const countSpan = document.getElementById('cartBadge');
         if (!countSpan) return;
 
         const userStr = localStorage.getItem('user');
@@ -180,7 +186,16 @@ window.Cart = {
         }
 
         countSpan.textContent = count;
-        countSpan.style.display = count > 0 ? 'flex' : 'none';
+        // Don't hide the badge when 0, usually users like to see '0' or just the icon with 0
+        // But if concealment is desired: countSpan.style.display = count > 0 ? 'flex' : 'none';
+        
+        // For this design, let's keep it visible if > 0 or show 0 if preferred.
+        // User asked for "number... change according to database".
+        if (count > 0) {
+             countSpan.style.display = 'flex';
+        } else {
+             countSpan.style.display = 'none'; // Or 'flex' if you want to show 0
+        }
     },
 
     // Fetch User Balance
@@ -292,3 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+})(); // End of IIFE
+} // End of guard check
