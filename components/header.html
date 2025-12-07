@@ -16,15 +16,76 @@
     </ul>
 
     <div class="auth-buttons">
-        <a href="/Web_Programing_Assignment_FE/auth/login.html" class="auth-btn btn-login">
+        <a href="/auth/login.html" class="auth-btn btn-login">
             <i class='bx bx-log-in'></i>
             <span>Đăng nhập</span>
         </a>
-        <a href="/Web_Programing_Assignment_FE/auth/register.html" class="auth-btn btn-signup">
+        <a href="/auth/register.html" class="auth-btn btn-signup">
             <i class='bx bx-user-plus'></i>
             <span>Đăng ký</span>
         </a>
     </div>
+
+    
+        <div class="user-profile" id="userProfile">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User Avatar" class="user-avatar" id="userAvatar">
+        </div>
+
+        <div class="menu-icon">
+            <i class='bx bx-menu'></i>
+        </div>
+    </header>
+
+    <!-- Profile Overlay -->
+    <div class="profile-overlay" id="profileOverlay">
+        <div class="profile-card">
+            <div class="close-btn" id="closeBtn">
+                <i class='bx bx-x'></i>
+            </div>
+
+            <div class="profile-header">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User Avatar" class="profile-avatar-large" id="profileAvatarLarge">
+                <h2 class="profile-name" id="profileName">Nguyễn Văn A</h2>
+                <p class="profile-email" id="profileEmail">nguyenvana@example.com</p>
+            </div>
+
+            <div class="profile-info">
+                <div class="info-item">
+                    <i class='bx bx-user'></i>
+                    <div class="info-text">
+                        <div class="info-label">Tên người dùng</div>
+                        <div class="info-value" id="infoUsername">nguyenvana</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class='bx bx-phone'></i>
+                    <div class="info-text">
+                        <div class="info-label">Số điện thoại</div>
+                        <div class="info-value" id="infoPhone">0123 456 789</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class='bx bx-calendar'></i>
+                    <div class="info-text">
+                        <div class="info-label">Ngày tham gia</div>
+                        <div class="info-value" id="infoJoinDate">01/01/2024</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="profile-btn btn-edit">
+                    <i class='bx bx-edit'></i>
+                    Chỉnh sửa hồ sơ
+                </button>
+                <button class="profile-btn btn-logout" id="logoutBtn">
+                    <i class='bx bx-log-out'></i>
+                    Đăng xuất
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <div class="menu-icon">
         <i class='bx bx-menu'></i>
