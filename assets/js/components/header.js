@@ -51,20 +51,44 @@ window.updateHeaderLoginStatus = async function() {
         console.error('Error fetching user role:', e);
     }
     
-    // Show/hide panel links based on role
-    const adminPanelLink = document.getElementById('adminPanelLink');
-    const publisherDashboardLink = document.getElementById('publisherDashboardLink');
+    // Update Navbar "Explore" link based on role
+    const navExploreLink = document.getElementById('navExploreLink');
+    const mobileNavExploreLink = document.getElementById('mobileNavExploreLink');
     
-    // Reset classes
-    if (adminPanelLink) adminPanelLink.classList.add('d-none');
-    if (publisherDashboardLink) publisherDashboardLink.classList.add('d-none');
-    
+    // Default state (Explore / Khám phá)
+    const setExploreLinkDefault = () => {
+        if (navExploreLink) {
+            navExploreLink.textContent = 'Khám phá';
+            navExploreLink.href = '/products/index.html';
+        }
+        if (mobileNavExploreLink) {
+            mobileNavExploreLink.textContent = 'Khám phá';
+            mobileNavExploreLink.href = '/products/index.html';
+        }
+    };
+
     if (userRole === 'admin') {
-      if (adminPanelLink) adminPanelLink.classList.remove('d-none');
-      console.log('Admin panel shown');
+        if (navExploreLink) {
+            navExploreLink.innerHTML = 'Admin Panel';
+            navExploreLink.href = '/admin/dashboard.html';
+        }
+        if (mobileNavExploreLink) {
+            mobileNavExploreLink.innerHTML = 'Admin Panel';
+            mobileNavExploreLink.href = '/admin/dashboard.html';
+        }
+        console.log('Navbar updated for Admin');
     } else if (userRole === 'publisher') {
-       if (publisherDashboardLink) publisherDashboardLink.classList.remove('d-none');
-       console.log('Publisher dashboard shown');
+        if (navExploreLink) {
+            navExploreLink.innerHTML = 'Quản lý NXB';
+            navExploreLink.href = '/publishers/dashboard.html';
+        }
+        if (mobileNavExploreLink) {
+            mobileNavExploreLink.innerHTML = 'Quản lý NXB';
+            mobileNavExploreLink.href = '/publishers/dashboard.html';
+        }
+        console.log('Navbar updated for Publisher');
+    } else {
+        setExploreLinkDefault();
     }
     
     // Re-initialize event listeners after showing user menu

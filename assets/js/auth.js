@@ -47,18 +47,44 @@
       updateUserUI(user);
 
       // Helper to update links based on role
+      // Helper to update links based on role
       const updateLinks = (userRole) => {
-          const adminLink = document.getElementById('adminPanelLink');
-          const publisherLink = document.getElementById('publisherDashboardLink');
+          // Update Navbar "Explore" link based on role
+          const navExploreLink = document.getElementById('navExploreLink');
+          const mobileNavExploreLink = document.getElementById('mobileNavExploreLink');
           
-          if (adminLink) {
-              if (userRole === 'admin') adminLink.classList.remove('d-none');
-              else adminLink.classList.add('d-none');
-          }
-          
-          if (publisherLink) {
-              if (userRole === 'publisher') publisherLink.classList.remove('d-none');
-              else publisherLink.classList.add('d-none');
+          // Helper to reset to default
+          const setExploreLinkDefault = () => {
+              if (navExploreLink) {
+                  navExploreLink.textContent = 'Khám phá';
+                  navExploreLink.href = (window.APP_ROOT || '/') + 'products/index.html';
+              }
+              if (mobileNavExploreLink) {
+                  mobileNavExploreLink.textContent = 'Khám phá';
+                  mobileNavExploreLink.href = (window.APP_ROOT || '/') + 'products/index.html';
+              }
+          };
+
+          if (userRole === 'admin') {
+              if (navExploreLink) {
+                  navExploreLink.innerHTML = 'Admin Panel';
+                  navExploreLink.href = (window.APP_ROOT || '/') + 'admin/index.html';
+              }
+              if (mobileNavExploreLink) {
+                  mobileNavExploreLink.innerHTML = 'Admin Panel';
+                  mobileNavExploreLink.href = (window.APP_ROOT || '/') + 'admin/index.html';
+              }
+          } else if (userRole === 'publisher') {
+              if (navExploreLink) {
+                  navExploreLink.innerHTML = 'Quản lý NXB';
+                  navExploreLink.href = (window.APP_ROOT || '/') + 'publishers/dashboard.html';
+              }
+              if (mobileNavExploreLink) {
+                  mobileNavExploreLink.innerHTML = 'Quản lý NXB';
+                  mobileNavExploreLink.href = (window.APP_ROOT || '/') + 'publishers/dashboard.html';
+              }
+          } else {
+              setExploreLinkDefault();
           }
       };
 

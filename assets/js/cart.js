@@ -284,7 +284,9 @@ if (!window.Cart) {
                     // Insufficient balance
                     const needed = new Intl.NumberFormat('vi-VN').format(result.data.needed_amount) + ' đ';
                     const current = new Intl.NumberFormat('vi-VN').format(result.data.current_balance) + ' đ';
-                    Toast.error(`Số dư không đủ!\nSố dư hiện tại: ${current}\nCần thêm: ${needed}`);
+                    const total = new Intl.NumberFormat('vi-VN').format(result.data.total_cost || (result.data.needed_amount + result.data.current_balance)) + ' đ';
+                    
+                    Toast.error(`Số dư không đủ thanh toán!\n\nSố dư hiện tại: ${current}\nTổng tiền: ${total}\nCần nạp thêm: ${needed}`);
                 } else {
                     Toast.error('Thanh toán thất bại: ' + (result.message || 'Lỗi không xác định'));
                 }

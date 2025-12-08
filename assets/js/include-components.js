@@ -27,7 +27,7 @@
      }
   }
 
-  // window.APP_ROOT = rootPath;
+  window.APP_ROOT = rootPath;
   console.log('[DEBUG] Root Path identified as:', rootPath);
 
   function include(selector, url){
@@ -39,6 +39,7 @@
     var fullUrl = rootPath + relativeUrl;
     
     // console.log('[DEBUG] Fetching component:', fullUrl);
+    console.log('[DEBUG] Fetching component:', selector, fullUrl);
 
     fetch(fullUrl).then(function(r){
       if(!r.ok) throw new Error('Network response was not ok: ' + r.statusText);

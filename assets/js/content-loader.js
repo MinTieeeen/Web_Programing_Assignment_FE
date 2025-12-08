@@ -21,8 +21,8 @@ class ContentLoader {
         }
 
         try {
-            // Fetch content
-            const response = await fetch(`${window.ENV.API_URL}/content`);
+            // Fetch content from new settings endpoint
+            const response = await fetch(`${window.ENV.API_URL}/settings`);
             const result = await response.json();
 
             if (result.status === 'success') {

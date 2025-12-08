@@ -474,3 +474,49 @@ body {
         color: #e0e0e0;
     }
 }
+
+/* Sidebar Custom Styles (Moved from admin-sidebar.html) */
+.navbar-vertical .dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 8px;
+    margin-top: 5px;
+    border: none;
+    padding: 5px;
+    transition: all 0.3s ease;
+}
+
+.navbar-vertical .dropdown-item {
+    color: rgba(255, 255, 255, 0.6) !important;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+
+.navbar-vertical .dropdown-item:hover {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    transform: translateX(5px);
+}
+
+.navbar-vertical .dropdown-item.active {
+    color: #ffffff !important;
+    background-color: rgba(32, 107, 196, 0.6) !important;
+    font-weight: 500;
+}
+
+.nav-link.dropdown-toggle::after {
+    transition: transform 0.3s ease;
+    margin-left: auto;
+}
+
+.nav-link.dropdown-toggle[aria-expanded="true"]::after,
+.nav-link.dropdown-toggle.show::after {
+    transform: rotate(180deg);
+}
+
+.nav-link.dropdown-toggle.show {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white !important;
+}

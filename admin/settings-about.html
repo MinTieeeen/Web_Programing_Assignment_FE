@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài đặt Về Chúng Tôi - Quan tri Website</title>
+    <!-- Tabler Core -->
+    <link href="../assets/tabler/css/tabler.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-flags.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-payments.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-vendors.min.css" rel="stylesheet"/>
+    <link href="../assets/css/toast.css" rel="stylesheet">
+    <style>
+      @import url('https://rsms.me/inter/inter.css');
+      :root {
+      	--tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      }
+      body {
+      	font-feature-settings: "cv03", "cv04", "cv11";
+      }
+      /* Custom overrides for list ordering if needed */
+      .drag-handle { cursor: grab; }
+    </style>
+     <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+    <script src="../assets/tabler/js/tabler-theme.min.js"></script>
+    <div class="page">
+        <!-- Sidebar -->
+        <div id="sidebarContainer"></div>
+        <div id="navbarContainer"></div>
+        
+        <div class="page-wrapper">
+            <!-- Page Header -->
+            <div class="page-header d-print-none">
+                <div class="container-xl">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title">
+                                Cài đặt Trang Giới thiệu
+                            </h2>
+                        </div>
+                        <div class="col-auto ms-auto d-print-none">
+                            <div class="btn-list">
+                                <button id="btn-refresh" class="btn btn-white d-none d-sm-inline-block">
+                                    <i class="ti ti-refresh"></i> Làm mới
+                                </button>
+                                <button id="btn-save" class="btn btn-primary d-none d-sm-inline-block">
+                                    <i class="ti ti-device-floppy"></i> Lưu thay đổi
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-body">
+                <div class="container-xl">
+                    
+                    <!-- Hero Section -->
+                    <div class="card mb-3">
+                        <div class="card-status-top bg-blue"></div>
+                        <div class="card-header">
+                            <h3 class="card-title">Hero Section (Đầu trang)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <label class="form-label">Tiêu đề lớn</label>
+                                    <input type="text" class="form-control" id="hero_title">
+                                </div>
+                                <div class="col-md-4">
+                                     <label class="form-label">Phụ đề</label>
+                                    <input type="text" class="form-control" id="hero_subtitle">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Intro Section -->
+                    <div class="card mb-3">
+                        <div class="card-status-top bg-blue"></div>
+                         <div class="card-header">
+                            <h3 class="card-title">Giới thiệu chính</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tiêu đề đoạn giới thiệu</label>
+                                        <input type="text" class="form-control" id="intro_title">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nội dung chi tiết</label>
+                                        <textarea class="form-control" id="intro_content" rows="6"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Hình ảnh minh họa URL</label>
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control" id="intro_image" onchange="document.getElementById('intro-img-preview').src = this.value">
+                                        <button class="btn" type="button" onclick="document.getElementById('intro-upload').click()">
+                                            <i class="ti ti-upload"></i> Upload
+                                        </button>
+                                    </div>
+                                    <input type="file" id="intro-upload" hidden accept="image/*" onchange="handleIntroImageUpload(this)">
+                                    <div class="border rounded p-1 bg-light text-center">
+                                        <img id="intro-img-preview" src="" class="img-fluid" style="max-height: 200px; object-fit: contain;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Section (Dynamic List) -->
+                    <div class="card mb-3">
+                        <div class="card-status-top bg-green"></div>
+                        <div class="card-header">
+                            <h3 class="card-title">Thống kê nổi bật</h3>
+                            <div class="card-actions">
+                                <button class="btn btn-sm btn-outline-success" onclick="addStatItem()">
+                                    <i class="ti ti-plus"></i> Thêm chỉ số
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table card-table table-vcenter text-nowrap datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Con số (Value)</th>
+                                        <th>Nhãn (Label)</th>
+                                        <th class="w-1"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stats-list">
+                                    <!-- Dynamic Items -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Features Section (Dynamic List) -->
+                    <div class="card mb-3">
+                        <div class="card-status-top bg-yellow"></div>
+                         <div class="card-header">
+                            <h3 class="card-title">Tính năng / Cam kết</h3>
+                             <div class="card-actions">
+                                <button class="btn btn-sm btn-outline-warning" onclick="addFeatureItem()">
+                                    <i class="ti ti-plus"></i> Thêm tính năng
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                             <table class="table card-table table-vcenter text-nowrap datatable">
+                                <thead>
+                                    <tr>
+                                        <th class="w-1">Icon (Class)</th>
+                                        <th>Tiêu đề</th>
+                                        <th>Mô tả</th>
+                                        <th class="w-1"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="features-list">
+                                    <!-- Dynamic Items -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <footer class="footer footer-transparent d-print-none">
+                 <div class="container-xl">
+                    <div class="row text-center align-items-center flex-row-reverse">
+                        <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                            <ul class="list-inline list-inline-dots mb-0">
+                                <li class="list-inline-item">
+                                    Copyright &copy; 2025 NextPlay. All rights reserved.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                 </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/tabler/js/tabler.min.js"></script>
+    <script src="../env.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/admin/utils.js"></script>
+    <script src="../assets/js/admin/components.js"></script>
+    <script>
+        let aboutData = {
+            hero: {},
+            intro: {},
+            stats: [],
+            features: []
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+             // Initialize Admin Components
+             await AdminComponents.init('settings-about');
+
+             loadSettings();
+             document.getElementById('btn-refresh').addEventListener('click', loadSettings);
+             document.getElementById('btn-save').addEventListener('click', saveSettings);
+        });
+
+        async function loadSettings() {
+            try {
+                const response = await fetch(`${window.ENV.API_URL}/settings/about_us`);
+                const result = await response.json();
+                
+                if(result.status === 'success') {
+                    aboutData = result.data;
+                    renderForm();
+                } else {
+                    alert('Không thể tải cài đặt: ' + (result.message || 'Lỗi không xác định'));
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Lỗi kết nối đến máy chủ.');
+            }
+        }
+
+        function renderForm() {
+            // Hero
+            if(!aboutData.hero) aboutData.hero = {};
+            document.getElementById('hero_title').value = aboutData.hero.title || '';
+            document.getElementById('hero_subtitle').value = aboutData.hero.subtitle || '';
+
+            // Intro
+            if(!aboutData.intro) aboutData.intro = {};
+            document.getElementById('intro_title').value = aboutData.intro.title || '';
+            document.getElementById('intro_content').value = aboutData.intro.content || '';
+            document.getElementById('intro_image').value = aboutData.intro.image || '';
+            document.getElementById('intro-img-preview').src = aboutData.intro.image || '';
+
+            // Stats
+            renderStatsList();
+            // Features
+            renderFeaturesList();
+        }
+
+        // --- Stats Logic ---
+        function renderStatsList() {
+            const tbody = document.getElementById('stats-list');
+            tbody.innerHTML = '';
+            if(!aboutData.stats) aboutData.stats = [];
+            
+            aboutData.stats.forEach((stat, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="text" class="form-control form-control-flush" value="${stat.value || ''}" onchange="updateStat(${index}, 'value', this.value)" placeholder="VD: 100+"></td>
+                    <td><input type="text" class="form-control form-control-flush" value="${stat.label || ''}" onchange="updateStat(${index}, 'label', this.value)" placeholder="VD: Game đa dạng"></td>
+                    <td>
+                        <button class="btn btn-icon btn-ghost-danger" onclick="removeStat(${index})" title="Xóa">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        window.addStatItem = function() {
+            aboutData.stats.push({ value: '', label: '' });
+            renderStatsList();
+        }
+        
+        window.updateStat = function(index, field, val) {
+            aboutData.stats[index][field] = val;
+        }
+        
+        window.removeStat = function(index) {
+            if(confirm('Xóa chỉ số này?')) {
+                aboutData.stats.splice(index, 1);
+                renderStatsList();
+            }
+        }
+
+        // --- Features Logic ---
+        function renderFeaturesList() {
+            const tbody = document.getElementById('features-list');
+            tbody.innerHTML = '';
+            if(!aboutData.features) aboutData.features = [];
+            
+            aboutData.features.forEach((feat, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="text" class="form-control form-control-flush" value="${feat.icon || ''}" onchange="updateFeature(${index}, 'icon', this.value)" placeholder="bi bi-star"></td>
+                    <td><input type="text" class="form-control form-control-flush" value="${feat.title || ''}" onchange="updateFeature(${index}, 'title', this.value)"></td>
+                    <td><input type="text" class="form-control form-control-flush" value="${feat.description || ''}" onchange="updateFeature(${index}, 'description', this.value)"></td>
+                    <td>
+                         <button class="btn btn-icon btn-ghost-danger" onclick="removeFeature(${index})" title="Xóa">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.addFeatureItem = function() {
+            aboutData.features.push({ icon: 'bi bi-check-circle', title: '', description: '' });
+            renderFeaturesList();
+        }
+
+        window.updateFeature = function(index, field, val) {
+             aboutData.features[index][field] = val;
+        }
+
+        window.removeFeature = function(index) {
+            if(confirm('Xóa tính năng này?')) {
+                aboutData.features.splice(index, 1);
+                renderFeaturesList();
+            }
+        }
+
+        // --- Save ---
+        async function saveSettings() {
+            // Collect Form Data for Hero/Intro
+            aboutData.hero.title = document.getElementById('hero_title').value;
+            aboutData.hero.subtitle = document.getElementById('hero_subtitle').value;
+            
+            aboutData.intro.title = document.getElementById('intro_title').value;
+            aboutData.intro.content = document.getElementById('intro_content').value;
+            aboutData.intro.image = document.getElementById('intro_image').value;
+
+            // Stats and Features are already updated in aboutData via onchange events
+            
+            try {
+                const response = await fetch(`${window.ENV.API_URL}/settings/about_us`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(aboutData)
+                });
+                const result = await response.json();
+                
+                if(result.status === 'success') {
+                    Toast.success('Lưu thay đổi thành công!');
+                } else {
+                    Toast.error('Lỗi khi lưu: ' + result.message);
+                }
+            } catch (e) {
+                console.error(e);
+                Toast.error('Lỗi khi lưu.');
+            }
+        }
+
+        async function handleIntroImageUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Show loading state
+            const uploadBtn = input.previousElementSibling.querySelector('button');
+            const originalText = uploadBtn.innerHTML;
+            uploadBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
+            uploadBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${window.ENV.API_URL}/settings/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Update input and preview
+                    const imgInput = document.getElementById('intro_image');
+                    imgInput.value = result.url;
+                    document.getElementById('intro-img-preview').src = result.url;
+                    Toast.success('Upload ảnh thành công!'); 
+                } else {
+                    Toast.error('Lỗi upload: ' + (result.message || 'Không xác định'));
+                }
+            } catch (error) {
+                console.error('Error uploading:', error);
+                Toast.error('Lỗi tin hiệu mạng khi upload.');
+            } finally {
+                // Restore button state
+                uploadBtn.innerHTML = originalText;
+                uploadBtn.disabled = false;
+                // Reset file input so same file can be selected again if needed
+                input.value = '';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -13,6 +13,7 @@
     color: #e0e6ed;
     position: relative;
     overflow: hidden;
+    z-index: 100;
 }
 
 /* Optional: Add a subtle ambient glow blob if desired, but keeping it clean for now */

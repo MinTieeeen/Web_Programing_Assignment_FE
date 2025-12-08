@@ -1,53 +1,5 @@
 <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
-    <style>
-        /* Custom Sidebar Styles for Smoother Dropdowns */
-        .navbar-vertical .dropdown-menu {
-            background-color: rgba(0, 0, 0, 0.2) !important; /* Darker background for nested items */
-            border-radius: 8px;
-            margin-top: 5px;
-            border: none;
-            padding: 5px;
-            transition: all 0.3s ease;
-        }
-    
-        .navbar-vertical .dropdown-item {
-            color: rgba(255, 255, 255, 0.6) !important; /* Lighter text color */
-            padding: 8px 15px;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-            font-size: 0.95rem;
-            margin-bottom: 2px;
-        }
-    
-        .navbar-vertical .dropdown-item:hover {
-            color: #ffffff !important;
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            transform: translateX(5px); /* Subtle movement */
-        }
-    
-        .navbar-vertical .dropdown-item.active {
-            color: #ffffff !important;
-            background-color: rgba(32, 107, 196, 0.6) !important; /* Primary color but transparent */
-            font-weight: 500;
-        }
-    
-        /* Chevron Rotation */
-        .nav-link.dropdown-toggle::after {
-            transition: transform 0.3s ease;
-            margin-left: auto;
-        }
-        
-        .nav-link.dropdown-toggle[aria-expanded="true"]::after,
-        .nav-link.dropdown-toggle.show::after {
-            transform: rotate(180deg); /* Smooth rotation */
-        }
-        
-        /* Active Parent State */
-        .nav-link.dropdown-toggle.show {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: white !important;
-        }
-    </style>
+
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -133,11 +85,11 @@
                         <span class="nav-link-title">Cấu hình hệ thống</span>
                     </a>
                     <div class="dropdown-menu">
-                         <a class="dropdown-item" href="content.html" data-page="content">
-                            Thông tin chung
+                        <a class="dropdown-item" href="settings-general.html" data-page="settings-general">
+                            Cài đặt chung
                         </a>
-                        <a class="dropdown-item" href="home-content.html" data-page="home-content">
-                            Thông tin trang
+                        <a class="dropdown-item" href="settings-about.html" data-page="settings-about">
+                            Về chúng tôi
                         </a>
                          <a class="dropdown-item" href="faq.html" data-page="faq">
                             Hỏi đáp (FAQ)

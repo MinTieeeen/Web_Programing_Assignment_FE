@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài đặt chung - Quan tri Website</title>
+    <!-- Tabler Core -->
+    <link href="../assets/tabler/css/tabler.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-flags.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-payments.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-vendors.min.css" rel="stylesheet"/>
+    <!-- Inter Font -->
+    <style>
+      @import url('https://rsms.me/inter/inter.css');
+      :root {
+      	--tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      }
+      body {
+      	font-feature-settings: "cv03", "cv04", "cv11";
+      }
+    </style>
+    <link href="../assets/css/toast.css" rel="stylesheet">
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body >
+    <script src="../assets/tabler/js/tabler-theme.min.js"></script>
+    <div class="page">
+        <!-- Sidebar -->
+        <div id="sidebarContainer"></div>
+        <div id="navbarContainer"></div>
+        
+        <div class="page-wrapper">
+            <!-- Page Header -->
+            <div class="page-header d-print-none">
+                <div class="container-xl">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title">
+                                Cài đặt chung
+                            </h2>
+                        </div>
+                        <!-- Page Title Actions -->
+                        <div class="col-auto ms-auto d-print-none">
+                            <div class="btn-list">
+                                <button id="btn-refresh" class="btn btn-white d-none d-sm-inline-block">
+                                    <i class="ti ti-refresh"></i> Làm mới
+                                </button>
+                                <button id="btn-save" class="btn btn-primary d-none d-sm-inline-block">
+                                    <i class="ti ti-device-floppy"></i> Lưu thay đổi
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Body -->
+            <div class="page-body">
+                <div class="container-xl">
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
+                                <li class="nav-item">
+                                    <a href="#tabs-basic" class="nav-link active" data-bs-toggle="tab">Thông tin cơ bản</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#tabs-home" class="nav-link" data-bs-toggle="tab">Cấu hình Trang chủ</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <!-- Tab 1: Basic Info -->
+                                <div class="tab-pane active show" id="tabs-basic">
+                                    <div class="row row-cards">
+                                        <!-- General Info -->
+                                        <div class="col-lg-6">
+                                            <div class="card border-0 shadow-none">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Thông tin chung</h3>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Website</label>
+                                                        <input type="text" class="form-control" id="company_name" name="company_name">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Slogan</label>
+                                                        <textarea class="form-control" id="slogan" name="slogan" rows="3"></textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Logo URL</label>
+                                                        <div class="row g-2">
+                                                            <div class="col">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="logo" name="logo" onchange="updateImagePreview(this)">
+                                                                    <button class="btn" type="button" onclick="document.getElementById('logo-upload').click()">
+                                                                        <i class="ti ti-upload"></i> Upload
+                                                                    </button>
+                                                                </div>
+                                                                <input type="file" id="logo-upload" hidden accept="image/*" onchange="handleLogoUpload(this)">
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <span class="avatar avatar-md" id="logo-preview-bg" style="background-image: url('')"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Contact Info -->
+                                        <div class="col-lg-6">
+                                            <div class="card border-0 shadow-none h-100">
+                                                 <div class="card-header">
+                                                    <h3 class="card-title">Liên hệ & Mạng xã hội</h3>
+                                                </div>
+                                                <div class="card-body">
+                                                    <h4 class="card-title text-muted mt-0 mb-3">Thông tin liên hệ</h4>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Địa chỉ</label>
+                                                        <input type="text" class="form-control" id="contact_address">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Email</label>
+                                                        <input type="email" class="form-control" id="contact_email">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Hotline</label>
+                                                        <input type="text" class="form-control" id="contact_hotline">
+                                                    </div>
+                                                    
+                                                    <div class="hr-text">Mạng xã hội</div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Facebook</label>
+                                                        <div class="input-group input-group-flat">
+                                                            <span class="input-group-text"><i class="ti ti-brand-facebook"></i></span>
+                                                            <input type="text" class="form-control" id="contact_facebook" placeholder="Facebook URL">
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Twitter / X</label>
+                                                        <div class="input-group input-group-flat">
+                                                            <span class="input-group-text"><i class="ti ti-brand-x"></i></span>
+                                                            <input type="text" class="form-control" id="contact_twitter" placeholder="Twitter URL">
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Instagram</label>
+                                                        <div class="input-group input-group-flat">
+                                                            <span class="input-group-text"><i class="ti ti-brand-instagram"></i></span>
+                                                            <input type="text" class="form-control" id="contact_instagram" placeholder="Instagram URL">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tab 2: Homepage Config -->
+                                <div class="tab-pane" id="tabs-home">
+                                    <div class="row row-cards">
+                                        <!-- Hero Section -->
+                                        <div class="col-12">
+                                            <div class="card border-0 shadow-none mb-3">
+                                                <div class="card-status-top bg-blue"></div>
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Hero Section (Banner Chính)</h3>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">Tiêu đề lớn</label>
+                                                            <input type="text" class="form-control" id="hero_title">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="form-label">Badge (Nhãn)</label>
+                                                            <input type="text" class="form-control" id="hero_badge" placeholder="VD: Manifest">
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="form-label">Mô tả</label>
+                                                            <textarea class="form-control" id="hero_description" rows="2"></textarea>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">Nút chính (Text)</label>
+                                                            <input type="text" class="form-control" id="hero_btn_text">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">Nút chính (URL)</label>
+                                                            <input type="text" class="form-control" id="hero_btn_url">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Stats Section -->
+                                        <div class="col-12">
+                                            <div class="card border-0 shadow-none mb-3">
+                                                <div class="card-status-top bg-green"></div>
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Thống kê (4 chỉ số)</h3>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <!-- Stat 1 -->
+                                                        <div class="col-md-3">
+                                                            <label class="form-label">Chỉ số 1</label>
+                                                            <input type="text" class="form-control mb-2" id="stat_1_value" placeholder="100+">
+                                                            <input type="text" class="form-control" id="stat_1_label" placeholder="Game đa dạng">
+                                                        </div>
+                                                        <!-- Stat 2 -->
+                                                        <div class="col-md-3">
+                                                            <label class="form-label">Chỉ số 2</label>
+                                                            <input type="text" class="form-control mb-2" id="stat_2_value" placeholder="50K+">
+                                                            <input type="text" class="form-control" id="stat_2_label" placeholder="Người chơi">
+                                                        </div>
+                                                        <!-- Stat 3 -->
+                                                        <div class="col-md-3">
+                                                            <label class="form-label">Chỉ số 3</label>
+                                                            <input type="text" class="form-control mb-2" id="stat_3_value" placeholder="24/7">
+                                                            <input type="text" class="form-control" id="stat_3_label" placeholder="Hỗ trợ">
+                                                        </div>
+                                                        <!-- Stat 4 -->
+                                                        <div class="col-md-3">
+                                                            <label class="form-label">Chỉ số 4</label>
+                                                            <input type="text" class="form-control mb-2" id="stat_4_value" placeholder="100%">
+                                                            <input type="text" class="form-control" id="stat_4_label" placeholder="Miễn phí">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Services Section -->
+                                        <div class="col-12">
+                                            <div class="card border-0 shadow-none">
+                                                <div class="card-status-top bg-yellow"></div>
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Dịch vụ</h3>
+                                                </div>
+                                                <div class="card-body">
+                                                    <label class="form-label">Tiêu đề Section Dịch vụ</label>
+                                                    <input type="text" class="form-control" id="services_title">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <footer class="footer footer-transparent d-print-none">
+                <div class="container-xl">
+                    <div class="row text-center align-items-center flex-row-reverse">
+                        <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                            <ul class="list-inline list-inline-dots mb-0">
+                                <li class="list-inline-item">
+                                    Copyright &copy; 2025
+                                    <a href="." class="link-secondary">NextPlay</a>.
+                                    All rights reserved.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/tabler/js/tabler.min.js"></script>
+    <script src="../env.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/admin/utils.js"></script>
+    <script src="../assets/js/admin/components.js"></script>
+    <script>
+        let settingsData = { 
+            general: { contact: {} },
+            home: { hero: {}, stats: {}, services: {} } // home_config
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+             // Initialize Admin Components (Sidebar, Navbar, Auth)
+             await AdminComponents.init('settings-general');
+
+             loadSettings();
+             document.getElementById('btn-refresh').addEventListener('click', loadSettings);
+             document.getElementById('btn-save').addEventListener('click', saveSettings);
+        });
+
+        async function loadSettings() {
+            try {
+                // Fetch both existing 'general' and new 'home_config'
+                const [generalRes, homeRes] = await Promise.all([
+                    fetch(`${window.ENV.API_URL}/settings/general`),
+                    fetch(`${window.ENV.API_URL}/settings/home_config`)
+                ]);
+
+                const generalResult = await generalRes.json();
+                const homeResult = await homeRes.json();
+                
+                if(generalResult.status === 'success') {
+                    settingsData.general = generalResult.data;
+                }
+                
+                // home_config might not exist nicely yet if migration didn't run perfectly or first time
+                if(homeResult.status === 'success') {
+                    settingsData.home = homeResult.data;
+                } else {
+                     // Default structure if missing
+                     settingsData.home = { hero: {}, stats: {}, services: {} };
+                }
+
+                renderForm();
+
+            } catch (e) {
+                console.error(e);
+                Toast.error('Lỗi kết nối đến máy chủ.');
+            }
+        }
+
+        function renderForm() {
+            // --- Tab 1: General ---
+            const g = settingsData.general;
+            
+            document.getElementById('company_name').value = g.company_name || '';
+            document.getElementById('slogan').value = g.slogan || '';
+            document.getElementById('logo').value = g.logo || '';
+            const logoUrl = g.logo || '';
+            document.getElementById('logo-preview-bg').style.backgroundImage = `url('${logoUrl}')`;
+
+            if (!g.contact) g.contact = {};
+            document.getElementById('contact_address').value = g.contact.address || '';
+            document.getElementById('contact_email').value = g.contact.email || '';
+            document.getElementById('contact_hotline').value = g.contact.hotline || '';
+            
+            document.getElementById('contact_facebook').value = g.contact.facebook || '';
+            document.getElementById('contact_twitter').value = g.contact.twitter || '';
+            document.getElementById('contact_instagram').value = g.contact.instagram || '';
+
+            // --- Tab 2: Homepage ---
+            const h = settingsData.home;
+            if(!h.hero) h.hero = {};
+            if(!h.stats) h.stats = {};
+            if(!h.services) h.services = {};
+
+            // Hero
+            document.getElementById('hero_title').value = h.hero.title || '';
+            document.getElementById('hero_description').value = h.hero.description || '';
+            document.getElementById('hero_badge').value = h.hero.badge || '';
+            document.getElementById('hero_btn_text').value = h.hero.btn_text || '';
+            document.getElementById('hero_btn_url').value = h.hero.btn_url || '';
+
+            // Stats
+            document.getElementById('stat_1_value').value = h.stats.stat_1_value || '';
+            document.getElementById('stat_1_label').value = h.stats.stat_1_label || '';
+            document.getElementById('stat_2_value').value = h.stats.stat_2_value || '';
+            document.getElementById('stat_2_label').value = h.stats.stat_2_label || '';
+            document.getElementById('stat_3_value').value = h.stats.stat_3_value || '';
+            document.getElementById('stat_3_label').value = h.stats.stat_3_label || '';
+            document.getElementById('stat_4_value').value = h.stats.stat_4_value || '';
+            document.getElementById('stat_4_label').value = h.stats.stat_4_label || '';
+
+            // Services
+            document.getElementById('services_title').value = h.services.title || '';
+        }
+
+        function updateImagePreview(input) {
+             document.getElementById('logo-preview-bg').style.backgroundImage = `url('${input.value}')`;
+        }
+
+        async function saveSettings() {
+            // --- Collect General Data ---
+            const g = settingsData.general;
+            g.company_name = document.getElementById('company_name').value;
+            g.slogan = document.getElementById('slogan').value;
+            g.logo = document.getElementById('logo').value;
+            g.contact.address = document.getElementById('contact_address').value;
+            g.contact.email = document.getElementById('contact_email').value;
+            g.contact.hotline = document.getElementById('contact_hotline').value;
+            g.contact.facebook = document.getElementById('contact_facebook').value;
+            g.contact.twitter = document.getElementById('contact_twitter').value;
+            g.contact.instagram = document.getElementById('contact_instagram').value;
+
+            // --- Collect Home Data ---
+            const h = settingsData.home;
+            if(!h.hero) h.hero = {};
+            h.hero.title = document.getElementById('hero_title').value;
+            h.hero.description = document.getElementById('hero_description').value;
+            h.hero.badge = document.getElementById('hero_badge').value;
+            h.hero.btn_text = document.getElementById('hero_btn_text').value;
+            h.hero.btn_url = document.getElementById('hero_btn_url').value;
+
+            if(!h.stats) h.stats = {};
+            h.stats.stat_1_value = document.getElementById('stat_1_value').value;
+            h.stats.stat_1_label = document.getElementById('stat_1_label').value;
+            h.stats.stat_2_value = document.getElementById('stat_2_value').value;
+            h.stats.stat_2_label = document.getElementById('stat_2_label').value;
+            h.stats.stat_3_value = document.getElementById('stat_3_value').value;
+            h.stats.stat_3_label = document.getElementById('stat_3_label').value;
+            h.stats.stat_4_value = document.getElementById('stat_4_value').value;
+            h.stats.stat_4_label = document.getElementById('stat_4_label').value;
+
+            if(!h.services) h.services = {};
+            h.services.title = document.getElementById('services_title').value;
+
+            try {
+                // Save both concurrently
+                const [saveGeneral, saveHome] = await Promise.all([
+                    fetch(`${window.ENV.API_URL}/settings/general`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(g)
+                    }),
+                    fetch(`${window.ENV.API_URL}/settings/home_config`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(h)
+                    })
+                ]);
+                
+                const resGeneral = await saveGeneral.json();
+                const resHome = await saveHome.json();
+
+                if(resGeneral.status === 'success' && resHome.status === 'success') {
+                    Toast.success('Lưu tất cả thay đổi thành công!');
+                } else {
+                    let msg = '';
+                    if(resGeneral.status !== 'success') msg += `Lỗi Basic Info: ${resGeneral.message}. `;
+                    if(resHome.status !== 'success') msg += `Lỗi Homepage: ${resHome.message}.`;
+                    Toast.error(msg);
+                }
+            } catch (e) {
+                console.error(e);
+                Toast.error('Lỗi tin hiệu khi lưu.');
+            }
+        }
+
+        async function handleLogoUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Show loading state
+            const uploadBtn = input.previousElementSibling.querySelector('button');
+            const originalText = uploadBtn.innerHTML;
+            uploadBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
+            uploadBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${window.ENV.API_URL}/settings/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Update input and preview
+                    const logoInput = document.getElementById('logo');
+                    logoInput.value = result.url;
+                    updateImagePreview(logoInput);
+                    Toast.success('Upload ảnh thành công!'); 
+                } else {
+                    Toast.error('Lỗi upload: ' + (result.message || 'Không xác định'));
+                }
+            } catch (error) {
+                console.error('Error uploading:', error);
+                Toast.error('Lỗi tin hiệu mạng khi upload.');
+            } finally {
+                // Restore button state
+                uploadBtn.innerHTML = originalText;
+                uploadBtn.disabled = false;
+                // Reset file input so same file can be selected again if needed
+                input.value = '';
+            }
+        }
+    </script>
+</body>
+</html>
