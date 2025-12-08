@@ -3,200 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý đánh giá - NextPlay</title>
+    <title>Quản lý bình luận - NextPlay</title>
     <!-- Tabler Core -->
     <link href="../assets/tabler/css/tabler.min.css" rel="stylesheet"/>
-    <link href="../assets/tabler/css/tabler-flags.min.css" rel="stylesheet"/>
-    <link href="../assets/tabler/css/tabler-payments.min.css" rel="stylesheet"/>
     <link href="../assets/tabler/css/tabler-vendors.min.css" rel="stylesheet"/>
+    <link href="../assets/css/toast.css" rel="stylesheet"/>
     <style>
       @import url('https://rsms.me/inter/inter.css');
-      :root {
-      	--tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
-      }
-      body {
-      	font-feature-settings: "cv03", "cv04", "cv11";
-      }
+      :root { --tblr-font-sans-serif: 'Inter Var', sans-serif; }
     </style>
 </head>
 <body>
     <script src="../assets/tabler/js/tabler-theme.min.js"></script>
     <div class="page">
-        <!-- Sidebar -->
         <div id="sidebarContainer"></div>
-
         <div class="page-wrapper">
-            <!-- Navbar -->
             <div id="navbarContainer"></div>
 
-            <!-- Page Header -->
             <div class="page-header d-print-none">
                 <div class="container-xl">
                     <div class="row g-2 align-items-center">
                         <div class="col">
-                            <h2 class="page-title">
-                                Quản lý đánh giá & bình luận
-                            </h2>
-                        </div>
-                        <div class="col-auto ms-auto d-print-none">
-                            <div class="btn-list">
-                                <button class="btn btn-outline-primary" onclick="exportReviews()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>
-                                    Xuất đánh giá
-                                </button>
-                                <button class="btn btn-outline-danger" onclick="bulkDelete()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                                    Xóa nhiều
-                                </button>
-                            </div>
+                            <h2 class="page-title">Quản lý bình luận & Đánh giá</h2>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Page Body -->
             <div class="page-body">
                 <div class="container-xl">
-                    <!-- Stats Cards -->
-                    <div class="row row-deck row-cards mb-4">
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="subheader">Tổng đánh giá</div>
-                                    </div>
-                                    <div class="h1 mb-3" id="totalReviews">...</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="subheader">Đánh giá trung bình</div>
-                                    </div>
-                                    <div class="h1 mb-3" id="averageRating">...</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="subheader">Đánh giá bị báo cáo</div>
-                                    </div>
-                                    <div class="h1 mb-3 text-warning" id="flaggedReviews">...</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="subheader">Đánh giá hôm nay</div>
-                                    </div>
-                                    <div class="h1 mb-3" id="todayReviews">...</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Filters -->
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="row g-2">
-                                <div class="col-md-3">
-                                    <input type="text" class="form-control" id="searchReviews" placeholder="Tìm kiếm đánh giá...">
-                                </div>
-                                <div class="col-md-2">
-                                    <select class="form-select" id="ratingFilter">
-                                        <option value="">Tất cả xếp hạng</option>
-                                        <option value="5">5 Sao</option>
-                                        <option value="4">4 Sao</option>
-                                        <option value="3">3 Sao</option>
-                                        <option value="2">2 Sao</option>
-                                        <option value="1">1 Sao</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <select class="form-select" id="gameFilter">
-                                        <option value="">Tất cả trò chơi</option>
-                                        <!-- Dynamic options -->
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <select class="form-select" id="statusFilter">
-                                        <option value="">Tất cả trạng thái</option>
-                                        <option value="approved">Đã duyệt</option>
-                                        <option value="pending">Chờ duyệt</option>
-                                        <option value="flagged">Bị báo cáo</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="date" class="form-control" id="dateFilter">
-                                </div>
-                                <div class="col-md-1">
-                                    <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" /><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" /></svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Reviews Table -->
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Danh sách đánh giá</h3>
-                            <div class="card-actions">
-                                <label class="form-check form-check-inline m-0">
-                                    <input class="form-check-input" type="checkbox" id="selectAll">
-                                    <span class="form-check-label">Chọn tất cả</span>
-                                </label>
+                            <h3 class="card-title">Danh sách bình luận</h3>
+                        </div>
+                        <div class="card-body border-bottom py-3">
+                            <div class="d-flex">
+                                <div class="text-muted">
+                                    Tìm kiếm:
+                                    <div class="ms-2 d-inline-block">
+                                        <input type="text" class="form-control form-control-sm" id="searchComments" placeholder="Nội dung, người dùng...">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap datatable" id="reviewsTable">
+                            <table class="table card-table table-vcenter text-nowrap datatable" id="commentsTable">
                                 <thead>
                                     <tr>
-                                        <th class="w-1">
-                                            <input type="checkbox" class="form-check-input" id="headerCheckbox">
-                                        </th>
-                                        <th>ID</th>
-                                        <th>Khách hàng</th>
-                                        <th>Trò chơi</th>
-                                        <th>Xếp hạng</th>
-                                        <th>Bình luận</th>
-                                        <th>Ngày</th>
-                                        <th>Trạng thái</th>
+                                        <th>Người dùng</th>
+                                        <th>Bài viết / Game</th>
+                                        <th>Đánh giá</th>
+                                        <th>Nội dung</th>
+                                        <th>Thời gian</th>
                                         <th>Thao tác</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <!-- Dynamic content -->
-                                </tbody>
+                                <tbody></tbody>
                             </table>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-center">
-                            <ul class="pagination m-0" id="reviewsPagination">
-                                <!-- Pagination will be generated dynamically -->
-                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
             
-             <footer class="footer footer-transparent d-print-none">
+            <footer class="footer footer-transparent d-print-none">
                 <div class="container-xl">
                     <div class="row text-center align-items-center flex-row-reverse">
                         <div class="col-12 col-lg-auto mt-3 mt-lg-0">
-                            <ul class="list-inline list-inline-dots mb-0">
-                                <li class="list-inline-item">
-                                    Copyright &copy; 2025
-                                    <a href="." class="link-secondary">NextPlay</a>.
-                                    All rights reserved.
-                                </li>
-                            </ul>
+                            Copyright &copy; 2025 <a href="." class="link-secondary">NextPlay</a>.
                         </div>
                     </div>
                 </div>
@@ -204,50 +77,15 @@
         </div>
     </div>
 
-    <!-- Review Details Modal -->
-    <div class="modal modal-blur fade" id="reviewDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Chi tiết đánh giá</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="reviewDetailsContent">
-                    <!-- Dynamic content -->
-                </div>
-                <div class="modal-footer">
-                    <div class="d-flex w-100 justify-content-between">
-                         <button type="button" class="btn me-auto" data-bs-dismiss="modal">Đóng</button>
-                         <div>
-                            <button type="button" class="btn btn-success" onclick="approveReview()" id="approveReviewBtn">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
-                                Duyệt
-                            </button>
-                            <button type="button" class="btn btn-warning" onclick="flagReview()" id="flagReviewBtn">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 5a5 5 0 0 1 7 0a5 5 0 0 0 7 0v9a5 5 0 0 1 -7 0a5 5 0 0 0 -7 0v-9z" /><path d="M5 21v-7" /></svg>
-                                Báo cáo
-                            </button>
-                            <button type="button" class="btn btn-danger" onclick="deleteReview()" id="deleteReviewBtn">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                                Xóa
-                            </button>
-                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/tabler/js/tabler.min.js"></script>
     <script src="../env.js?v=2"></script>
+    <script src="../assets/js/toast.js"></script>
     <script src="../assets/js/admin/utils.js?v=2"></script>
-    <script src="../assets/js/admin/components.js?v=2"></script>
-    <script src="../assets/js/admin/comments.js"></script>
+    <script src="../assets/js/admin/components.js?v=5"></script>
+    <script src="../assets/js/admin/comments.js?v=1"></script>
     <script>
-        // Initialize components
-        AdminComponents.init('comments');
+        AdminComponents.init('comments'); // Expects 'comments' key for sidebar
     </script>
 </body>
 </html>

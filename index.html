@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextPlay - Nền tảng game trực tuyến hàng đầu</title>
+    <link rel="shortcut icon" href="/assets/images/logo.png" type="image/png" data-content-key="system.assets.favicon" data-content-type="link">
     <meta name="description"
         content="NextPlay là nền tảng phân phối game bản quyền uy tín. Khám phá hàng ngàn tựa game hấp dẫn, từ hành động, nhập vai đến chiến thuật. Tham gia cộng đồng game thủ ngay hôm nay!">
     <meta name="keywords"
@@ -63,12 +64,12 @@
                     Manifest
                 </div>
 
-                <h1 data-aos="fade-right" data-aos-duration="3000">
+                <h1 data-aos="fade-right" data-aos-duration="3000" data-content-key="home.hero.title">
                     Nơi trải nghiệm <span class="tq-gradient">gaming</span> được <span class="tq-gradient">nâng
                         tầm</span>
                 </h1>
 
-                <p>Từ việc làm chủ các cơ chế gameplay nâng cao đến việc rèn luyện phản xạ và khả năng ra quyết định,
+                <p data-content-key="home.hero.description">Từ việc làm chủ các cơ chế gameplay nâng cao đến việc rèn luyện phản xạ và khả năng ra quyết định,
                     NextPlay mang đến những hiểu biết và chiến lược vô giá cho game thủ ở mọi cấp độ.</p>
 
                 <button onclick="document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });">
@@ -86,7 +87,7 @@
         </section>
 
         <section class="tq-featured-section" id="about">
-            <h1 class="tq-section-title tq-autoDisplay">Game nổi bật</h1>
+            <h1 class="tq-section-title tq-autoDisplay" data-content-key="home.featured.title">Game nổi bật</h1>
             <div class="tq-featured-grid">
                 <div class="tq-game-card tq-autoDisplay">
                     <img src="assets/images/dota2_background.jpg" class="tq-card-img" alt="Dota 2 - MOBA Strategy Game"
@@ -126,20 +127,20 @@
         <section class="tq-stats-section">
             <div class="tq-stats-grid">
                 <div class="tq-stat-item tq-autoDisplay">
-                    <h3 class="tq-gradient">100+</h3>
-                    <p>Game đa dạng</p>
+                    <h3 class="tq-gradient" data-content-key="home.stats.stat_1_value">100+</h3>
+                    <p data-content-key="home.stats.stat_1_label">Game đa dạng</p>
                 </div>
                 <div class="tq-stat-item tq-autoDisplay">
-                    <h3 class="tq-gradient">50K+</h3>
-                    <p>Người chơi hoạt động</p>
+                    <h3 class="tq-gradient" data-content-key="home.stats.stat_2_value">50K+</h3>
+                    <p data-content-key="home.stats.stat_2_label">Người chơi hoạt động</p>
                 </div>
                 <div class="tq-stat-item tq-autoDisplay">
-                    <h3 class="tq-gradient">24/7</h3>
-                    <p>Hỗ trợ kỹ thuật trực tuyến</p>
+                    <h3 class="tq-gradient" data-content-key="home.stats.stat_3_value">24/7</h3>
+                    <p data-content-key="home.stats.stat_3_label">Hỗ trợ kỹ thuật trực tuyến</p>
                 </div>
                 <div class="tq-stat-item tq-autoDisplay">
-                    <h3 class="tq-gradient">100%</h3>
-                    <p>Miễn phí tham gia</p>
+                    <h3 class="tq-gradient" data-content-key="home.stats.stat_4_value">100%</h3>
+                    <p data-content-key="home.stats.stat_4_label">Miễn phí tham gia</p>
                 </div>
             </div>
         </section>
@@ -200,7 +201,7 @@
         </section>
 
         <section class="tq-services-section" id="skills">
-            <h1 class="tq-section-title tq-autoDisplay">Dịch vụ</h1>
+            <h1 class="tq-section-title tq-autoDisplay" data-content-key="home.services.title">Dịch vụ</h1>
 
             <div class="tq-service-box tq-autoDisplay">
                 <div class="tq-col tq-designer">
@@ -237,14 +238,15 @@
             </div>
         </section>
 
-        <section data-include="footer"></section>
+        <section data-include="footer" style="width: 100%;"></section>
     </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="env.js?v=2"></script>
-    <script src="assets/js/include-components.js?v=3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="env.js?v=3"></script>
+    <script src="assets/js/include-components.js?v=4"></script>
     <script src="assets/js/auth.js?v=2"></script>
     <script src="assets/js/toast.js"></script>
     <script src="assets/js/cart.js?v=2"></script>
+    <script src="assets/js/content-loader.js?v=2"></script>
     <script>
         // Check and update header login status when page loads
         window.addEventListener('load', function () {

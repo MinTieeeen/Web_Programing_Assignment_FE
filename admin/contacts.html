@@ -194,7 +194,8 @@
         async function loadMessages() {
             try {
                 const response = await fetch(`${API_BASE_URL}/admin/contacts`, {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                    credentials: 'include'
                 });
                 const result = await response.json();
                 if (result.status === 'success') {

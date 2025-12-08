@@ -143,8 +143,14 @@ class AdminDashboard {
             }
             const apiUrl = window.ENV.API_URL;
             const [usersResponse, gamesResponse] = await Promise.all([
-                fetch(`${apiUrl}/users`),
-                fetch(`${apiUrl}/games`)
+                fetch(`${apiUrl}/users`, {
+                     headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                     credentials: 'include'
+                }),
+                fetch(`${apiUrl}/games`, {
+                     headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                     credentials: 'include'
+                })
             ]);
 
             const usersData = await usersResponse.json();
@@ -166,14 +172,8 @@ class AdminDashboard {
         } catch (error) {
             console.error('Error loading dashboard stats:', error);
             // Fallback to mock data if backend fails
-            this.animateNumber('totalUsers', 1245);
-            this.animateNumber('totalGames', 456);
-            this.animateNumber('activeOrders', 89);
-            
-            const revenueElement = document.getElementById('totalRevenue');
-            if (revenueElement) {
-                this.animateNumber('totalRevenue', 45678, '$');
-            }
+            this.animateNumber('totalUsers', 0);
+            this.animateNumber('totalGames', 0);
         }
     }
 
@@ -198,7 +198,11 @@ class AdminDashboard {
         if (!tableBody) return;
 
         try {
-            const response = await fetch('/Assignment/NextPlay/users');
+            const apiUrl = window.ENV.API_URL;
+            const response = await fetch(`${apiUrl}/users`, {
+                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                 credentials: 'include'
+            });
             const result = await response.json();
             
             if (result.status === 'success' && result.data) {
@@ -215,7 +219,7 @@ class AdminDashboard {
                         <td>${user.name}</td>
                         <td>${user.email}</td>
                         <td>${user.date}</td>
-                        <td><span class=\"badge status-${user.status.toLowerCase()}\">${user.status}</span></td>
+                        <td><span class="badge status-${user.status.toLowerCase()}">${user.status}</span></td>
                     </tr>
                 `).join('');
             } else {
@@ -233,7 +237,11 @@ class AdminDashboard {
         if (!tableBody) return;
 
         try {
-            const response = await fetch('/Assignment/NextPlay/games');
+             const apiUrl = window.ENV.API_URL;
+            const response = await fetch(`${apiUrl}/games`, {
+                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                 credentials: 'include'
+            });
             const result = await response.json();
             
             if (result.status === 'success' && result.data) {
@@ -250,11 +258,11 @@ class AdminDashboard {
                         <td>${game.publisher}</td>
                         <td>${game.category}</td>
                         <td>
-                            <button class=\"btn btn-success btn-sm me-2\" onclick=\"approveGame('${game.name}')\">
-                                <i class=\"bi bi-check\"></i>
+                            <button class="btn btn-success btn-sm me-2" onclick="approveGame('${game.name}')">
+                                <i class="bi bi-check"></i>
                             </button>
-                            <button class=\"btn btn-danger btn-sm\" onclick=\"rejectGame('${game.name}')\">
-                                <i class=\"bi bi-x\"></i>
+                            <button class="btn btn-danger btn-sm" onclick="rejectGame('${game.name}')">
+                                <i class="bi bi-x\"></i>
                             </button>
                         </td>
                     </tr>

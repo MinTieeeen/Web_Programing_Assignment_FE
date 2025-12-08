@@ -91,6 +91,10 @@
               AOS.refresh(); 
           }, 100);
       }
+      
+      // Dispatch event for ContentLoader
+      window.dispatchEvent(new CustomEvent('component-loaded', { detail: { selector: selector } }));
+
     }).catch(function(e){ console.error('Include error for ' + selector + ':', e); });
   }
 

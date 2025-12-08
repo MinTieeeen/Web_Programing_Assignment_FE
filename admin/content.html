@@ -8,6 +8,7 @@
     <link href="../assets/tabler/css/tabler.min.css" rel="stylesheet"/>
     <link href="../assets/tabler/css/tabler-flags.min.css" rel="stylesheet"/>
     <link href="../assets/tabler/css/tabler-vendors.min.css" rel="stylesheet"/>
+    <link href="../assets/css/toast.css" rel="stylesheet"/>
     <style>
       @import url('https://rsms.me/inter/inter.css');
       :root {
@@ -108,6 +109,98 @@
                                     </h3>
                                 </div>
                                 <div class="card-body">
+                                    <!-- Company Name -->
+                                    <div class="mb-4" id="group_info_company">
+                                        <label class="form-label">Tên Hệ thống</label>
+                                        <div class="view-mode d-flex justify-content-between align-items-center p-2 border rounded bg-light">
+                                            <div class="d-flex align-items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-building me-2 text-muted" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0" /><path d="M9 8l1 0" /><path d="M9 12l1 0" /><path d="M9 16l1 0" /><path d="M14 8l1 0" /><path d="M14 12l1 0" /><path d="M14 16l1 0" /><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16" /></svg>
+                                                <span class="field-value" id="view_info_company"></span>
+                                            </div>
+                                            <button class="btn btn-sm btn-icon btn-ghost-primary btn-edit-icon" onclick="toggleEdit('info_company')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
+                                            </button>
+                                        </div>
+                                        <div class="edit-mode edit-mode-container">
+                                            <input type="text" class="form-control mb-2" id="input_info_company" placeholder="NextPlay...">
+                                            <div class="edit-actions">
+                                                <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('info_company', false)">Hủy</button>
+                                                <button class="btn btn-sm btn-primary" onclick="saveContent('system', 'info', 'company_name', 'info_company')">Lưu thay đổi</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Slogan -->
+                                    <div class="mb-4" id="group_info_slogan">
+                                        <label class="form-label">Slogan</label>
+                                        <div class="view-mode d-flex justify-content-between align-items-center p-2 border rounded bg-light">
+                                            <div class="d-flex align-items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-quote me-2 text-muted" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5" /><path d="M19 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5" /></svg>
+                                                <span class="field-value" id="view_info_slogan"></span>
+                                            </div>
+                                            <button class="btn btn-sm btn-icon btn-ghost-primary btn-edit-icon" onclick="toggleEdit('info_slogan')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
+                                            </button>
+                                        </div>
+                                        <div class="edit-mode edit-mode-container">
+                                            <input type="text" class="form-control mb-2" id="input_info_slogan" placeholder="Cùng nhau chơi...">
+                                            <div class="edit-actions">
+                                                <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('info_slogan', false)">Hủy</button>
+                                                <button class="btn btn-sm btn-primary" onclick="saveContent('system', 'info', 'slogan', 'info_slogan')">Lưu thay đổi</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Logo URL -->
+                                    <div class="mb-4" id="group_asset_logo">
+                                        <label class="form-label">Logo URL</label>
+                                        <div class="view-mode d-flex justify-content-between align-items-center p-2 border rounded bg-light">
+                                            <div class="d-flex align-items-center text-truncate">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-photo me-2 text-muted" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01" /><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" /><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" /><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" /></svg>
+                                                <span class="field-value text-truncate" id="view_asset_logo"></span>
+                                            </div>
+                                            <button class="btn btn-sm btn-icon btn-ghost-primary btn-edit-icon" onclick="toggleEdit('asset_logo')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
+                                            </button>
+                                        </div>
+                                        <div class="edit-mode edit-mode-container">
+                                            <div class="mb-2">
+                                                <img src="" id="preview_asset_logo" class="d-none rounded mb-2" style="max-height: 100px; width: auto;">
+                                                <input type="file" class="form-control" id="input_asset_logo" accept="image/*" onchange="previewImage(this, 'asset_logo')">
+                                                <small class="form-hint">Chọn ảnh logo mới để tải lên (JPG, PNG, WEBP)</small>
+                                            </div>
+                                            <div class="edit-actions">
+                                                <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('asset_logo', false)">Hủy</button>
+                                                <button class="btn btn-sm btn-primary" onclick="uploadImage('system', 'assets', 'logo', 'asset_logo')">Lưu & Tải lên</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Favicon URL -->
+                                    <div class="mb-4" id="group_asset_favicon">
+                                        <label class="form-label">Favicon URL</label>
+                                        <div class="view-mode d-flex justify-content-between align-items-center p-2 border rounded bg-light">
+                                            <div class="d-flex align-items-center text-truncate">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-photo me-2 text-muted" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01" /><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" /><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" /><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" /></svg>
+                                                <span class="field-value text-truncate" id="view_asset_favicon"></span>
+                                            </div>
+                                            <button class="btn btn-sm btn-icon btn-ghost-primary btn-edit-icon" onclick="toggleEdit('asset_favicon')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
+                                            </button>
+                                        </div>
+                                        <div class="edit-mode edit-mode-container">
+                                            <div class="mb-2">
+                                                <img src="" id="preview_asset_favicon" class="d-none rounded mb-2" style="max-height: 32px; width: auto;">
+                                                <input type="file" class="form-control" id="input_asset_favicon" accept="image/*" onchange="previewImage(this, 'asset_favicon')">
+                                                <small class="form-hint">Chọn ảnh favicon (ICO, PNG - Khuyến nghị 32x32)</small>
+                                            </div>
+                                            <div class="edit-actions">
+                                                <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('asset_favicon', false)">Hủy</button>
+                                                <button class="btn btn-sm btn-primary" onclick="uploadImage('system', 'assets', 'favicon', 'asset_favicon')">Lưu & Tải lên</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- Email -->
                                     <div class="mb-4" id="group_info_email">
                                         <label class="form-label">Email liên hệ</label>
@@ -124,7 +217,7 @@
                                             <input type="text" class="form-control mb-2" id="input_info_email" placeholder="contact@example.com">
                                             <div class="edit-actions">
                                                 <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('info_email', false)">Hủy</button>
-                                                <button class="btn btn-sm btn-primary" onclick="saveContent('contact', 'email', 'info_email')">Lưu thay đổi</button>
+                                                <button class="btn btn-sm btn-primary" onclick="saveContent('system', 'info', 'email', 'info_email')">Lưu thay đổi</button>
                                             </div>
                                         </div>
                                     </div>
@@ -145,7 +238,7 @@
                                             <input type="text" class="form-control mb-2" id="input_info_phone" placeholder="+84...">
                                             <div class="edit-actions">
                                                 <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('info_phone', false)">Hủy</button>
-                                                <button class="btn btn-sm btn-primary" onclick="saveContent('contact', 'hotline', 'info_phone')">Lưu thay đổi</button>
+                                                <button class="btn btn-sm btn-primary" onclick="saveContent('system', 'info', 'hotline', 'info_phone')">Lưu thay đổi</button>
                                             </div>
                                         </div>
                                     </div>
@@ -166,28 +259,12 @@
                                             <input type="text" class="form-control mb-2" id="input_info_address" placeholder="123 Street...">
                                             <div class="edit-actions">
                                                 <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('info_address', false)">Hủy</button>
-                                                <button class="btn btn-sm btn-primary" onclick="saveContent('contact', 'address', 'info_address')">Lưu thay đổi</button>
+                                                <button class="btn btn-sm btn-primary" onclick="saveContent('system', 'info', 'address', 'info_address')">Lưu thay đổi</button>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- About -->
-                                    <div class="mb-4" id="group_info_about">
-                                        <label class="form-label">Mô tả ngắn (Footer)</label>
-                                        <div class="view-mode p-2 border rounded bg-light position-relative">
-                                             <div class="field-value" id="view_info_about" style="white-space: pre-wrap; min-height: 60px;"></div>
-                                             <button class="btn btn-sm btn-icon btn-ghost-primary btn-edit-icon position-absolute top-0 end-0 m-2" onclick="toggleEdit('info_about')">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
-                                            </button>
-                                        </div>
-                                        <div class="edit-mode edit-mode-container">
-                                            <textarea class="form-control mb-2" id="input_info_about" rows="4"></textarea>
-                                            <div class="edit-actions">
-                                                <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('info_about', false)">Hủy</button>
-                                                <button class="btn btn-sm btn-primary" onclick="saveContent('contact', 'about', 'info_about')">Lưu thay đổi</button>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -201,6 +278,7 @@
                                         Mạng xã hội
                                     </h3>
                                 </div>
+
                                 <div class="card-body">
                                     <div class="mb-4" id="group_social_facebook">
                                         <label class="form-label">Facebook</label>
@@ -217,7 +295,7 @@
                                             <input type="text" class="form-control mb-2" id="input_social_facebook" placeholder="https://facebook.com/...">
                                             <div class="edit-actions">
                                                 <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('social_facebook', false)">Hủy</button>
-                                                <button class="btn btn-sm btn-primary" onclick="saveContent('contact', 'facebook', 'social_facebook')">Lưu thay đổi</button>
+                                                <button class="btn btn-sm btn-primary" onclick="saveContent('system', 'info', 'facebook_url', 'social_facebook')">Lưu thay đổi</button>
                                             </div>
                                         </div>
                                     </div>
@@ -237,7 +315,7 @@
                                             <input type="text" class="form-control mb-2" id="input_social_twitter" placeholder="https://twitter.com/...">
                                             <div class="edit-actions">
                                                 <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('social_twitter', false)">Hủy</button>
-                                                <button class="btn btn-sm btn-primary" onclick="saveContent('contact', 'twitter', 'social_twitter')">Lưu thay đổi</button>
+                                                <button class="btn btn-sm btn-primary" onclick="saveContent('system', 'info', 'twitter_url', 'social_twitter')">Lưu thay đổi</button>
                                             </div>
                                         </div>
                                     </div>
@@ -257,7 +335,7 @@
                                             <input type="text" class="form-control mb-2" id="input_social_instagram" placeholder="https://instagram.com/...">
                                             <div class="edit-actions">
                                                 <button class="btn btn-sm btn-outline-secondary" onclick="toggleEdit('social_instagram', false)">Hủy</button>
-                                                <button class="btn btn-sm btn-primary" onclick="saveContent('contact', 'instagram', 'social_instagram')">Lưu thay đổi</button>
+                                                <button class="btn btn-sm btn-primary" onclick="saveContent('system', 'info', 'instagram_url', 'social_instagram')">Lưu thay đổi</button>
                                             </div>
                                         </div>
                                     </div>
@@ -315,17 +393,41 @@
                 
                 if (result.status === 'success') {
                     currentContent = result.data;
-                    const contactData = currentContent.contact || {};
+                    const systemInfo = (currentContent.system && currentContent.system.info) || {};
+                    const systemAssets = (currentContent.system && currentContent.system.assets) || {};
                     
-                    // Populate views using 'contact' page_key data
-                    renderField('info_email', contactData.email);
-                    renderField('info_phone', contactData.hotline); // DB uses 'hotline'
-                    renderField('info_address', contactData.address);
-                    renderField('info_about', contactData.about); // Might be empty in DB
+                    // System Info
+                    renderField('info_company', systemInfo.company_name);
+                    renderField('info_slogan', systemInfo.slogan);
+                    renderField('info_email', systemInfo.email);
+                    renderField('info_phone', systemInfo.hotline);
+                    renderField('info_address', systemInfo.address);
 
-                    renderField('social_facebook', contactData.facebook);
-                    renderField('social_twitter', contactData.twitter);
-                    renderField('social_instagram', contactData.instagram);
+
+                    // Socials (Assuming they are in system.info or system.socials? Seed said system.info)
+                    renderField('social_facebook', systemInfo.facebook_url);
+                    // renderField('social_twitter', systemInfo.twitter); 
+                    // renderField('social_instagram', systemInfo.instagram);
+
+                    // Logo
+                    renderField('asset_logo', systemAssets.logo);
+                    renderField('asset_favicon', systemAssets.favicon);
+
+                    // Home Hero
+                    const homeHero = (currentContent.home && currentContent.home.hero) || {};
+                    const homeStats = (currentContent.home && currentContent.home.stats) || {};
+
+                    renderField('home_hero_title', homeHero.title);
+                    renderField('home_hero_desc', homeHero.description);
+
+                    // Simple render for stats inputs (they use values directly in inputs mainly alongside saving)
+                    // But we can also set values if we want view mode later. 
+                    // For now, the UI above for stats uses inputs directly for compactness.
+                    if(document.getElementById('input_home_stat_1_val')) document.getElementById('input_home_stat_1_val').value = homeStats.stat_1_value || '';
+                    if(document.getElementById('input_home_stat_1_lbl')) document.getElementById('input_home_stat_1_lbl').value = homeStats.stat_1_label || '';
+                    if(document.getElementById('input_home_stat_2_val')) document.getElementById('input_home_stat_2_val').value = homeStats.stat_2_value || '';
+                    if(document.getElementById('input_home_stat_2_lbl')) document.getElementById('input_home_stat_2_lbl').value = homeStats.stat_2_label || '';
+
                 } else {
                     console.error('Failed to load content:', result);
                     Toast.error('Không thể tải nội dung trang');
@@ -358,7 +460,26 @@
                     viewEl.classList.add('field-empty');
                 }
             }
-            if (inputEl) inputEl.value = value || '';
+            
+            if (inputEl) {
+                // IMPORTANT: Do NOT set value for file inputs
+                if (inputEl.type !== 'file') {
+                    inputEl.value = value || '';
+                } else {
+                    // For file inputs, maybe show the current value in a separate element or console
+                    // Or update the preview image if it's an image upload
+                    if (value && (value.startsWith('http') || value.startsWith('/'))) {
+                         // Assuming there is a preview element for this input
+                         // We don't have a reliable way to know the preview ID here unless valid uniqueId
+                         // But we can check if there's a preview element with id `preview_{key}`
+                         const preview = document.getElementById(`preview_${key}`);
+                         if(preview) {
+                             preview.src = value;
+                             preview.classList.remove('d-none');
+                         }
+                    }
+                }
+            }
         }
 
         function toggleEdit(key, isEdit = true) {
@@ -372,14 +493,28 @@
             if (isEdit) {
                 viewMode.style.display = 'none';
                 editMode.style.display = 'block'; // Now using block for container
-                inputEl.focus();
+                if (inputEl && inputEl.type !== 'file') inputEl.focus(); // Don't focus file input automatically
             } else {
                 viewMode.style.display = 'flex'; // Restore proper display
                 editMode.style.display = 'none';
             }
         }
 
-        async function saveContent(pageKey, sectionKey, uniqueId) {
+        const readableNames = {
+            'company_name': 'Tên hệ thống',
+            'slogan': 'Slogan',
+            'logo': 'Logo',
+            'favicon': 'Favicon',
+            'email': 'Email liên hệ',
+            'hotline': 'Số điện thoại',
+            'address': 'Địa chỉ',
+
+            'facebook_url': 'Facebook URL',
+            'twitter_url': 'Twitter URL',
+            'instagram_url': 'Instagram URL'
+        };
+
+        async function saveContent(pageKey, sectionKey, contentKey, uniqueId) {
             const inputId = `input_${uniqueId}`;
             const value = document.getElementById(inputId).value;
             
@@ -393,13 +528,15 @@
                     body: JSON.stringify({
                         page_key: pageKey,
                         section_key: sectionKey,
+                        content_key: contentKey,
                         content_value: value
                     })
                 });
 
                 const result = await response.json();
                 if (result.status === 'success' || response.ok) {
-                    Toast.success('Đã lưu thay đổi');
+                    const displayName = readableNames[contentKey] || contentKey;
+                    Toast.success(`Đã lưu ${displayName} thành công`);
                     
                     // Update view
                     renderField(uniqueId, value);
@@ -409,7 +546,78 @@
                 }
             } catch (error) {
                 console.error('Error saving content:', error);
-                Toast.error('Lỗi kết nối');
+                Toast.error('Lỗi kết nối saveContent');
+            }
+        }
+
+        function previewImage(input, uniqueId) {
+            const preview = document.getElementById(`preview_${uniqueId}`);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function uploadImage(pageKey, sectionKey, contentKey, uniqueId) {
+            const inputId = `input_${uniqueId}`;
+            const fileInput = document.getElementById(inputId);
+            
+            if (!fileInput.files || !fileInput.files[0]) {
+                Toast.error('Vui lòng chọn một file ảnh');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('page_key', pageKey);
+            formData.append('section_key', sectionKey);
+            formData.append('content_key', contentKey);
+            
+            // Show loading state
+            const btn = document.querySelector(`button[onclick*="uploadImage('${pageKey}', '${sectionKey}', '${contentKey}', '${uniqueId}')"]`);
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang tải lên...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/content/upload`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const displayName = readableNames[contentKey] || contentKey;
+                    Toast.success(`Đã tải lên ${displayName} thành công`);
+                    
+                    // Manually update the view element mostly, renderField handles preview updates if we pass URL
+                    // But here calling renderField(uniqueId, result.url) caused the file input value error.
+                    // Now that renderField is fixed, we can call it.
+                    renderField(uniqueId, result.url);
+                    toggleEdit(uniqueId, false);
+                    
+                    // Reset input safely
+                    fileInput.value = '';
+                    // Keep preview visible or reset? 
+                    // Usually we want to show the NEWLY UPLOADED image. 
+                    // renderField will update the preview src to the result.url.
+                } else {
+                    Toast.error('Lỗi: ' + (result.message || 'Upload thất bại'));
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                Toast.error('Lỗi kết nối khi tải lên');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
             }
         }
     </script>

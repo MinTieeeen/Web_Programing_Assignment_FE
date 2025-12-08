@@ -140,6 +140,11 @@ class AdminComponents {
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="news.html" data-page="news">
+                            <i class="bi bi-newspaper"></i> Tin tức
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="settings.html" data-page="settings">
                             <i class="bi bi-gear"></i> Cài đặt
                         </a>
@@ -194,14 +199,33 @@ class AdminComponents {
     }
 
     static setActivePage(currentPage) {
-        // Set active navigation item
-        const navLinks = document.querySelectorAll('.sidebar .nav-link');
+        // Handle standalone links
+        const navLinks = document.querySelectorAll('.sidebar .nav-link:not(.dropdown-toggle)');
         navLinks.forEach(link => {
             link.classList.remove('active');
-            if (link.dataset.page === currentPage || 
-                (currentPage === 'dashboard' && link.href.includes('index.html')) ||
-                link.href.includes(window.location.pathname.split('/').pop())) {
+            if (link.dataset.page === currentPage) {
                 link.classList.add('active');
+            }
+        });
+
+        // Handle dropdown items
+        const dropdownItems = document.querySelectorAll('.sidebar .dropdown-item');
+        dropdownItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.dataset.page === currentPage) {
+                item.classList.add('active');
+                
+                // Expand parent dropdown
+                const dropdownMenu = item.closest('.dropdown-menu');
+                if (dropdownMenu) {
+                    dropdownMenu.classList.add('show');
+                    // Add show to the dropdown toggler as well for Tabler
+                    const dropdownToggle = dropdownMenu.previousElementSibling;
+                    if (dropdownToggle && dropdownToggle.classList.contains('dropdown-toggle')) {
+                        dropdownToggle.classList.add('show');
+                        dropdownToggle.setAttribute('aria-expanded', 'true');
+                    }
+                }
             }
         });
 
@@ -213,9 +237,13 @@ class AdminComponents {
             'products': 'Quản lý trò chơi',
             'orders': 'Quản lý đơn hàng',
             'comments': 'Quản lý đánh giá',
-            'contacts': 'Quản lý nhà phát hành',
+            'contacts': 'Quản lý liên hệ / nhà phát hành',
             'posts': 'Quản lý danh mục',
-            'settings': 'Cài đặt hệ thống'
+            'news': 'Quản lý tin tức',
+            'settings': 'Cài đặt hệ thống',
+            'content': 'Thông tin hệ thống',
+            'home-content': 'Nội dung trang chủ',
+            'faq': 'Quản lý câu hỏi (FAQ)'
         };
 
         const pageTitle = document.getElementById('pageTitle');
@@ -260,6 +288,7 @@ class AdminComponents {
                     }
                 }
             });
+
         }
     }
 
@@ -269,6 +298,48 @@ class AdminComponents {
 
         // Initialize notification handlers
         this.initializeNotifications();
+        
+        // Global Delegation for Sidebar Dropdowns
+        // This handles dynamic content updates robustly
+        document.body.addEventListener('click', (e) => {
+            const toggle = e.target.closest('.sidebar .dropdown-toggle');
+            if (toggle) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const parent = toggle.closest('.nav-item');
+                const menu = parent.querySelector('.dropdown-menu');
+
+                if (menu) {
+                    const isExpanded = menu.classList.contains('show');
+
+                    // Close other expanded dropdowns (Accordion behavior)
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar) {
+                        const otherToggles = sidebar.querySelectorAll('.dropdown-toggle');
+                        otherToggles.forEach(t => {
+                            if (t !== toggle) {
+                                t.classList.remove('show');
+                                t.setAttribute('aria-expanded', 'false');
+                                const tMenu = t.closest('.nav-item').querySelector('.dropdown-menu');
+                                if (tMenu) tMenu.classList.remove('show');
+                            }
+                        });
+                    }
+
+                    // Toggle current
+                    if (isExpanded) {
+                        toggle.classList.remove('show');
+                        toggle.setAttribute('aria-expanded', 'false');
+                        menu.classList.remove('show');
+                    } else {
+                        toggle.classList.add('show');
+                        toggle.setAttribute('aria-expanded', 'true');
+                        menu.classList.add('show');
+                    }
+                }
+            }
+        });
     }
 
     static initializeTooltips() {

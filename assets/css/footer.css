@@ -1,46 +1,43 @@
 /* ==== FOOTER BASE ==== */
 .np-footer {
     width: 100%;
-    background: #0f0f12;
-    /* tone tối hiện đại */
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 60px 0 30px;
-    color: #ccc;
-    font-family: 'Inter', sans-serif;
-}
-
-.npf-container {
-    width: 90%;
-    max-width: 1250px;
-    margin: auto;
-}
-
-/* Footer Styles - NextPlay Homepage Style */
-
-.np-footer {
-    width: 100%;
-    background: rgba(8, 0, 32, 0.7);
+    /* Dark background similar to header but slightly more opaque for a solid base */
+    background: rgba(8, 0, 32, 0.95);
+    /* Top border/glow matching the header's neon blue */
     border-top: 1px solid rgba(114, 161, 222, 0.3);
-    padding: 60px 0 30px;
-    margin-top: 100px;
+    box-shadow: 0 -5px 20px rgba(114, 161, 222, 0.15);
+    padding: 70px 0 30px;
+    margin-top: 80px;
     backdrop-filter: blur(10px);
+    font-family: 'Inter', sans-serif;
+    color: #e0e6ed;
+    position: relative;
+    overflow: hidden;
 }
 
+/* Optional: Add a subtle ambient glow blob if desired, but keeping it clean for now */
+
 .npf-container {
-    max-width: 1400px;
+    max-width: 1300px;
     margin: 0 auto;
     padding: 0 40px;
 }
 
 .npf-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 50px;
-    margin-bottom: 40px;
+    grid-template-columns: 2fr 1fr 1fr 1.2fr;
+    gap: 60px;
+    margin-bottom: 50px;
 }
 
 /* Brand Section */
 .npf-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.npf-brand-header {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -50,7 +47,12 @@
     width: 50px;
     height: 50px;
     object-fit: contain;
-    filter: drop-shadow(0 0 10px rgba(114, 161, 222, 0.5));
+    filter: drop-shadow(0 0 8px rgba(114, 161, 222, 0.6));
+    transition: transform 0.3s ease;
+}
+
+.npf-logo:hover {
+    transform: scale(1.1) rotate(5deg);
 }
 
 .npf-brand-text {
@@ -59,16 +61,29 @@
 }
 
 .npf-name {
-    font-size: 26px;
-    font-weight: 700;
+    font-size: 28px;
+    font-weight: 800;
     color: #ffffff;
-    margin-bottom: 5px;
-    text-shadow: 0 0 10px rgba(114, 161, 222, 0.3);
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #fff 0%, #72a1de 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(114, 161, 222, 0.3);
 }
 
 .npf-tag {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.npf-desc {
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    font-size: 15px;
+    max-width: 350px;
 }
 
 /* Footer Columns */
@@ -78,12 +93,27 @@
 }
 
 .npf-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #ffffff;
-    margin: 0 0 20px 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #72a1de; /* Neon blue title */
+    margin: 0 0 25px 0;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    position: relative;
+    display: inline-block;
+}
+
+/* Underline effect for title */
+.npf-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 30px;
+    height: 2px;
+    background: #72a1de;
+    box-shadow: 0 0 10px #72a1de;
+    border-radius: 2px;
 }
 
 .npf-col ul {
@@ -93,60 +123,83 @@
 }
 
 .npf-col ul li {
-    margin-bottom: 12px;
+    margin-bottom: 15px;
 }
 
 .npf-col a {
     color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
     transition: all 0.3s ease;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
+/* Hover effect on links */
 .npf-col a:hover {
-    color: #72a1de;
+    color: #fff;
     transform: translateX(5px);
-    text-shadow: 0 0 10px rgba(114, 161, 222, 0.5);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
-.npf-col p {
+/* Add a subtle dot or arrow on hover if desired, but keeping it simple for now */
+
+/* Contact Info Styling */
+.npf-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
     color: rgba(255, 255, 255, 0.7);
-    font-size: 14px;
-    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
 }
 
-.npf-col p a {
+.npf-contact-item i {
     color: #72a1de;
+    font-size: 18px;
+    margin-top: 2px;
+    filter: drop-shadow(0 0 5px rgba(114, 161, 222, 0.5));
 }
 
-.npf-col p a:hover {
-    text-decoration: underline;
+.npf-contact-item a {
+    color: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(114, 161, 222, 0.3);
+    padding-bottom: 1px;
+}
+
+.npf-contact-item a:hover {
+    border-color: #72a1de;
+    color: #72a1de;
 }
 
 /* Social Icons */
 .npf-social {
     display: flex;
-    gap: 12px;
+    gap: 15px;
+    margin-top: 10px;
 }
 
 .npf-icon {
-    width: 42px;
-    height: 42px;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(114, 161, 222, 0.1);
-    border: 1px solid rgba(114, 161, 222, 0.3);
-    border-radius: 10px;
-    color: #72a1de;
-    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
 }
 
 .npf-icon:hover {
-    background: rgba(114, 161, 222, 0.2);
+    background: rgba(114, 161, 222, 0.15);
     border-color: #72a1de;
-    box-shadow: 0 0 20px rgba(114, 161, 222, 0.5);
+    color: #72a1de;
+    box-shadow: 0 0 20px rgba(114, 161, 222, 0.4);
     transform: translateY(-5px);
 }
 
@@ -155,58 +208,63 @@
 }
 
 .npf-icon:hover svg {
-    transform: scale(1.1);
+    transform: scale(1.15);
 }
 
 /* Bottom Section */
 .npf-bottom {
     padding-top: 30px;
-    border-top: 1px solid rgba(114, 161, 222, 0.2);
-    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-.npf-bottom p {
-    color: rgba(255, 255, 255, 0.5);
+.npf-copyright {
+    color: rgba(255, 255, 255, 0.4);
     font-size: 14px;
-    margin: 0;
+    font-weight: 500;
+}
+
+.npf-legal {
+    display: flex;
+    gap: 25px;
+}
+
+.npf-legal a {
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.npf-legal a:hover {
+    color: #72a1de;
 }
 
 /* Responsive */
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 1024px) {
     .npf-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 40px;
+        gap: 50px;
     }
-
+    
     .npf-brand {
         grid-column: span 2;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .np-footer {
-        padding: 40px 0 20px;
-        margin-top: 60px;
-    }
-
-    .npf-container {
-        padding: 0 20px;
-    }
-
-    .npf-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-
-    .npf-brand {
-        grid-column: span 1;
-        justify-content: center;
-        flex-direction: column;
+        align-items: center;
         text-align: center;
     }
 
-    .npf-brand-text {
-        align-items: center;
+    .npf-desc {
+        max-width: 500px;
+        text-align: center;
+    }
+    
+    .npf-title::after {
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .npf-col {
@@ -217,43 +275,29 @@
     .npf-social {
         justify-content: center;
     }
-
-    .npf-col a:hover {
-        transform: translateX(0);
-        transform: scale(1.05);
-    }
 }
 
-@media screen and (max-width: 480px) {
-    .npf-logo {
-        width: 40px;
-        height: 40px;
+@media screen and (max-width: 768px) {
+    .np-footer {
+        padding: 50px 0 25px;
+        margin-top: 50px;
     }
 
-    .npf-name {
-        font-size: 22px;
+    .npf-container {
+        padding: 0 25px;
     }
 
-    .npf-tag {
-        font-size: 12px;
+    .npf-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
     }
 
-    .npf-title {
-        font-size: 14px;
-        margin-bottom: 15px;
+    .npf-brand {
+        grid-column: span 1;
     }
-
-    .npf-icon {
-        width: 38px;
-        height: 38px;
-    }
-
-    .npf-col ul li {
-        margin-bottom: 10px;
-    }
-
-    .npf-col a,
-    .npf-col p {
-        font-size: 13px;
+    
+    .npf-bottom {
+        flex-direction: column;
+        text-align: center;
     }
 }

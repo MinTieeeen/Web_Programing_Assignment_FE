@@ -1,23 +1,5 @@
 // Check if user is admin by querying backend
-async function checkIfUserIsAdmin(uid) {
-  try {
-    const response = await fetch(`/nextplay/index.php/admin/check/${uid}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      return data.status === 'success' && data.isAdmin;
-    }
-    return false;
-  } catch (error) {
-    console.error('Admin check error:', error);
-    return false;
-  }
-}
+
 
 // Check user login status and update header
 window.updateHeaderLoginStatus = async function() {
@@ -52,19 +34,37 @@ window.updateHeaderLoginStatus = async function() {
     }
     if (mobileUserName) mobileUserName.textContent = userData.name || userData.username;
     
-    // Check admin status by querying backend
-    const isAdmin = await checkIfUserIsAdmin(userData.uid);
+    // Fetch latest user data including role
+    let userRole = userData.userType || 'user'; // Default from login
     
-    // Show/hide admin panel links based on backend check
+    // Optional: Refresh role from backend to be sure
+    try {
+        const roleResponse = await fetch(`/nextplay/index.php/users/${userData.uid}`);
+        if (roleResponse.ok) {
+            const roleData = await roleResponse.json();
+            if (roleData.status === 'success' && roleData.data.userType) {
+                userRole = roleData.data.userType;
+                // Update local storage if needed, or just use for this session
+            }
+        }
+    } catch (e) {
+        console.error('Error fetching user role:', e);
+    }
+    
+    // Show/hide panel links based on role
     const adminPanelLink = document.getElementById('adminPanelLink');
-    const mobileAdminPanelLink = document.getElementById('mobileAdminPanelLink');
-    if (isAdmin) {
+    const publisherDashboardLink = document.getElementById('publisherDashboardLink');
+    
+    // Reset classes
+    if (adminPanelLink) adminPanelLink.classList.add('d-none');
+    if (publisherDashboardLink) publisherDashboardLink.classList.add('d-none');
+    
+    if (userRole === 'admin') {
       if (adminPanelLink) adminPanelLink.classList.remove('d-none');
-      if (mobileAdminPanelLink) mobileAdminPanelLink.classList.remove('d-none');
-      console.log('Admin panel links shown for admin user');
-    } else {
-      if (adminPanelLink) adminPanelLink.classList.add('d-none');
-      if (mobileAdminPanelLink) mobileAdminPanelLink.classList.add('d-none');
+      console.log('Admin panel shown');
+    } else if (userRole === 'publisher') {
+       if (publisherDashboardLink) publisherDashboardLink.classList.remove('d-none');
+       console.log('Publisher dashboard shown');
     }
     
     // Re-initialize event listeners after showing user menu

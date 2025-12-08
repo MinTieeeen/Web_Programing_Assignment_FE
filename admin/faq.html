@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý câu hỏi thường gặp - NextPlay</title>
+    <!-- Tabler Core -->
+    <link href="../assets/tabler/css/tabler.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-flags.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-payments.min.css" rel="stylesheet"/>
+    <link href="../assets/tabler/css/tabler-vendors.min.css" rel="stylesheet"/>
+    <link href="../assets/css/toast.css" rel="stylesheet"/>
+    <style>
+      @import url('https://rsms.me/inter/inter.css');
+      :root {
+      	--tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      }
+      body {
+      	font-feature-settings: "cv03", "cv04", "cv11";
+      }
+    </style>
+</head>
+<body>
+    <script src="../assets/tabler/js/tabler-theme.min.js"></script>
+    <div class="page">
+        <!-- Sidebar -->
+        <div id="sidebarContainer"></div>
+
+        <div class="page-wrapper">
+            <!-- Navbar -->
+            <div id="navbarContainer"></div>
+
+            <!-- Page Header -->
+            <div class="page-header d-print-none">
+                <div class="container-xl">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title">
+                                Quản lý câu hỏi thường gặp (FAQ)
+                            </h2>
+                        </div>
+                        <div class="col-auto ms-auto d-print-none">
+                            <div class="btn-list">
+                                <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#addFaqModal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+                                    Thêm câu hỏi mới
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Body -->
+            <div class="page-body">
+                <div class="container-xl">
+                    <!-- Stats Cards -->
+                    <div class="row row-deck row-cards mb-4">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="subheader">Tổng câu hỏi</div>
+                                    </div>
+                                    <div class="h1 mb-3" id="totalFaqs">...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Table Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Danh sách câu hỏi</h3>
+                        </div>
+                        <div class="card-body border-bottom py-3">
+                            <div class="d-flex">
+                                <div class="text-muted">
+                                    Tìm kiếm:
+                                    <div class="ms-2 d-inline-block">
+                                        <input type="text" class="form-control form-control-sm" id="searchFaq" placeholder="Tìm kiếm câu hỏi...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table card-table table-vcenter text-nowrap datatable" id="faqTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Câu hỏi</th>
+                                        <th>Câu trả lời</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+             <footer class="footer footer-transparent d-print-none">
+                <div class="container-xl">
+                    <div class="row text-center align-items-center flex-row-reverse">
+                        <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                            <ul class="list-inline list-inline-dots mb-0">
+                                <li class="list-inline-item">
+                                    Copyright &copy; 2025
+                                    <a href="." class="link-secondary">NextPlay</a>.
+                                    All rights reserved.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Add FAQ Modal -->
+    <div class="modal modal-blur fade" id="addFaqModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thêm câu hỏi mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addFaqForm">
+                        <div class="mb-3">
+                            <label class="form-label">Chủ đề</label>
+                            <select class="form-select" id="faqTopic" required onchange="toggleTopicInput('add')">
+                                <option value="general|Chung|bi-info-circle">Chung</option>
+                                <option value="account|Tài khoản & Bảo mật|bi-shield-lock">Tài khoản & Bảo mật</option>
+                                <option value="payment|Thanh toán|bi-credit-card">Thanh toán</option>
+                                <option value="technical|Kỹ thuật & Cài đặt|bi-pc-display">Kỹ thuật & Cài đặt</option>
+                                <option value="other|Khác|bi-question-circle">Khác (Tự nhập)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 d-none" id="customTopicGroup_add">
+                            <label class="form-label">Thông tin chủ đề mới</label>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <input type="text" class="form-control" id="newTopicKey_add" placeholder="Key (vd: new_topic)">
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control" id="newTopicName_add" placeholder="Tên chủ đề">
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control" id="newTopicIcon_add" placeholder="Icon (bi-star)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Câu hỏi</label>
+                            <input type="text" class="form-control" id="faqQuestion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Câu trả lời</label>
+                            <textarea class="form-control" id="faqAnswer" rows="5" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn me-auto" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveFaq()">Lưu câu hỏi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit FAQ Modal -->
+    <div class="modal modal-blur fade" id="editFaqModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chỉnh sửa câu hỏi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editFaqForm">
+                        <input type="hidden" id="editFaqId">
+                        <div class="mb-3">
+                            <label class="form-label">Chủ đề</label>
+                            <select class="form-select" id="editFaqTopic" required onchange="toggleTopicInput('edit')">
+                                <option value="general|Chung|bi-info-circle">Chung</option>
+                                <option value="account|Tài khoản & Bảo mật|bi-shield-lock">Tài khoản & Bảo mật</option>
+                                <option value="payment|Thanh toán|bi-credit-card">Thanh toán</option>
+                                <option value="technical|Kỹ thuật & Cài đặt|bi-pc-display">Kỹ thuật & Cài đặt</option>
+                                <option value="other|Khác|bi-question-circle">Khác (Tự nhập)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 d-none" id="customTopicGroup_edit">
+                            <label class="form-label">Thông tin chủ đề mới</label>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <input type="text" class="form-control" id="newTopicKey_edit" placeholder="Key">
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control" id="newTopicName_edit" placeholder="Tên">
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control" id="newTopicIcon_edit" placeholder="Icon">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Câu hỏi</label>
+                            <input type="text" class="form-control" id="editFaqQuestion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Câu trả lời</label>
+                            <textarea class="form-control" id="editFaqAnswer" rows="5" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn me-auto" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="updateFaq()">Cập nhật</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/tabler/js/tabler.min.js"></script>
+    <script src="../env.js?v=2"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/admin/utils.js?v=2"></script>
+    <script src="../assets/js/admin/components.js?v=5"></script>
+    <script src="../assets/js/admin/faq.js?v=2"></script>
+    <script>
+        // Initialize components
+        AdminComponents.init('faq');
+    </script>
+</body>
+</html>

@@ -42,6 +42,9 @@ class AdminUsers {
         try {
             // Use admin endpoint to get users with balance
             const response = await fetch(`${API_BASE_URL}/users`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 credentials: 'include'
             });
             const result = await response.json();
@@ -70,7 +73,7 @@ class AdminUsers {
             // Fallback to empty array if API fails
             this.users = [];
             this.totalUsers = 0;
-            showToast('Lỗi tải người dùng: ' + error.message, 'error');
+            Toast.error('Lỗi tải người dùng: ' + error.message);
         }
         
         this.renderUsers();
@@ -228,20 +231,23 @@ class AdminUsers {
         try {
             const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 credentials: 'include'
             });
             
             const result = await response.json();
             
             if (result.status === 'success') {
-                showToast(`Đã xóa người dùng "${username}"`, 'success');
+                Toast.success(`Đã xóa người dùng "${username}"`);
                 await this.loadUsers(); // Reload from database
             } else {
                 throw new Error(result.message || 'Không thể xóa người dùng');
             }
         } catch (error) {
             console.error('Delete user error:', error);
-            showToast('Lỗi xóa người dùng: ' + error.message, 'error');
+            Toast.error('Lỗi xóa người dùng: ' + error.message);
         }
     }
 
@@ -262,21 +268,21 @@ class AdminUsers {
     validateUserForm(formData, excludeUserId = null) {
         // Basic validation
         if (!formData.username || !formData.email || !formData.firstname || !formData.lastname) {
-            showToast('Vui lòng điền đầy đủ thông tin bắt buộc', 'error');
+            Toast.error('Vui lòng điền đầy đủ thông tin bắt buộc');
             return false;
         }
 
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(formData.email)) {
-            showToast('Vui lòng nhập địa chỉ email hợp lệ', 'error');
+            Toast.error('Vui lòng nhập địa chỉ email hợp lệ');
             return false;
         }
 
         // Username validation
         const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
         if (!usernameRegex.test(formData.username)) {
-            showToast('Tài khoản phải từ 3-20 ký tự và chỉ chứa chữ cái, số và dấu gạch dưới', 'error');
+            Toast.error('Tài khoản phải từ 3-20 ký tự và chỉ chứa chữ cái, số và dấu gạch dưới');
             return false;
         }
 
@@ -287,7 +293,7 @@ class AdminUsers {
         );
 
         if (existingUser) {
-            showToast('Tài khoản hoặc email đã tồn tại', 'error');
+            Toast.error('Tài khoản hoặc email đã tồn tại');
             return false;
         }
 
@@ -325,7 +331,8 @@ class AdminUsers {
             const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 credentials: 'include',
                 body: JSON.stringify({
@@ -341,7 +348,7 @@ class AdminUsers {
             const result = await response.json();
             
             if (result.status === 'success') {
-                showToast(`Đã cập nhật người dùng "${userData.username}" thành công`, 'success');
+                Toast.success(`Đã cập nhật người dùng "${userData.username}" thành công`);
                 
                 // Close modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
@@ -353,7 +360,7 @@ class AdminUsers {
             }
         } catch (error) {
             console.error('Update user error:', error);
-            showToast('Lỗi cập nhật người dùng: ' + error.message, 'error');
+            Toast.error('Lỗi cập nhật người dùng: ' + error.message);
         }
     }
 
@@ -415,7 +422,7 @@ class AdminUsers {
         const isConfirmed = document.getElementById('confirmLock').checked;
 
         if (!isConfirmed) {
-            AdminUtils.showToast('Vui lòng xác nhận khoá tài khoản', 'warning');
+            Toast.warning('Vui lòng xác nhận khoá tài khoản');
             return;
         }
 
@@ -430,7 +437,8 @@ class AdminUsers {
             const response = await fetch(`${API_BASE_URL}/admin/users/toggle-lock`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({
                     uid: userId,
@@ -443,7 +451,7 @@ class AdminUsers {
 
             if (result.status === 'success') {
                 const action = shouldLock ? 'khóa' : 'mở khóa';
-                AdminUtils.showToast(`Đã ${action} tài khoản thành công`, 'success');
+                Toast.success(`Đã ${action} tài khoản thành công`);
                 // Update local state and re-render
                 if (user) {
                     user.status = shouldLock ? 'suspended' : 'active';
@@ -454,7 +462,7 @@ class AdminUsers {
             }
         } catch (error) {
             console.error('Toggle lock error:', error);
-            AdminUtils.showToast('Lỗi: ' + error.message, 'error');
+            Toast.error('Lỗi: ' + error.message);
         }
     }
 
@@ -465,6 +473,9 @@ class AdminUsers {
             
             // Fetch detailed user info
             const response = await fetch(`${API_BASE_URL}/admin/users/detail?uid=${userId}`, {
+                 headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                 },
                  credentials: 'include'
             });
             const result = await response.json();
@@ -577,7 +588,7 @@ class AdminUsers {
 
         } catch (error) {
             console.error('View user details error:', error);
-            AdminUtils.showToast('Lỗi tải thông tin chi tiết: ' + error.message, 'error');
+            Toast.error('Lỗi tải thông tin chi tiết: ' + error.message);
         }
     }
 
@@ -597,12 +608,12 @@ class AdminUsers {
         const confirmNewPassword = document.getElementById('confirmNewPassword').value;
 
         if (newPassword !== confirmNewPassword) {
-            AdminUtils.showToast('Mật khẩu xác nhận không khớp', 'error');
+            Toast.error('Mật khẩu xác nhận không khớp');
             return;
         }
 
         if (newPassword.length < 8) {
-             AdminUtils.showToast('Mật khẩu phải có ít nhất 8 ký tự', 'error');
+             Toast.error('Mật khẩu phải có ít nhất 8 ký tự');
              return;
         }
 
@@ -610,7 +621,8 @@ class AdminUsers {
             const response = await fetch(`${API_BASE_URL}/admin/users/reset-password`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({
                     uid: userId,
@@ -621,14 +633,14 @@ class AdminUsers {
             const result = await response.json();
 
             if (result.status === 'success') {
-                AdminUtils.showToast('Đã đặt lại mật khẩu thành công', 'success');
+                Toast.success('Đã đặt lại mật khẩu thành công');
                 bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal')).hide();
             } else {
                 throw new Error(result.message || 'Không thể đặt lại mật khẩu');
             }
         } catch (error) {
             console.error('Reset password error:', error);
-            AdminUtils.showToast('Lỗi: ' + error.message, 'error');
+            Toast.error('Lỗi: ' + error.message);
         }
     }
 
