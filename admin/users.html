@@ -389,7 +389,15 @@
                     ? '<span class="badge bg-danger">Locked</span>' 
                     : '<span class="badge bg-success">Active</span>';
                 
-                const avatarUrl = user.avatar && user.avatar.startsWith('http') ? user.avatar : '';
+
+                let avatarUrl = '';
+                if (user.avatar) {
+                    if (user.avatar.startsWith('http')) {
+                        avatarUrl = user.avatar;
+                    } else {
+                        avatarUrl = `/assets/images/${user.avatar}`;
+                    }
+                }
                 return `
                 <tr>
                     <td class="text-muted">${user.uid}</td>
